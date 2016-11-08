@@ -191,8 +191,7 @@ public class SpawnMeshes : MonoBehaviour
         int sides = Random.Range(3, 17);
 
         gear.Build(lowRadius, midRadius, highRadius, sides, material);
-
-        gearObject.AddComponent<Rigidbody2D>();
+        gear.AddHingeJoint();
 
         gearObject.GetComponent<MeshRenderer>().material.color = Color.gray;
     }

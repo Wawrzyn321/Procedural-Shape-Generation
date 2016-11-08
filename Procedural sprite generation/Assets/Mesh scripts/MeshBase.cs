@@ -38,6 +38,12 @@ public abstract class MeshBase : MonoBehaviour {
         return transform.position;
     }
 
+    public void AddHingeJoint()
+    {
+        HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
+        C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+    }
+
     protected static int Side(Vector3 p1, Vector3 p2, Vector3 p3)
     {
         //using {Math} instead of {Mathf}, because Mathf.Sign returns {1} for {0}!
