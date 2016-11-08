@@ -98,7 +98,6 @@ public class StarMesh : MeshBase {
 
     public override void UpdateCollider()
     {
-        //optmimize - get only 1...sides*2 indexes from vertices
         Vector2[] points = new Vector2[sides*2];
         float angleDelta = 360 / (float)points.Length * Mathf.Deg2Rad;
         float angleShift = -360f/(sides*4)*Mathf.Deg2Rad;

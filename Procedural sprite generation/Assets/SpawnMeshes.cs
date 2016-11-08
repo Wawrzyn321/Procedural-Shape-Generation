@@ -11,16 +11,17 @@ public class SpawnMeshes : MonoBehaviour
 
     void Start()
     {
-        AddQuadrangle(new Vector3(3, 0,0));
-        AddCircle(new Vector3(-3, 0, 0));
+        //add some shapes to playground
+        AddQuadrangle(new Vector3(4, 0, 0));
+        AddCircle(new Vector3(-4, 0, 0));
         AddTriangle(new Vector3(0, 3, 0));
         AddCake(new Vector3(0, -3, 0));
-        AddRing(new Vector3(-3,-3,0));
-        AddPointedCircle(new Vector3(-3,3,0));
-        AddRectangle(new Vector3(3,3,0));
-        AddEllipse(new Vector3(3,-3,0));
-        AddStar(new Vector3(1,1));
-        AddGear(new Vector3(-1,1));
+        AddRing(new Vector3(-4, -3, 0));
+        AddPointedCircle(new Vector3(-4, 3, 0));
+        AddRectangle(new Vector3(4, 3, 0));
+        AddEllipse(new Vector3(4, -3, 0));
+        AddStar(new Vector3(1, 1));
+        AddGear(new Vector3(-1, 1));
         AddConvex(Vector3.zero);
     }
 
@@ -136,9 +137,10 @@ public class SpawnMeshes : MonoBehaviour
         ring.transform.position = pos;
 
         float innerRadius = Random.Range(0f, 0.8f);
-        float outerRadius = innerRadius+Random.Range(0, 0.8f);
+        float outerRadius = innerRadius + Random.Range(0, 0.8f);
+        int sides = Random.Range(3, 15);
 
-        ring.AddComponent<RingMesh>().Build(innerRadius, outerRadius, Random.Range(3, 15), material);
+        ring.AddComponent<RingMesh>().Build(innerRadius, outerRadius, sides, material);
         ring.GetComponent<RingMesh>().SetTexture(otherTexture);
 
         ring.AddComponent<Rigidbody2D>();
@@ -159,7 +161,7 @@ public class SpawnMeshes : MonoBehaviour
         star.GetComponent<StarMesh>().SetTexture(otherTexture);
 
         star.AddComponent<Rigidbody2D>();
-        
+
     }
     private void AddConvex(Vector3 pos)
     {

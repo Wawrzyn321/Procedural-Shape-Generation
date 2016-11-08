@@ -5,12 +5,13 @@ using System;
 [RequireComponent(typeof(MeshFilter), (typeof(PolygonCollider2D)), (typeof(MeshRenderer)))]
 public class TriangleMesh : MeshBase
 {
-    public Material meshMatt;
 
+    //mesh data
     private Vector3[] vertices;
     private int[] triangles;
     private Vector2[] uvs;
 
+    //collider
     private PolygonCollider2D C_PC2D;
 
     public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt, Space space)
@@ -50,7 +51,7 @@ public class TriangleMesh : MeshBase
 
         vertices[0] = p1;
 
-        float sign = Side(p2, p1, p3);
+        float sign = GetSide(p2, p1, p3);
         if (sign == 0)
         {
             Debug.LogWarning("Triangle::SetPoints: Given points are colinear!");
@@ -78,6 +79,12 @@ public class TriangleMesh : MeshBase
     public Vector3[] GetVertices()
     {
         return vertices;
+    }
+
+    private int GetSide(Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        //using {Math} instead of {Mathf}, because Mathf.Sign returns {1} for {0}!
+        return Math.Sign((p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y));
     }
 
     #region Abstract Implementation

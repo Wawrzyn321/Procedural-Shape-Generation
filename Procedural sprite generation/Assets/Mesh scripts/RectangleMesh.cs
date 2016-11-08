@@ -2,7 +2,6 @@
 using UnityEngine;
 public class RectangleMesh : MeshBase
 {
-    public Material meshMatt;
 
     //mesh parameter
     private Vector2 size;
@@ -52,7 +51,7 @@ public class RectangleMesh : MeshBase
             new Vector3(-size.x*0.5f, size.y*0.5f, 0), //downright
         };
 
-        triangles = new int[] {2,0,1,3,0,2};
+        triangles = new int[] {2, 0, 1, 3, 0, 2};
 
         uvs = new Vector2[]
         {

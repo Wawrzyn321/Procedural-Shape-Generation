@@ -95,11 +95,8 @@ public class PointedCircleMesh : MeshBase
 
         if (radius < vertices[0].sqrMagnitude)
         {
-            C_PC2D = GetComponent<PolygonCollider2D>();
-            if (!C_PC2D)
-            {
-                C_PC2D = gameObject.AddComponent<PolygonCollider2D>();
-            }
+            //not added in AddOrGetComponents
+            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
 
             Vector2[] C_CC2D_vertices = new Vector2[3];
 

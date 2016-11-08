@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 using System.Collections.Generic;
 
 public class LineMesh : MeshBase
 {
-    public Material meshMatt;
 
+    //mesh data
     private List<Vector3> vertices;
     private List<int> triangles;
     private List<Vector2> uvs;
 
+    //line data
     private bool useDoubleCollider;
     private Vector2[] lineVerts;
     //private float lineWidth;
 
+    //collider
     private PolygonCollider2D C_PC2D;
 
     private List<Vector2> cachedVertsLeft;

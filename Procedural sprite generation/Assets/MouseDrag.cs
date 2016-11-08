@@ -7,9 +7,11 @@ public class MouseDrag : MonoBehaviour {
 
     private MeshBase connectedMeshBase;
     private Rigidbody2D connectedBody;
+    private float oldDrag;
+
+    //components
     private LineRenderer C_LR;
     private SpringJoint2D C_SP2D;
-    private float oldDrag;
 
     void Awake()
     {
@@ -20,16 +22,20 @@ public class MouseDrag : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
+            //raycast from mouse pointer
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider != null)
             {
+                //if we hit something...
                 if (hit.collider.GetComponent<Rigidbody2D>())
                 {
+                    //...and it has Rigidbody2D
                     connectedBody = hit.collider.GetComponent<Rigidbody2D>();
 
                     oldDrag = connectedBody.drag;
                     connectedBody.drag = 10f;
 
+                    //attach SpringJoint to hit collider
                     C_SP2D = hit.collider.gameObject.AddComponent<SpringJoint2D>();
                     C_SP2D.autoConfigureDistance = false;
                     C_SP2D.distance = 0;
@@ -65,8 +71,7 @@ public class MouseDrag : MonoBehaviour {
                 connectedBody.drag = oldDrag;
                 C_SP2D = null;
                 connectedBody = null;
-                C_LR.SetPosition(0, Vector3.zero);
-                C_LR.SetPosition(1, Vector3.zero);
+                SetLineRendererPositions(Vector3.zero, Vector3.zero);
             }
         }
     }
@@ -75,10 +80,17 @@ public class MouseDrag : MonoBehaviour {
     {
         if (connectedBody)
         {
+            //drag connected body
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             C_SP2D.connectedAnchor = pos;
-            C_LR.SetPosition(0, C_SP2D.connectedAnchor);
-            C_LR.SetPosition(1, connectedBody.transform.TransformPoint(C_SP2D.anchor));
+            SetLineRendererPositions(C_SP2D.connectedAnchor,
+                connectedBody.transform.TransformPoint(C_SP2D.anchor));
         }
     }
+    private void SetLineRendererPositions(Vector3 pos1, Vector3 pos2)
+    {
+        C_LR.SetPosition(0, pos1);
+        C_LR.SetPosition(1, pos2);
+    }
+
 }

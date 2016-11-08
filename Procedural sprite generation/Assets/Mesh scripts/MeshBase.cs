@@ -44,12 +44,6 @@ public abstract class MeshBase : MonoBehaviour {
         C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
     }
 
-    protected static int Side(Vector3 p1, Vector3 p2, Vector3 p3)
-    {
-        //using {Math} instead of {Mathf}, because Mathf.Sign returns {1} for {0}!
-        return Math.Sign((p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y));
-    }
-
     public abstract void UpdateMesh();
     public abstract void UpdateCollider();
     public abstract void GetOrAddComponents();

@@ -361,8 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5383acf481986e43b420564896b88ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachToCenterOfMass: 1
-  stiffJoint: 0
+  attachToCenterOfMass: 0
 --- !u!120 &1748410696
 LineRenderer:
   m_ObjectHideFlags: 0
