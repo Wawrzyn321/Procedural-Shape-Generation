@@ -140,8 +140,6 @@ public class QuadrangleMesh : MeshBase {
 
     public override void UpdateCollider()
     {
-        
-        //points[points.Length - 1] = points[0];
         C_PC2D.points = points;
     }
 

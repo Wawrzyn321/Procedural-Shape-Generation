@@ -4,7 +4,6 @@ using System.Collections;
 public class MouseDrag : MonoBehaviour {
     
     public bool attachToCenterOfMass = true;
-    public bool stiffJoint = false;
 
     private MeshBase connectedMeshBase;
     private Rigidbody2D connectedBody;
