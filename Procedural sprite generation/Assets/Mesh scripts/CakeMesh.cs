@@ -20,6 +20,7 @@ public class CakeMesh : MeshBase
     private PolygonCollider2D C_PC2D;
     private CircleCollider2D C_CC2D;
 
+    //constructor
     public void Build(float radius, int sides, int sidesToFill, Material meshMatt)
     {
         name = "Cake";
@@ -40,6 +41,7 @@ public class CakeMesh : MeshBase
         }
     }
     
+    //build a cake
     public bool BakeCake(float radius, int sides, int sidesToFill)
     {
         #region Validity Check
@@ -96,6 +98,7 @@ public class CakeMesh : MeshBase
         return true;
     }
 
+    //center is set as circle origin
     public override Vector2 GetCenter()
     {
         return (Vector2)transform.position - centerShift;

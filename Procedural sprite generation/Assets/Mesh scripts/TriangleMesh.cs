@@ -86,13 +86,6 @@ public class TriangleMesh : MeshBase
         return vertices;
     }
 
-    // checks the side vector {v} lays on, relative to segment {v1,v2}
-    private int GetSide(Vector3 v1, Vector3 v2, Vector3 v)
-    {
-        //using {Math} instead of {Mathf}, because Mathf.Sign returns {1} for {0}!
-        return Math.Sign((v1.x - v.x) * (v2.y - v.y) - (v2.x - v.x) * (v1.y - v.y));
-    }
-
     #region Abstract Implementation
 
     public override void UpdateMesh()

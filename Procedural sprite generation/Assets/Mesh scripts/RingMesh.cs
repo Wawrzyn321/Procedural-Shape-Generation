@@ -20,6 +20,7 @@ public class RingMesh : MeshBase
     private PolygonCollider2D C_PC2D_inner;
     private CircleCollider2D C_CC2D;
 
+    //constructor
     public void Build(float innerRadius, float outerRadius, int sides, Material meshMatt)
     {
         name = "Ring";
@@ -39,6 +40,7 @@ public class RingMesh : MeshBase
         }
     }
     
+    //build a ring
     public bool BuildRing(float innerRadius, float outerRadius, int sides)
     {
 

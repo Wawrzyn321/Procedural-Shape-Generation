@@ -11,17 +11,18 @@ public class PointedCircleMesh : MeshBase
     //p-circle data
     private float radius;
     private Vector2 shift;
-    private int sides;
+    //private int sides;
 
     //colliders
     private CircleCollider2D C_CC2D;
     private PolygonCollider2D C_PC2D;
 
+    //constructor
     public void Build(float radius, int sides, Vector2 shift, Material meshMatt)
     {
         name = "PointedCircle";
         this.radius = radius;
-        this.sides = sides;
+        //this.sides = sides;
         this.shift = shift;
 
         mesh = new Mesh();
@@ -36,6 +37,7 @@ public class PointedCircleMesh : MeshBase
         }
     }
     
+    //build p-circle
     public bool BuildPointedCircle(float radius, int sides, Vector2 shift)
     {
         #region Validity Check
@@ -75,6 +77,7 @@ public class PointedCircleMesh : MeshBase
         return true;
     }
 
+    //no {shift} parameter here
     public override Vector2 GetCenter()
     {
         return (Vector2)transform.position - shift;

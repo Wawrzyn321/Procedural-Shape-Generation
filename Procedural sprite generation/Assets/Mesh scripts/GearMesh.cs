@@ -21,12 +21,13 @@ public class GearMesh : MeshBase
     private PolygonCollider2D C_EC2D_inner;
     private PolygonCollider2D C_EC2D_outer;
 
-    public void Build(float lowRadius, float midRadius, float highRadius, int sides, Material meshMatt)
+    //construct
+    public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt)
     {
         name = "Gear";
-        this.lowRadius = lowRadius;
-        this.midRadius = midRadius;
-        this.highRadius = highRadius;
+        this.lowRadius = innerRadius;
+        this.midRadius = rootRadius;
+        this.highRadius = outerRadius;
         this.sides = sides;
         
         mesh = new Mesh();
@@ -34,13 +35,14 @@ public class GearMesh : MeshBase
 
         C_MR.material = meshMatt;
 
-        if (BuildGear(lowRadius, midRadius, highRadius, sides))
+        if (BuildGear(innerRadius, rootRadius, outerRadius, sides))
         {
             UpdateMesh();
             UpdateCollider();
         }
     }
-
+    
+    //build a gear
     public bool BuildGear(float lowRadius, float midRadius, float highRadius, int sides)
     {
 
@@ -53,12 +55,12 @@ public class GearMesh : MeshBase
         }
         if (midRadius == 0)
         {
-            Debug.LogWarning("GearMesh::BuildGear: midRadius can't be equal to zero!");
+            Debug.LogWarning("GearMesh::BuildGear: rootRadius can't be equal to zero!");
             return false;
         }
         if (highRadius == 0)
         {
-            Debug.LogWarning("GearMesh::BuildGear: highRadius can't be equal to zero!");
+            Debug.LogWarning("GearMesh::BuildGear: outerRadius can't be equal to zero!");
             return false;
         }
         if (lowRadius < 0)

@@ -17,9 +17,11 @@ public class LineMesh : MeshBase
     //collider
     private PolygonCollider2D C_PC2D;
 
+    //list of 
     private List<Vector2> cachedVertsLeft;
     private List<Vector2> cachedVertsRight;
 
+    //constructor
     public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt, Space space)
     {
         name = "Line mesh";
@@ -39,6 +41,7 @@ public class LineMesh : MeshBase
         }
     }
 
+    //build line
     public bool BuildLine(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider)
     {
         #region Validity Check
@@ -216,6 +219,7 @@ public class LineMesh : MeshBase
         return true;
     }
 
+    //difference between angles in radians
     private float AngleDifference(float a, float b)
     {
         float diff = b - a;

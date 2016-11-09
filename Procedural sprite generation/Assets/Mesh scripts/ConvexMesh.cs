@@ -13,6 +13,7 @@ public class ConvexMesh : MeshBase {
     //collider
     private PolygonCollider2D C_PC2D;
 
+    //constructor
     public void Build(Vector3[] vertices, Material meshMatt)
     {
         name = "Convex Mesh";
@@ -29,6 +30,7 @@ public class ConvexMesh : MeshBase {
         }
     }
 
+    //build convex shape
     public bool BuildConvex(Vector3[] verts)
     {
         #region Validity Check
@@ -55,13 +57,20 @@ public class ConvexMesh : MeshBase {
 
         return true;
     }
-    
+
+    //get points set in constructor
     public List<Vector3> GetBasePoints()
     {
         return points;
     }
 
-    
+    //get convex points
+    public List<Vector3> GetOutlinePoints()
+    {
+        return meshVertices;
+    }
+
+
     #region Abstract Implementation
 
     public override void UpdateMesh()
@@ -82,29 +91,18 @@ public class ConvexMesh : MeshBase {
         C_PC2D.points = ConvertVec3ToVec2_collider(meshVertices.ToArray());
     }
 
-    #endregion
-
     public override void GetOrAddComponents()
     {
-        C_PC2D = GetComponent<PolygonCollider2D>();
-        if (!C_PC2D)
-        {
-            C_PC2D = gameObject.AddComponent<PolygonCollider2D>();
-        }
-        C_MR = GetComponent<MeshRenderer>();
-        if (!C_MR)
-        {
-            C_MR = gameObject.AddComponent<MeshRenderer>();
-        }
-        C_MF = GetComponent<MeshFilter>();
-        if (!C_MF)
-        {
-            C_MF = gameObject.AddComponent<MeshFilter>();
-        }
+        C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+        C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
+        C_MF = gameObject.GetOrAddComponent<MeshFilter>();
     }
+
+    #endregion
 
     #region Convex Hull Algorithm
 
+    //get general line equation from two given points
     private Vector3 getLineEquation(Vector3 a, Vector3 b)
     {
         if (a.x == b.x)
@@ -118,95 +116,90 @@ public class ConvexMesh : MeshBase {
         else
         {
             float bV = (a.x - b.x) / (a.y - b.y);
-            float cV = (bV * a.y - a.x);
+            float cV = bV * a.y - a.x;
             return new Vector3(1, -bV, cV);
         }
     }
-
-    //get side of points {v} relative to vector {v1}{v2}
-    private double getSide(Vector3 v, Vector3 v1, Vector3 v2)
-    {
-        return (v1.x - v2.x) * (v.y - v2.y) - (v1.y - v2.y) * (v.x - v2.x);
-    }
-
-
-    private Vector3? getLeftmostPoint(List<Vector3> v)
+    
+    private Vector3? getLeftmostPoint(List<Vector3> setOfPoints)
     {
         Vector3? p = null;
         float mX = float.MaxValue;
-        for (int i = 0; i < v.Count; i++)
+        for (int i = 0; i < setOfPoints.Count; i++)
         {
-            if (v[i].x < mX)
+            if (setOfPoints[i].x < mX)
             {
-                mX = v[i].x;
-                p = v[i];
+                mX = setOfPoints[i].x;
+                p = setOfPoints[i];
             }
         }
         return p;
     }
 
     //get pointer to points of highest x coordinate
-    private Vector3? getRightmostPoint(List<Vector3> v)
+    private Vector3? getRightmostPoint(List<Vector3> setOfPoints)
     {
         Vector3? p = null;
         float mX = float.MinValue;
-        for (int i = 0; i < v.Count; i++)
+        for (int i = 0; i < setOfPoints.Count; i++)
         {
-            if (v[i].x > mX)
+            if (setOfPoints[i].x > mX)
             {
-                mX = v[i].x;
-                p = v[i];
+                mX = setOfPoints[i].x;
+                p = setOfPoints[i];
             }
         }
         return p;
     }
 
-    //get vector of points on the right of two given points
-    private List<Vector3> getPointsOnRight(List<Vector3> v, Vector3 vL, Vector3 vP)
+    //get vector of points on the right of two given setOfPoints
+    private List<Vector3> getPointsOnRight(List<Vector3> setOfPoints, Vector3 vL, Vector3 vP)
     {
         List<Vector3> r = new List<Vector3>();
-        for (int i = 0; i < v.Count; i++)
+        for (int i = 0; i < setOfPoints.Count; i++)
         {
-            if (getSide(v[i], vL, vP) > 0)
+            if (GetSide(setOfPoints[i], vL, vP) > 0)
             {
-                r.Add(v[i]);
+                r.Add(setOfPoints[i]);
             }
         }
         return r;
     }
 
     //get points located the farthest from line of given equation
-    private Vector3? getFarthestPoint(Vector3 lineEquation, List<Vector3> v)
+    private Vector3? getFarthestPoint(Vector3 lineEquation, List<Vector3> setOfPoints)
     {
         double len = 0;
         Vector3? r = null;
-        for (int i = 0; i < v.Count; i++)
+        for (int i = 0; i < setOfPoints.Count; i++)
         {
             double l =
-                Mathf.Abs(lineEquation.x * v[i].x + lineEquation.y * v[i].y + lineEquation.z)
+                Mathf.Abs(lineEquation.x * setOfPoints[i].x + lineEquation.y * setOfPoints[i].y + lineEquation.z)
                 / Mathf.Sqrt(lineEquation.x * lineEquation.x + lineEquation.y * lineEquation.y);
             if (l > len)
             {
                 len = l;
-                r = v[i];
+                r = setOfPoints[i];
             }
         }
         return r;
     }
 
     //recurrent subroutine to {QuickHull}
-    private List<Vector3> QuickHullSub(Vector3? A, Vector3? B, List<Vector3> points)
+    private List<Vector3> QuickHullSub(Vector3? A, Vector3? B, List<Vector3> setOfPoints)
     {
-        if (A.HasValue == false || B.HasValue == false || points == null)
+        if (A.HasValue == false || B.HasValue == false || setOfPoints == null)
         {
             return null;
         }
-        Vector3? C = getFarthestPoint(getLineEquation(A.Value, B.Value), points);
+        Vector3? C = getFarthestPoint(getLineEquation(A.Value, B.Value), setOfPoints);
         if (!C.HasValue)
+        {
             return null;
+        }
 
-        List<Vector3> s1 = getPointsOnRight(points, A.Value, C.Value);
-        List<Vector3> s2 = getPointsOnRight(points, C.Value, B.Value);
+        List<Vector3> s1 = getPointsOnRight(setOfPoints, A.Value, C.Value);
+        List<Vector3> s2 = getPointsOnRight(setOfPoints, C.Value, B.Value);
 
         List<Vector3> arg1 = QuickHullSub(A, C, s1);
         List<Vector3> arg3 = QuickHullSub(C, B, s2);
@@ -226,22 +219,22 @@ public class ConvexMesh : MeshBase {
     }
 
     //Quick Hull main
-    private List<Vector3> QuickHull(List<Vector3> points)
+    private List<Vector3> QuickHull(List<Vector3> setOfPoints)
     {
-        if (points.Count < 2)
+        if (setOfPoints.Count < 2)
         {
             return null;
         }
-        Vector3? A = getLeftmostPoint(points);
-        Vector3? B = getRightmostPoint(points);
+        Vector3? A = getLeftmostPoint(setOfPoints);
+        Vector3? B = getRightmostPoint(setOfPoints);
 
         if (A == null || B == null)
         {
             return null;
         }
-        //to get points on left of AB, just get points on right of BA!
-        List<Vector3> s1 = getPointsOnRight(points, A.Value, B.Value);
-        List<Vector3> s2 = getPointsOnRight(points, B.Value, A.Value);
+        //to get points on left of AB, just get setOfPoints on right of BA!
+        List<Vector3> s1 = getPointsOnRight(setOfPoints, A.Value, B.Value);
+        List<Vector3> s2 = getPointsOnRight(setOfPoints, B.Value, A.Value);
 
         List<Vector3> arg2 = QuickHullSub(A, B, s1);
         List<Vector3> arg4 = QuickHullSub(B, A, s2);

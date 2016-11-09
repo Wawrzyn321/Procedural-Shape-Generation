@@ -16,6 +16,7 @@ public class QuadrangleMesh : MeshBase {
     //collider
     private PolygonCollider2D C_PC2D;
 
+    //constructor
     public void Build(Vector2[] verts, Material meshMatt)
     {
         name = "Quadrangle";
@@ -32,6 +33,7 @@ public class QuadrangleMesh : MeshBase {
         }
     }
 
+    //build quad
     public bool BuildQuadrangleMesh(Vector2[] verts)
     {
         vertices = new Vector3[4];
@@ -49,7 +51,7 @@ public class QuadrangleMesh : MeshBase {
             triangles[1] = 1;
             triangles[2] = 2;
 
-            if (getSide(verts[3], verts[0], verts[1]) * getSide(verts[2], verts[0], verts[1]) <= 0)
+            if (GetSide(verts[3], verts[0], verts[1]) * GetSide(verts[2], verts[0], verts[1]) <= 0)
             {
                 triangles[3] = 3;
                 triangles[4] = 1;
@@ -59,7 +61,7 @@ public class QuadrangleMesh : MeshBase {
                 points[2] = verts[1];
                 points[3] = verts[2];
             }
-            else if (getSide(verts[3], verts[1], verts[2]) * getSide(verts[0], verts[1], verts[2]) <= 0)
+            else if (GetSide(verts[3], verts[1], verts[2]) * GetSide(verts[0], verts[1], verts[2]) <= 0)
             {
                 triangles[3] = 1;
                 triangles[4] = 2;
@@ -82,14 +84,14 @@ public class QuadrangleMesh : MeshBase {
             triangles[0] = 1;
             triangles[1] = 2;
             triangles[2] = 3;
-            if (getSide(verts[0], verts[3], verts[1]) <= 0 && getSide(verts[2], verts[3], verts[1]) >= 0)
+            if (GetSide(verts[0], verts[3], verts[1]) <= 0 && GetSide(verts[2], verts[3], verts[1]) >= 0)
             {
                 triangles[3] = 0;
                 triangles[4] = 1;
                 triangles[5] = 3;
                 points = verts;
             }
-            else if (getSide(verts[0], verts[1], verts[2]) <= 0 && getSide(verts[3], verts[1], verts[2]) >= 0)
+            else if (GetSide(verts[0], verts[1], verts[2]) <= 0 && GetSide(verts[3], verts[1], verts[2]) >= 0)
             {
                 triangles[3] = 0;
                 triangles[4] = 1;
@@ -116,17 +118,13 @@ public class QuadrangleMesh : MeshBase {
         return true;
     }
 
+    //checks if point v is within triangle {v1,v2,v3}
     private bool isPointInTriangle(Vector2 v, Vector2 v1, Vector2 v2, Vector2 v3)
     {
-        double a1 = getSide(v, v1, v2);
-        double a2 = getSide(v, v2, v3);
-        double a3 = getSide(v, v3, v1);
+        double a1 = GetSide(v, v1, v2);
+        double a2 = GetSide(v, v2, v3);
+        double a3 = GetSide(v, v3, v1);
         return (a1 >= 0 && a2 >= 0 && a3 >= 0) || (a1 <= 0 && a2 <= 0 && a3 <= 0);
-    }
-
-    private double getSide(Vector2 v, Vector2 v1, Vector2 v2)
-    {
-        return (v1.x - v2.x) * (v.y - v2.y) - (v1.y - v2.y) * (v.x - v2.x);
     }
 
     #region Abstract Implementation

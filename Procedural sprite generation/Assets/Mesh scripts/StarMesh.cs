@@ -8,13 +8,14 @@ public class StarMesh : MeshBase {
     private Vector2[] uvs;
 
     //star data
-    private float radiusA;
-    private float radiusB;
+    private float radiusA; //horizontal radius
+    private float radiusB; //vertical radius
     private int sides;
 
     //collider
     private PolygonCollider2D C_PC2D;
 
+    //constructor
     public void Build(float radiusA, float radiusB, int sides, Material meshMatt)
     {
         name = "Star";
@@ -34,6 +35,7 @@ public class StarMesh : MeshBase {
         }
     }
 
+    //build a star
     public bool BuildStarMesh(float radiusA, float radiusB, int sides)
     {
 
