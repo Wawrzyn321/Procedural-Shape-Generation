@@ -36,7 +36,7 @@ public class PointedCircleMesh : MeshBase
         }
     }
     
-    private bool BuildPointedCircle(float radius, int sides, Vector2 shift)
+    public bool BuildPointedCircle(float radius, int sides, Vector2 shift)
     {
         #region Validity Check
 

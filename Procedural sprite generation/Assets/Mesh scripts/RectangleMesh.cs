@@ -14,6 +14,7 @@ public class RectangleMesh : MeshBase
     //colliders
     private BoxCollider2D C_BC2D;
     
+    //constructor
     public void Build(Vector2 size, Material meshMatt)
     {
         name = "Rectangle";
@@ -31,7 +32,8 @@ public class RectangleMesh : MeshBase
         }
     }
 
-    private bool BuildRectangle(Vector2 size)
+    //build a box
+    public bool BuildRectangle(Vector2 size)
     {
         #region  Validity Check
 
@@ -87,7 +89,6 @@ public class RectangleMesh : MeshBase
         C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
         C_MF = gameObject.GetOrAddComponent<MeshFilter>();
     }
-
 
     #endregion
 

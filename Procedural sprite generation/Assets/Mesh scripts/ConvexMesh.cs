@@ -29,7 +29,7 @@ public class ConvexMesh : MeshBase {
         }
     }
 
-    private bool BuildConvex(Vector3[] verts)
+    public bool BuildConvex(Vector3[] verts)
     {
         #region Validity Check
 

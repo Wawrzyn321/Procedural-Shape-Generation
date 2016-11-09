@@ -32,7 +32,7 @@ public class QuadrangleMesh : MeshBase {
         }
     }
 
-    private bool BuildQuadrangleMesh(Vector2[] verts)
+    public bool BuildQuadrangleMesh(Vector2[] verts)
     {
         vertices = new Vector3[4];
         for (int i = 0; i < 4; i++)

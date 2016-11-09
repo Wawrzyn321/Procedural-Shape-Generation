@@ -12,6 +12,7 @@ public class TriangleMesh : MeshBase
     //collider
     private PolygonCollider2D C_PC2D;
     
+    //constructor
     public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt)
     {
         name = "Triangle";
@@ -28,9 +29,10 @@ public class TriangleMesh : MeshBase
             UpdateCollider();
         }
     }
+
+    //build triangle or set its points
     public bool SetPoints(Vector2 p1, Vector2 p2, Vector2 p3)
     {
-
         #region Validity Check
 
         if (p1 == p2 || p2 == p3 || p3 == p1)
@@ -41,8 +43,18 @@ public class TriangleMesh : MeshBase
 
         #endregion
 
-        vertices = new Vector3[3];
-        triangles = new int[3];
+        if (vertices == null)
+        {
+            vertices = new Vector3[3];
+        }
+
+        if (triangles == null)
+        {
+            triangles = new int[3];
+            triangles[0] = 0;
+            triangles[1] = 2;
+            triangles[2] = 1;
+        }
 
         vertices[0] = p1;
 
@@ -50,6 +62,7 @@ public class TriangleMesh : MeshBase
         if (sign == 0)
         {
             Debug.LogWarning("Triangle::SetPoints: Given points are colinear!");
+            return false;
         }
         else if (sign == 1)
         {
@@ -61,25 +74,23 @@ public class TriangleMesh : MeshBase
             vertices[1] = p3;
             vertices[2] = p2;
         }
-        
-        triangles[0] = 0;
-        triangles[1] = 2;
-        triangles[2] = 1;
 
         uvs = UVUnwrap(vertices).ToArray();
 
         return true;
     }
 
+    // get triangle vertices
     public Vector3[] GetVertices()
     {
         return vertices;
     }
 
-    private int GetSide(Vector3 p1, Vector3 p2, Vector3 p3)
+    // checks the side vector {v} lays on, relative to segment {v1,v2}
+    private int GetSide(Vector3 v1, Vector3 v2, Vector3 v)
     {
         //using {Math} instead of {Mathf}, because Mathf.Sign returns {1} for {0}!
-        return Math.Sign((p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y));
+        return Math.Sign((v1.x - v.x) * (v2.y - v.y) - (v2.x - v.x) * (v1.y - v.y));
     }
 
     #region Abstract Implementation

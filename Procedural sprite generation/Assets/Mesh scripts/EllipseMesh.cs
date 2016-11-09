@@ -18,6 +18,7 @@ public class EllipseMesh : MeshBase
     private CircleCollider2D C_CC2D;
     private PolygonCollider2D C_PC2D;
     
+    //constructor
     public void Build(float radiusA, float radiusB, int sides, Material meshMatt)
     {
         name = "Ellipse";
@@ -37,6 +38,7 @@ public class EllipseMesh : MeshBase
         }
     }
     
+    //build an ellipse
     public bool BuildEllipse(float radiusA, float radiusB, int sides)
     {
 

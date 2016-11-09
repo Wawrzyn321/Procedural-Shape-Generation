@@ -9,7 +9,6 @@ public abstract class MeshBase : MonoBehaviour {
     protected Mesh mesh;
     protected MeshFilter C_MF;
     protected MeshRenderer C_MR;
-
     protected Material matt;
 
     public void SetRandomColor()
@@ -20,6 +19,7 @@ public abstract class MeshBase : MonoBehaviour {
     public void SetMaterial(Material material)
     {
         matt = material;
+        C_MR.material = matt;
     }
 
     public void SetTexture(Texture texture)
@@ -30,6 +30,7 @@ public abstract class MeshBase : MonoBehaviour {
     public void SetMaterial(Material material, Texture texture)
     {
         matt = material;
+        C_MR.material = matt;
         C_MR.material.mainTexture = texture;
     }
 

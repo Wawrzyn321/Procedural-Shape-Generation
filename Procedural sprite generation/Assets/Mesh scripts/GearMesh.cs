@@ -41,7 +41,7 @@ public class GearMesh : MeshBase
         }
     }
 
-    private bool BuildGear(float lowRadius, float midRadius, float highRadius, int sides)
+    public bool BuildGear(float lowRadius, float midRadius, float highRadius, int sides)
     {
 
         #region Validity Check

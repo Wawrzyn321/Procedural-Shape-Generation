@@ -39,7 +39,7 @@ public class LineMesh : MeshBase
         }
     }
 
-    private bool BuildLine(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider)
+    public bool BuildLine(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider)
     {
         #region Validity Check
         

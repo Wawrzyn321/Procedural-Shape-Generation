@@ -16,6 +16,7 @@ public class CircleMesh : MeshBase
     //collider
     private CircleCollider2D C_CC2D;
 
+    //constructor
     public void Build(float radius, int sides, Material meshMatt)
     {
         name = "Circle";
@@ -34,7 +35,8 @@ public class CircleMesh : MeshBase
         }
     }
     
-    private bool BuildCircle(float radius, int sides)
+    //build a circle
+    public bool BuildCircle(float radius, int sides)
     {
 
         #region Validity Check
@@ -61,6 +63,7 @@ public class CircleMesh : MeshBase
         uvs = new List<Vector2>();
 
         vertices.Add(new Vector3(0, 0));
+        //uvs are manually unwrapped here
         uvs.Add(new Vector2(0.5f, 0.5f));
         float angleDelta = deg360 / sides;
         for (int i = 1; i < sides+1; i++)
