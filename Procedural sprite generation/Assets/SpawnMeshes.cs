@@ -52,7 +52,7 @@ public class SpawnMeshes : MonoBehaviour
         Vector2 p2 = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         Vector2 p3 = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
 
-        triangle.AddComponent<TriangleMesh>().Build(p1, p2, p3, material, Space.World);
+        triangle.AddComponent<TriangleMesh>().Build(p1, p2, p3, material);
 
         triangle.AddComponent<Rigidbody2D>();
 

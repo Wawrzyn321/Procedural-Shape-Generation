@@ -11,19 +11,16 @@ public class TriangleMesh : MeshBase
 
     //collider
     private PolygonCollider2D C_PC2D;
-
-    public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt, Space space)
+    
+    public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt)
     {
         name = "Triangle";
         mesh = new Mesh();
 
         GetOrAddComponents();
         C_MR.material = meshMatt;
-
-        if (space == Space.World)
-        {
-            transform.Translate(-(p1 + p2 + p3) / 3);
-        }
+        
+        transform.Translate(-(p1 + p2 + p3) / 3);
 
         if (SetPoints(p1, p2, p3))
         {
