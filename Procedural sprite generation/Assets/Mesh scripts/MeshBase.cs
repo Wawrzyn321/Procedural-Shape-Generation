@@ -33,7 +33,7 @@ public abstract class MeshBase : MonoBehaviour {
         C_MR.material.mainTexture = texture;
     }
 
-    public Vector2 GetCenter()
+    public virtual Vector2 GetCenter()
     {
         return transform.position;
     }

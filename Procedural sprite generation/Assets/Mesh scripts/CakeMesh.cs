@@ -96,7 +96,7 @@ public class CakeMesh : MeshBase
         return true;
     }
 
-    public new Vector2 GetCenter()
+    public override Vector2 GetCenter()
     {
         return (Vector2)transform.position - centerShift;
     }

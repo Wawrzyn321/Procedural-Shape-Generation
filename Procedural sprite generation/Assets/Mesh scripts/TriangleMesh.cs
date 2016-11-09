@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 
-[RequireComponent(typeof(MeshFilter), (typeof(PolygonCollider2D)), (typeof(MeshRenderer)))]
 public class TriangleMesh : MeshBase
 {
 
