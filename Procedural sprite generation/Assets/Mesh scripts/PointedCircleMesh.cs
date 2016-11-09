@@ -38,7 +38,7 @@ public class PointedCircleMesh : MeshBase
     }
     
     //build p-circle
-    public bool BuildPointedCircle(float radius, int sides, Vector2 shift)
+    private bool BuildPointedCircle(float radius, int sides, Vector2 shift)
     {
         #region Validity Check
 
@@ -75,12 +75,6 @@ public class PointedCircleMesh : MeshBase
         uvs = UVUnwrap(vertices.ToArray());
 
         return true;
-    }
-
-    //no {shift} parameter here
-    public override Vector2 GetCenter()
-    {
-        return (Vector2)transform.position - shift;
     }
 
     #region Abstract Implementation

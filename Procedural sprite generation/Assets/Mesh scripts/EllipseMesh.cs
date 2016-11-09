@@ -39,7 +39,7 @@ public class EllipseMesh : MeshBase
     }
     
     //build an ellipse
-    public bool BuildEllipse(float radiusA, float radiusB, int sides)
+    private bool BuildEllipse(float radiusA, float radiusB, int sides)
     {
 
         #region Validity Check

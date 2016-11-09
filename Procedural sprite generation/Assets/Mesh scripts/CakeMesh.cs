@@ -42,7 +42,7 @@ public class CakeMesh : MeshBase
     }
     
     //build a cake
-    public bool BakeCake(float radius, int sides, int sidesToFill)
+    private bool BakeCake(float radius, int sides, int sidesToFill)
     {
         #region Validity Check
 
@@ -96,12 +96,6 @@ public class CakeMesh : MeshBase
         centerShift /= vertices.Count;
 
         return true;
-    }
-
-    //center is set as circle origin
-    public override Vector2 GetCenter()
-    {
-        return (Vector2)transform.position - centerShift;
     }
 
     #region Abstract Implementation

@@ -41,7 +41,7 @@ public class RingMesh : MeshBase
     }
     
     //build a ring
-    public bool BuildRing(float innerRadius, float outerRadius, int sides)
+    private bool BuildRing(float innerRadius, float outerRadius, int sides)
     {
 
         #region Validity Check

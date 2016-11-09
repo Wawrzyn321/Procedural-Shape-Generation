@@ -43,7 +43,7 @@ public class GearMesh : MeshBase
     }
     
     //build a gear
-    public bool BuildGear(float lowRadius, float midRadius, float highRadius, int sides)
+    private bool BuildGear(float lowRadius, float midRadius, float highRadius, int sides)
     {
 
         #region Validity Check
@@ -175,10 +175,10 @@ public class GearMesh : MeshBase
             Vector2[] points_outer = new Vector2[4*sides];
             for (int i = 0; i < sides; i++)
             {
-                points_outer[4*i + 0] = vertices[i*6 + 2];
-                points_outer[4*i + 1] = vertices[i*6 + 1];
-                points_outer[4*i + 2] = vertices[i*6 + 4];
-                points_outer[4*i + 3] = vertices[i*6 + 5];
+                points_outer[4*i + 0] = vertices[i*6 + 1];
+                points_outer[4*i + 1] = vertices[i*6 + 2];
+                points_outer[4*i + 2] = vertices[i*6 + 5];
+                points_outer[4*i + 3] = vertices[i*6 + 4];
             }
             C_EC2D_outer.points = points_outer;
         }

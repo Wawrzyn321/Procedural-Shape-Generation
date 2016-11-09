@@ -36,7 +36,7 @@ public class StarMesh : MeshBase {
     }
 
     //build a star
-    public bool BuildStarMesh(float radiusA, float radiusB, int sides)
+    private bool BuildStarMesh(float radiusA, float radiusB, int sides)
     {
 
         #region Validity Check

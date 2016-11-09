@@ -33,7 +33,7 @@ public class RectangleMesh : MeshBase
     }
 
     //build a box
-    public bool BuildRectangle(Vector2 size)
+    private bool BuildRectangle(Vector2 size)
     {
         #region  Validity Check
 

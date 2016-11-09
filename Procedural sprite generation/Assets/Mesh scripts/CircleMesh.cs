@@ -36,7 +36,7 @@ public class CircleMesh : MeshBase
     }
     
     //build a circle
-    public bool BuildCircle(float radius, int sides)
+    private bool BuildCircle(float radius, int sides)
     {
 
         #region Validity Check

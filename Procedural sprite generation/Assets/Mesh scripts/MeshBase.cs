@@ -10,44 +10,73 @@ public abstract class MeshBase : MonoBehaviour {
     protected MeshFilter C_MF;
     protected MeshRenderer C_MR;
     protected Material matt;
-
-    public void SetRandomColor()
-    {
-        C_MR.material.color = Random.ColorHSV();
-    }
-
-    public void SetMaterial(Material material)
-    {
-        matt = material;
-        C_MR.material = matt;
-    }
-
-    public void SetTexture(Texture texture)
-    {
-        C_MR.material.mainTexture = texture;
-    }
-
-    public void SetMaterial(Material material, Texture texture)
-    {
-        matt = material;
-        C_MR.material = matt;
-        C_MR.material.mainTexture = texture;
-    }
-
-    public virtual Vector2 GetCenter()
-    {
-        return transform.position;
-    }
-
-    public void AddHingeJoint()
-    {
-        HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
-        C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
-    }
+    
+    protected static readonly float deg90 = Mathf.Deg2Rad * 90f;
+    protected static readonly float deg360 = 2 * Mathf.PI;
+    protected static bool OptimizeMesh = true;
 
     public abstract void UpdateMesh();
     public abstract void UpdateCollider();
     public abstract void GetOrAddComponents();
+
+    public Vector2 GetCenter()
+    {
+        return transform.position;
+    }
+
+    //add HingeJoint2D at the center of the object and attach it to background
+    public HingeJoint2D AddHingeJoint()
+    {
+        HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
+        C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+        return C_HJ2D;
+    }
+
+    //motor is optional parameter
+    public HingeJoint2D AddHingeJoint(JointMotor2D C_JM2D)
+    {
+        HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
+        C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+        C_HJ2D.motor = C_JM2D;
+        C_HJ2D.useMotor = true;
+        return C_HJ2D;
+    }
+
+    //fix object to background
+    public FixedJoint2D AddFixedJoint()
+    {
+        FixedJoint2D C_HJ2D = gameObject.AddComponent<FixedJoint2D>();
+        C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+        return C_HJ2D;
+    }
+
+    //joins two shapes by FixedJoint2D
+    public static bool Join(MeshBase meshA, MeshBase meshB)
+    {
+        FixedJoint2D C_FJ2D = meshA.gameObject.AddComponent<FixedJoint2D>();
+        C_FJ2D.connectedBody = meshB.GetComponent<Rigidbody2D>();
+        if (C_FJ2D.connectedBody)
+        {
+            return false;
+        }
+        C_FJ2D.anchor = meshA.transform.InverseTransformPoint(meshA.GetCenter());
+        C_FJ2D.anchor = meshB.transform.InverseTransformPoint(meshB.GetCenter());
+        return true;
+    }
+
+    //join with other shape by FixedJoint2D
+    public bool JoinTo(MeshBase otherMesh)
+    {
+        FixedJoint2D C_FJ2D = gameObject.AddComponent<FixedJoint2D>();
+        C_FJ2D.connectedBody = otherMesh.GetComponent<Rigidbody2D>();
+        if (C_FJ2D.connectedBody == null)
+        {
+            return false;
+        }
+        C_FJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+        C_FJ2D.anchor = otherMesh.transform.InverseTransformPoint(otherMesh.GetCenter());
+        return true;
+    }
 
     // checks the side vector {v} lays on, relative to segment {v1,v2}
     protected int GetSide(Vector3 v1, Vector3 v2, Vector3 v)
@@ -173,7 +202,35 @@ public abstract class MeshBase : MonoBehaviour {
 
     #endregion
 
-    protected static readonly float deg90 = Mathf.Deg2Rad * 90f;
-    protected static readonly float deg360 = 2*Mathf.PI;
-    protected static bool OptimizeMesh = true;
+    #region Mesh material
+
+    //set material to random color
+    public void SetRandomColor()
+    {
+        C_MR.material.color = Random.ColorHSV();
+    }
+
+    //set material
+    public void SetMaterial(Material material)
+    {
+        matt = material;
+        C_MR.material = matt;
+    }
+
+    //set material texture
+    public void SetTexture(Texture texture)
+    {
+        C_MR.material.mainTexture = texture;
+    }
+
+    //set material and texture
+    public void SetMaterial(Material material, Texture texture)
+    {
+        matt = material;
+        C_MR.material = matt;
+        C_MR.material.mainTexture = texture;
+    }
+
+    #endregion
+
 }

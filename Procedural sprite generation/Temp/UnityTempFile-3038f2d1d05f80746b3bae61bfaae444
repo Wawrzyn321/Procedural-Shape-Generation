@@ -98,5 +98,6 @@ Assets/ExtensionMethods.cs
 "Assets/Mesh scripts/TriangleMesh.cs"
 Assets/MouseDrag.cs
 Assets/SpawnMeshes.cs
+Assets/delete.cs
 -r:"C:\Program Files\Unity\Editor\Data\Mono\lib\mono\unity\System.Runtime.Serialization.dll"
 -r:"C:\Program Files\Unity\Editor\Data\Mono\lib\mono\unity\System.Xml.Linq.dll"

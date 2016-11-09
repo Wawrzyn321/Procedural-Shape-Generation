@@ -23,6 +23,9 @@ public class SpawnMeshes : MonoBehaviour
         AddStar(new Vector3(1, 1));
         AddGear(new Vector3(-1, 1));
         AddConvex(Vector3.zero);
+
+        MeshBase.Join(GameObject.Find("Convex Mesh").GetComponent<MeshBase>(), GameObject.Find("Circle").GetComponent<MeshBase>());
+        GameObject.Find("Convex Mesh").GetComponent<MeshBase>().JoinTo(GameObject.Find("Triangle").GetComponent<MeshBase>());
     }
 
     private void AddQuadrangle(Vector3 pos)
