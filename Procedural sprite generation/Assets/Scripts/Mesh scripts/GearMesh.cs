@@ -13,9 +13,9 @@ public class GearMesh : MeshBase
 
     //gear data
     private int sides;
-    private float highRadius;
-    private float midRadius;
-    private float lowRadius;
+    private float outerRadius;
+    private float rootRadius;
+    private float innerRadius;
 
     //colliders
     private PolygonCollider2D C_EC2D_inner;
@@ -25,9 +25,9 @@ public class GearMesh : MeshBase
     public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt)
     {
         name = "Gear";
-        this.lowRadius = innerRadius;
-        this.midRadius = rootRadius;
-        this.highRadius = outerRadius;
+        this.innerRadius = innerRadius;
+        this.rootRadius = rootRadius;
+        this.outerRadius = outerRadius;
         this.sides = sides;
         
         mesh = new Mesh();
@@ -43,7 +43,7 @@ public class GearMesh : MeshBase
     }
     
     //build a gear
-    private bool BuildGear(float lowRadius, float midRadius, float highRadius, int sides)
+    private bool BuildGear(float innerRadius, float rootRadius, float outerRadius, int sides)
     {
 
         #region Validity Check
@@ -53,27 +53,27 @@ public class GearMesh : MeshBase
             Debug.LogWarning("GearMesh::BuildGear: sides count can't be less than two!");
             return false;
         }
-        if (midRadius == 0)
+        if (rootRadius == 0)
         {
             Debug.LogWarning("GearMesh::BuildGear: rootRadius can't be equal to zero!");
             return false;
         }
-        if (highRadius == 0)
+        if (outerRadius == 0)
         {
             Debug.LogWarning("GearMesh::BuildGear: outerRadius can't be equal to zero!");
             return false;
         }
-        if (lowRadius < 0)
+        if (innerRadius < 0)
         {
-            lowRadius = -lowRadius;
+            innerRadius = -innerRadius;
         }
-        if (midRadius < 0)
+        if (rootRadius < 0)
         {
-            midRadius = -midRadius;
+            rootRadius = -rootRadius;
         }
-        if (lowRadius < 0)
+        if (innerRadius < 0)
         {
-            highRadius = -highRadius;
+            outerRadius = -outerRadius;
         }
 
         #endregion
@@ -85,18 +85,28 @@ public class GearMesh : MeshBase
 
         float angleDelta = deg360/doubleSides;
         float angleShift = angleDelta*0.5f;
+        float outerAngleShift = angleDelta*0.2f;
         
         for (int i = 0; i < doubleSides; i++)
         {
-            Vector3 lowVertPos =
-                new Vector3(Mathf.Cos(i*angleDelta + angleShift), Mathf.Sin(i*angleDelta + angleShift))*lowRadius;
-            Vector3 midVertPos =
-                new Vector3(Mathf.Cos(i*angleDelta + angleShift), Mathf.Sin(i*angleDelta + angleShift))*midRadius;
-            Vector3 highVertPos = 
-                new Vector3(Mathf.Cos(i * angleDelta+angleShift), Mathf.Sin(i * angleDelta+angleShift)) * highRadius;
-            vertices.Add(lowVertPos);
-            vertices.Add(midVertPos);
-            vertices.Add(highVertPos);
+            Vector3 innerVertPos =
+                new Vector3(Mathf.Cos(i*angleDelta + angleShift), Mathf.Sin(i*angleDelta + angleShift))*innerRadius;
+            Vector3 rootVertPos =
+                new Vector3(Mathf.Cos(i*angleDelta + angleShift), Mathf.Sin(i*angleDelta + angleShift))*rootRadius;
+            Vector3 outerVertPos;
+            if (i%2 == 0)
+            {
+                outerVertPos =
+                    new Vector3(Mathf.Cos(i*angleDelta + angleShift + outerAngleShift), Mathf.Sin(i*angleDelta + angleShift+ outerAngleShift))*outerRadius;
+            }
+            else
+            {
+                outerVertPos =
+                    new Vector3(Mathf.Cos(i*angleDelta + angleShift - outerAngleShift), Mathf.Sin(i*angleDelta + angleShift - outerAngleShift))*outerRadius;
+            }
+            vertices.Add(innerVertPos);
+            vertices.Add(rootVertPos);
+            vertices.Add(outerVertPos);
 
             int a = 3 * i;
             int b = 3 * i + 1;
@@ -105,9 +115,9 @@ public class GearMesh : MeshBase
             triangles.Add(d);
             triangles.Add(b);
             triangles.Add(c);
-            triangles.Add(c);
-            triangles.Add(a);
             triangles.Add(b);
+            triangles.Add(a);
+            triangles.Add(c);
 
             if (i % 2 == 0)
             {
@@ -118,9 +128,9 @@ public class GearMesh : MeshBase
                 triangles.Add(d);
                 triangles.Add(b);
                 triangles.Add(c);
-                triangles.Add(c);
-                triangles.Add(a);
                 triangles.Add(b);
+                triangles.Add(a);
+                triangles.Add(c);
             }
         }
         uvs = UVUnwrap(vertices.ToArray());
@@ -132,7 +142,7 @@ public class GearMesh : MeshBase
 
     public override void GetOrAddComponents()
     {
-        if (lowRadius == 0)
+        if (innerRadius == 0)
         {
             C_EC2D_outer = gameObject.GetOrAddComponent<PolygonCollider2D>();
         }
@@ -161,7 +171,7 @@ public class GearMesh : MeshBase
 
     public override void UpdateCollider()
     {
-        if (lowRadius != 0)
+        if (innerRadius != 0)
         {
             Vector2[] points_inner = new Vector2[sides*2];
             for (int i = 0; i < points_inner.Length; i++)
@@ -170,7 +180,7 @@ public class GearMesh : MeshBase
             }
             C_EC2D_inner.points = points_inner;
         }
-        if (highRadius != midRadius)
+        if (outerRadius != rootRadius)
         {
             Vector2[] points_outer = new Vector2[4*sides];
             for (int i = 0; i < sides; i++)
@@ -191,7 +201,7 @@ public class GearMesh : MeshBase
             {
                 float x = Mathf.Cos(i*angleDelta + angleShift);
                 float y = Mathf.Sin(i*angleDelta + angleShift);
-                points_outer[i] = new Vector2(x, y) * highRadius;
+                points_outer[i] = new Vector2(x, y) * outerRadius;
             }
             C_EC2D_outer.points = points_outer;
         }

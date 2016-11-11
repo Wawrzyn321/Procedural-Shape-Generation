@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SpawnMeshes : MonoBehaviour
+public class DemoScene : MonoBehaviour
 {
 
     public Material material;

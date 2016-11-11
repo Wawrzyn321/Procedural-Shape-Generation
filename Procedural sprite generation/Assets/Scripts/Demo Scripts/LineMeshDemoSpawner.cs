@@ -10,11 +10,11 @@ public class LineMeshDemoSpawner : MonoBehaviour {
 
     void Start ()
     {
-        SpawnLineMesh();
-        StartCoroutine("SpawnBalls");
+        AddLineMesh();
+        StartCoroutine("AddBalls");
     }
 
-    private void SpawnLineMesh()
+    private void AddLineMesh()
     {
         GameObject line = new GameObject();
 
@@ -32,17 +32,17 @@ public class LineMeshDemoSpawner : MonoBehaviour {
         line.AddComponent<Rigidbody2D>().useAutoMass = true;
     }
 
-    private IEnumerator SpawnBalls()
+    private IEnumerator AddBalls()
     {
         yield return new WaitForSeconds(2);
         for (int i = 0; i < ballsToSpawn; i++)
         {
-            SpawnBall();
+            AddBall();
             yield return new WaitForSeconds(0.75f);
         }
     }
 
-    private void SpawnBall()
+    private void AddBall()
     {
         GameObject ball = new GameObject();
         ball.transform.position = transform.position + new Vector3(Random.Range(-8f, 8f), 0);
