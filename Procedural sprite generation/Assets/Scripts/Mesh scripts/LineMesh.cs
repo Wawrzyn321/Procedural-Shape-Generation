@@ -22,7 +22,7 @@ public class LineMesh : MeshBase
     private List<Vector2> cachedVertsRight;
 
     //constructor
-    public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt, Space space)
+    public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt)
     {
         name = "Line mesh";
         this.useDoubleCollider = useDoubleCollider;
@@ -148,7 +148,6 @@ public class LineMesh : MeshBase
             oldAngle = angle;
         }
 
-
         //add last two vertices
         if (lineVerts[0] != lineVerts[currentVertIndex])
         {
@@ -168,6 +167,7 @@ public class LineMesh : MeshBase
             }
             else
             {
+                //make LineMesh loop
                 if (vertices[vertices.Count - 1] != vertices[vertices.Count - 2])
                 {
                     vertices.Add(lineVerts[currentTriIndex] + p1);
