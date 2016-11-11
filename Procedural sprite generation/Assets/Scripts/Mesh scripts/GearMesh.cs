@@ -21,7 +21,19 @@ public class GearMesh : MeshBase
     private PolygonCollider2D C_EC2D_inner;
     private PolygonCollider2D C_EC2D_outer;
 
-    //construct
+    public static GameObject AddGearMesh(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject gear = new GameObject();
+        gear.transform.position = position;
+        gear.AddComponent<GearMesh>().Build(innerRadius, rootRadius, outerRadius, sides, meshMatt);
+        if (attachRigidbody)
+        {
+            gear.AddComponent<Rigidbody2D>();
+        }
+        return gear;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt)
     {
         name = "Gear";

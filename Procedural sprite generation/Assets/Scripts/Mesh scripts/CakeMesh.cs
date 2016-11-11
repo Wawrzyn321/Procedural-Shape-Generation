@@ -20,7 +20,19 @@ public class CakeMesh : MeshBase
     private PolygonCollider2D C_PC2D;
     private CircleCollider2D C_CC2D;
 
-    //constructor
+    public static GameObject AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject cake = new GameObject();
+        cake.transform.position = position;
+        cake.AddComponent<CakeMesh>().Build(radius,sides, sidesToFill, meshMatt);
+        if (attachRigidbody)
+        {
+            cake.AddComponent<Rigidbody2D>();
+        }
+        return cake;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(float radius, int sides, int sidesToFill, Material meshMatt)
     {
         name = "Cake";
@@ -83,9 +95,9 @@ public class CakeMesh : MeshBase
         }
         for(int i = 0; i < sidesToFill;i++)
         {
-            triangles.Add(0);
-            triangles.Add(1 + i);
             triangles.Add(1 + i + 1);
+            triangles.Add(1 + i);
+            triangles.Add(0);
         }
 
         centerShift = new Vector2(0,0);

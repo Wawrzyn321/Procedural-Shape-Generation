@@ -21,6 +21,8 @@ public class GearsDemo : MonoBehaviour {
 
     private void AddGearWithMotor(Vector3 pos, JointMotor2D C_JM2D)
     {
+        //alternative way to add Mesh
+
         GameObject gear = new GameObject();
         gear.transform.position = pos;
         

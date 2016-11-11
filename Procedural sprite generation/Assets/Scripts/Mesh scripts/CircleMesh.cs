@@ -16,7 +16,19 @@ public class CircleMesh : MeshBase
     //collider
     private CircleCollider2D C_CC2D;
 
-    //constructor
+    public static GameObject AddCircle(Vector3 position, float radius, int sides, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject circle = new GameObject();
+        circle.transform.position = position;
+        circle.AddComponent<CircleMesh>().Build(radius, sides, meshMatt);
+        if (attachRigidbody)
+        {
+            circle.AddComponent<Rigidbody2D>();
+        }
+        return circle;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(float radius, int sides, Material meshMatt)
     {
         name = "Circle";
@@ -71,9 +83,9 @@ public class CircleMesh : MeshBase
             Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
             vertices.Add(vertPos);
             uvs.Add(vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0));
-            triangles.Add(0);
-            triangles.Add(1 + (i - 1) % sides);
             triangles.Add(1 + i % sides);
+            triangles.Add(1 + (i - 1) % sides);
+            triangles.Add(0);
         }
 
         return true;

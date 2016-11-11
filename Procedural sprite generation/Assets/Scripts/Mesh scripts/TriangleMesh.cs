@@ -11,8 +11,20 @@ public class TriangleMesh : MeshBase
 
     //collider
     private PolygonCollider2D C_PC2D;
-    
-    //constructor
+
+    public static GameObject AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject triangle = new GameObject();
+        triangle.transform.position = position;
+        triangle.AddComponent<TriangleMesh>().Build(p1, p2, p3, meshMatt);
+        if (attachRigidbody)
+        {
+            triangle.AddComponent<Rigidbody2D>();
+        }
+        return triangle;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt)
     {
         name = "Triangle";
@@ -64,7 +76,7 @@ public class TriangleMesh : MeshBase
             Debug.LogWarning("Triangle::SetPoints: Given points are colinear!");
             return false;
         }
-        else if (sign == 1)
+        else if (sign == -1)
         {
             vertices[1] = p2;
             vertices[2] = p3;

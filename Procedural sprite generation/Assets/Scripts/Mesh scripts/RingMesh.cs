@@ -20,7 +20,19 @@ public class RingMesh : MeshBase
     private PolygonCollider2D C_PC2D_inner;
     private CircleCollider2D C_CC2D;
 
-    //constructor
+    public static GameObject AddRingMesh(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject ring = new GameObject();
+        ring.transform.position = position;
+        ring.AddComponent<RingMesh>().Build(innerRadius, outerRadius, sides, meshMatt);
+        if (attachRigidbody)
+        {
+            ring.AddComponent<Rigidbody2D>();
+        }
+        return ring;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(float innerRadius, float outerRadius, int sides, Material meshMatt)
     {
         name = "Ring";

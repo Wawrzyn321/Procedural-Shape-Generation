@@ -13,7 +13,19 @@ public class ConvexMesh : MeshBase {
     //collider
     private PolygonCollider2D C_PC2D;
 
-    //constructor
+    public static GameObject AddConvexMesh(Vector3 position, Vector3[] vertices, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject convex = new GameObject();
+        convex.transform.position = position;
+        convex.AddComponent<ConvexMesh>().Build(vertices, meshMatt);
+        if (attachRigidbody)
+        {
+            convex.AddComponent<Rigidbody2D>();
+        }
+        return convex;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(Vector3[] vertices, Material meshMatt)
     {
         name = "Convex Mesh";

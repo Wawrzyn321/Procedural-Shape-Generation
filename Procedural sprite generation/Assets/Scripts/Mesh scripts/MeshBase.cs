@@ -26,7 +26,7 @@ public abstract class MeshBase : MonoBehaviour {
 
     #region Building helper functions
 
-    // checks the side vector {v} lays on, relative to segment {v1,v2}
+    // checks the side point {v} it lays on, relative to segment {v1,v2}
     protected int GetSide(Vector3 v1, Vector3 v2, Vector3 v)
     {
         //using {Math} instead of {Mathf}, because Mathf.Sign returns {1} for {0}!

@@ -15,7 +15,19 @@ public class StarMesh : MeshBase {
     //collider
     private PolygonCollider2D C_PC2D;
 
-    //constructor
+    public static GameObject AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject star = new GameObject();
+        star.transform.position = position;
+        star.AddComponent<StarMesh>().Build(radiusA, radiusB, sides, meshMatt);
+        if (attachRigidbody)
+        {
+            star.AddComponent<Rigidbody2D>();
+        }
+        return star;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(float radiusA, float radiusB, int sides, Material meshMatt)
     {
         name = "Star";
@@ -73,9 +85,9 @@ public class StarMesh : MeshBase {
         {
             Vector3 vertVec = new Vector3(Mathf.Cos(i * angleDelta+angleShift), Mathf.Sin(i * angleDelta + angleShift));
             vertices[1 + i] = vertVec*(i%2 == 0 ? radiusA : radiusB);
-            triangles[i * 3] = 0;
+            triangles[(i * 3 + 2) % triangles.Length] = 0;
             triangles[(i*3 + 1)%triangles.Length] = 1 + i%(sides*2);
-            triangles[(i*3 + 2)%triangles.Length] = 1 + (i + 1)%(sides*2);
+            triangles[i*3] = 1 + (i + 1)%(sides*2);
         }
 
         uvs = UVUnwrap(vertices).ToArray();

@@ -10,20 +10,32 @@ public class PointedCircleMesh : MeshBase
 
     //p-circle data
     private float radius;
-    private Vector2 shift;
+    //private Vector2 shift;
     //private int sides;
 
     //colliders
     private CircleCollider2D C_CC2D;
     private PolygonCollider2D C_PC2D;
 
-    //constructor
+    public static GameObject AddPointedCircleMesh(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject pointedCircle = new GameObject();
+        pointedCircle.transform.position = position;
+        pointedCircle.AddComponent<PointedCircleMesh>().Build(radius, sides, shift, meshMatt);
+        if (attachRigidbody)
+        {
+            pointedCircle.AddComponent<Rigidbody2D>();
+        }
+        return pointedCircle;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(float radius, int sides, Vector2 shift, Material meshMatt)
     {
         name = "PointedCircle";
         this.radius = radius;
         //this.sides = sides;
-        this.shift = shift;
+        //this.shift = shift;
 
         mesh = new Mesh();
         GetOrAddComponents();
@@ -68,9 +80,9 @@ public class PointedCircleMesh : MeshBase
         {
             Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
             vertices.Add(vertPos);
-            triangles.Add(0);
-            triangles.Add(1 + (i - 1) % sides);
             triangles.Add(1 + i % sides);
+            triangles.Add(1 + (i - 1) % sides);
+            triangles.Add(0);
         }
         uvs = UVUnwrap(vertices.ToArray());
 

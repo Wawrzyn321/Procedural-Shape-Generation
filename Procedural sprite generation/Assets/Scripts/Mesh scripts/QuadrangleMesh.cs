@@ -16,7 +16,19 @@ public class QuadrangleMesh : MeshBase {
     //collider
     private PolygonCollider2D C_PC2D;
 
-    //constructor
+    public static GameObject AddRectangleMesh(Vector3 position, Vector2[] verts, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject quad = new GameObject();
+        quad.transform.position = position;
+        quad.AddComponent<QuadrangleMesh>().Build(verts, meshMatt);
+        if (attachRigidbody)
+        {
+            quad.AddComponent<Rigidbody2D>();
+        }
+        return quad;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(Vector2[] verts, Material meshMatt)
     {
         name = "Quadrangle";
@@ -47,15 +59,10 @@ public class QuadrangleMesh : MeshBase {
         
         if (!isPointInTriangle(verts[3], verts[0], verts[1], verts[2]))
         {
-            triangles[0] = 0;
-            triangles[1] = 1;
-            triangles[2] = 2;
 
             if (GetSide(verts[3], verts[0], verts[1]) * GetSide(verts[2], verts[0], verts[1]) <= 0)
             {
-                triangles[3] = 3;
-                triangles[4] = 1;
-                triangles[5] = 0;
+                triangles = new int[] {0,1,2,3,1,0};
                 points[0] = verts[0];
                 points[1] = verts[3];
                 points[2] = verts[1];
@@ -63,9 +70,7 @@ public class QuadrangleMesh : MeshBase {
             }
             else if (GetSide(verts[3], verts[1], verts[2]) * GetSide(verts[0], verts[1], verts[2]) <= 0)
             {
-                triangles[3] = 1;
-                triangles[4] = 2;
-                triangles[5] = 3;
+                triangles = new int[]{ 0,1,2,3,2,1};
                 points[0] = verts[0];
                 points[1] = verts[1];
                 points[2] = verts[3];
@@ -73,29 +78,20 @@ public class QuadrangleMesh : MeshBase {
             }
             else
             {
-                triangles[3] = 0;
-                triangles[4] = 2;
-                triangles[5] = 3;
+                triangles = new int[] { 0, 1, 2, 0,2,3 };
                 points = verts;
             }
         }
         else
         {
-            triangles[0] = 1;
-            triangles[1] = 2;
-            triangles[2] = 3;
             if (GetSide(verts[0], verts[3], verts[1]) <= 0 && GetSide(verts[2], verts[3], verts[1]) >= 0)
             {
-                triangles[3] = 0;
-                triangles[4] = 1;
-                triangles[5] = 3;
+                triangles = new int[] { 3, 2, 1, 3, 1, 0 };
                 points = verts;
             }
             else if (GetSide(verts[0], verts[1], verts[2]) <= 0 && GetSide(verts[3], verts[1], verts[2]) >= 0)
             {
-                triangles[3] = 0;
-                triangles[4] = 1;
-                triangles[5] = 2;
+                triangles = new int[] {1,2,3,0,1,2};
                 points[0] = verts[0];
                 points[1] = verts[1];
                 points[2] = verts[3];
@@ -103,9 +99,7 @@ public class QuadrangleMesh : MeshBase {
             }
             else
             {
-                triangles[3] = 0;
-                triangles[4] = 2;
-                triangles[5] = 3;
+                triangles = new int[] {3,2,1,0,2,3};
                 points[0] = verts[0];
                 points[1] = verts[3];
                 points[2] = verts[1];

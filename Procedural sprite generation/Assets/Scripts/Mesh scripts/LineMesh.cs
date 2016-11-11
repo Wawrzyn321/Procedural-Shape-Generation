@@ -21,7 +21,19 @@ public class LineMesh : MeshBase
     private List<Vector2> cachedVertsLeft;
     private List<Vector2> cachedVertsRight;
 
-    //constructor
+    public static GameObject AddLineMesh(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject line = new GameObject();
+        line.transform.position = position;
+        line.AddComponent<LineMesh>().Build(lineVerts, lineWidth, useDoubleCollider, meshMatt);
+        if (attachRigidbody)
+        {
+            line.AddComponent<Rigidbody2D>();
+        }
+        return line;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt)
     {
         name = "Line mesh";

@@ -13,8 +13,20 @@ public class RectangleMesh : MeshBase
 
     //colliders
     private BoxCollider2D C_BC2D;
-    
-    //constructor
+
+    public static GameObject AddRectangleMesh(Vector3 position, Vector2 size, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject rectangleMesh = new GameObject();
+        rectangleMesh.transform.position = position;
+        rectangleMesh.AddComponent<RectangleMesh>().Build(size, meshMatt);
+        if (attachRigidbody)
+        {
+            rectangleMesh.AddComponent<Rigidbody2D>();
+        }
+        return rectangleMesh;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(Vector2 size, Material meshMatt)
     {
         name = "Rectangle";
@@ -53,7 +65,7 @@ public class RectangleMesh : MeshBase
             new Vector3(-size.x*0.5f, size.y*0.5f, 0), //downright
         };
 
-        triangles = new int[] {2, 0, 1, 3, 0, 2};
+        triangles = new int[] {1, 0, 2, 2, 0, 3};
 
         uvs = new Vector2[]
         {

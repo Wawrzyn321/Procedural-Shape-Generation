@@ -17,8 +17,20 @@ public class EllipseMesh : MeshBase
     //colliders
     private CircleCollider2D C_CC2D;
     private PolygonCollider2D C_PC2D;
-    
-    //constructor
+
+    public static GameObject AddEllipseMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject ellipse = new GameObject();
+        ellipse.transform.position = position;
+        ellipse.AddComponent<EllipseMesh>().Build(radiusA, radiusB, sides, meshMatt);
+        if (attachRigidbody)
+        {
+            ellipse.AddComponent<Rigidbody2D>();
+        }
+        return ellipse;
+    }
+
+    //assign variables, get components and build mesh
     public void Build(float radiusA, float radiusB, int sides, Material meshMatt)
     {
         name = "Ellipse";
@@ -77,9 +89,9 @@ public class EllipseMesh : MeshBase
             Vector3 vertPos = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusA, Mathf.Sin((i + 1) * angleDelta) * radiusB);
             vertices.Add(vertPos);
             uvs.Add(new Vector3(vertPos.x / 2 / radiusA, vertPos.y / 2 / radiusB) + new Vector3(0.5f, 0.5f, 0));
-            triangles.Add(0);
-            triangles.Add(1 + (i - 1) % sides);
             triangles.Add(1 + i % sides);
+            triangles.Add(1 + (i - 1) % sides);
+            triangles.Add(0);
         }
 
         return true;
