@@ -24,6 +24,39 @@ public abstract class MeshBase : MonoBehaviour {
         return transform.position;
     }
 
+    #region Building helper functions
+
+    // checks the side vector {v} lays on, relative to segment {v1,v2}
+    protected int GetSide(Vector3 v1, Vector3 v2, Vector3 v)
+    {
+        //using {Math} instead of {Mathf}, because Mathf.Sign returns {1} for {0}!
+        return Math.Sign((v1.x - v.x) * (v2.y - v.y) - (v2.x - v.x) * (v1.y - v.y));
+    }
+
+    protected static Vector2[] ConvertVec3ToVec2(Vector3[] verts3D)
+    {
+        Vector2[] verts2D = new Vector2[verts3D.Length];
+        for (int i = 0; i < verts3D.Length; i++)
+        {
+            verts2D[i] = verts3D[i];
+        }
+        return verts2D;
+    }
+    protected static Vector2[] ConvertVec3ToVec2_collider(Vector3[] verts3D)
+    {
+        Vector2[] verts2D = new Vector2[verts3D.Length+1];
+        for (int i = 0; i < verts3D.Length; i++)
+        {
+            verts2D[i] = verts3D[i];
+        }
+        verts2D[verts2D.Length - 1] = verts3D[0];
+        return verts2D;
+    }
+
+    #endregion
+
+    #region Joints Physics
+
     //add HingeJoint2D at the center of the object and attach it to background
     public HingeJoint2D AddHingeJoint()
     {
@@ -78,32 +111,7 @@ public abstract class MeshBase : MonoBehaviour {
         return true;
     }
 
-    // checks the side vector {v} lays on, relative to segment {v1,v2}
-    protected int GetSide(Vector3 v1, Vector3 v2, Vector3 v)
-    {
-        //using {Math} instead of {Mathf}, because Mathf.Sign returns {1} for {0}!
-        return Math.Sign((v1.x - v.x) * (v2.y - v.y) - (v2.x - v.x) * (v1.y - v.y));
-    }
-
-    protected static Vector2[] ConvertVec3ToVec2(Vector3[] verts3D)
-    {
-        Vector2[] verts2D = new Vector2[verts3D.Length];
-        for (int i = 0; i < verts3D.Length; i++)
-        {
-            verts2D[i] = verts3D[i];
-        }
-        return verts2D;
-    }
-    protected static Vector2[] ConvertVec3ToVec2_collider(Vector3[] verts3D)
-    {
-        Vector2[] verts2D = new Vector2[verts3D.Length+1];
-        for (int i = 0; i < verts3D.Length; i++)
-        {
-            verts2D[i] = verts3D[i];
-        }
-        verts2D[verts2D.Length - 1] = verts3D[0];
-        return verts2D;
-    }
+    #endregion
 
     #region UV Unwrapping
 
@@ -203,6 +211,25 @@ public abstract class MeshBase : MonoBehaviour {
     #endregion
 
     #region Mesh material
+
+    //set physics material properties
+    public void SetPhysicsMaterialProperties(float bounciness, float friction)
+    {
+        PhysicsMaterial2D sharedMaterial = gameObject.GetComponent<Collider2D>().sharedMaterial;
+        if (sharedMaterial == null)
+        {
+            sharedMaterial = new PhysicsMaterial2D();
+            gameObject.GetComponent<Collider2D>().sharedMaterial = sharedMaterial;
+        }
+        sharedMaterial.bounciness = bounciness;
+        sharedMaterial.friction = friction;
+    }
+
+    //set physics material properties
+    public void SetPhysicsMaterial(PhysicsMaterial2D C_PS2D)
+    {
+        gameObject.GetComponent<Collider2D>().sharedMaterial = C_PS2D;
+    }
 
     //set material to random color
     public void SetRandomColor()
