@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+/// <summary>
+/// Demo scene showing example of gears with motor.
+/// </summary>
 public class GearsDemo : MonoBehaviour {
 
     public Material material;
@@ -23,14 +25,19 @@ public class GearsDemo : MonoBehaviour {
     {
         //alternative way to add Mesh
 
+        //add GameObject and move it to desired position
         GameObject gear = new GameObject();
         gear.transform.position = pos;
         
+        //add GearMesh component, build the Gear and add a motor
         GearMesh gearMesh = gear.AddComponent<GearMesh>();
         gearMesh.Build(1, 1.2f, 1.5f, 12, material);
         gearMesh.AddHingeJoint(C_JM2D);
-
+        
+        //override default name
         gear.name = "Motor gear";
+
+        //set mesh's color
         gear.GetComponent<MeshRenderer>().material.color = Color.gray;
     }
 

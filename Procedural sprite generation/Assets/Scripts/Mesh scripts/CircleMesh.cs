@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
+
+/// <summary>
+/// Simple circle for PSG.
+/// 
+/// Colliders:
+///     - Circle
+/// 
+/// </summary>
 
 public class CircleMesh : MeshBase
 {
@@ -111,6 +118,7 @@ public class CircleMesh : MeshBase
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.normals = AddMeshNormals(vertices.Count);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {

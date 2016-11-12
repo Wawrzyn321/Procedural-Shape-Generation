@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class MouseDrag : MonoBehaviour {
+/// <summary>
+/// Sample script of mouse physics-based shape moving.
+/// </summary>
+public class PSG_MouseDrag : MonoBehaviour {
     
     public bool attachToCenterOfMass = true;
 
-    private MeshBase connectedMeshBase;
     private Rigidbody2D connectedBody;
     private float oldDrag;
 
@@ -30,8 +31,11 @@ public class MouseDrag : MonoBehaviour {
                 if (hit.collider.GetComponent<Rigidbody2D>())
                 {
                     //...and it has Rigidbody2D
+
+                    //assign hit object's Rigidbody to {connectedBody}
                     connectedBody = hit.collider.GetComponent<Rigidbody2D>();
 
+                    //save its drag
                     oldDrag = connectedBody.drag;
                     connectedBody.drag = 10f;
 
@@ -41,22 +45,26 @@ public class MouseDrag : MonoBehaviour {
                     C_SP2D.distance = 0;
                     C_SP2D.dampingRatio = 1f;
                     C_SP2D.frequency = 5f;
-
-                    connectedMeshBase = hit.collider.GetComponent<MeshBase>();
-
+                    
+                    //choose the place to anchor spring joint
                     if (attachToCenterOfMass)
                     {
+                        MeshBase connectedMeshBase = hit.collider.GetComponent<MeshBase>();
+                        //check if selected Rigidbody has MeshBase derived component
                         if (connectedMeshBase != null)
                         {
+                            //GetCenter overrides object origin
                             C_SP2D.anchor = connectedBody.transform.InverseTransformPoint(connectedMeshBase.GetCenter());
                         }
                         else
                         {
+                            //set to generated center of mass
                             C_SP2D.anchor = connectedBody.transform.InverseTransformPoint(connectedBody.transform.position);
                         }
                     }
                     else
                     {
+                        //set anchor to point of hit
                         C_SP2D.anchor = connectedBody.transform.InverseTransformPoint(hit.point);
                     }
                 }
@@ -66,7 +74,8 @@ public class MouseDrag : MonoBehaviour {
         {
             if (connectedBody != null)
             {
-                Destroy(connectedBody.gameObject.GetComponent<SpringJoint2D>());
+                //remove joint from body
+                Destroy(C_SP2D);
                 connectedBody.gravityScale = 1;
                 connectedBody.drag = oldDrag;
                 C_SP2D = null;
@@ -87,6 +96,8 @@ public class MouseDrag : MonoBehaviour {
                 connectedBody.transform.TransformPoint(C_SP2D.anchor));
         }
     }
+
+    //set points of LineRenderer
     private void SetLineRendererPositions(Vector3 pos1, Vector3 pos2)
     {
         C_LR.SetPosition(0, pos1);

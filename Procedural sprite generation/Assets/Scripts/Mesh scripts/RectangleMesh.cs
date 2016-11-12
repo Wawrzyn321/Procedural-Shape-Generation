@@ -1,5 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+
+/// <summary>
+/// Rectangle shape fo PSG.
+/// 
+/// Colliders:
+///     - Box
+/// </summary>
 public class RectangleMesh : MeshBase
 {
 
@@ -85,12 +91,14 @@ public class RectangleMesh : MeshBase
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
+        mesh.normals = AddMeshNormals(vertices.Length);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
             C_MF.mesh.Optimize();
         }
     }
+
     public override void UpdateCollider()
     {
         C_BC2D.size = size;

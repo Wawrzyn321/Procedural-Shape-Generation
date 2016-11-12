@@ -1,7 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
 
+/// <summary>
+/// A ring. If both radiuses are equal, it
+/// degenerates to circle.
+/// 
+/// Colliders:
+///     - 2x Polygon(if ring radiuses are different)
+///     - Circle (if ring radiuses are equal)
+/// </summary>
 public class RingMesh : MeshBase
 {
 
@@ -82,7 +89,7 @@ public class RingMesh : MeshBase
         vertices = new List<Vector3>();
         triangles = new List<int>();
 
-        //swap radiuses
+        //swap radiuses if inner one is greater than outer
         if (innerRadius > outerRadius)
         {
             float tempRadius = innerRadius;
@@ -134,6 +141,7 @@ public class RingMesh : MeshBase
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.normals = AddMeshNormals(vertices.Count);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {

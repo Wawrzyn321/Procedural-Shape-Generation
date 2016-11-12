@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LineMeshDemoSpawner : MonoBehaviour {
+/// <summary>
+/// Demo scene to show PSG's line with some circles.
+/// </summary>
+public class LineMeshDemo : MonoBehaviour {
 
     public Material material;
     public Texture otherTexture;

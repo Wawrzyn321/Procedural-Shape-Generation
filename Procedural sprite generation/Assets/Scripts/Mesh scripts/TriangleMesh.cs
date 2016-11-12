@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
-using System;
 
+/// <summary>
+/// Basic mesh, consisting of three vertices and
+/// one face.
+/// 
+/// Colliders:
+///     - polygon
+/// </summary>
 public class TriangleMesh : MeshBase
 {
 
@@ -33,8 +39,6 @@ public class TriangleMesh : MeshBase
         GetOrAddComponents();
         C_MR.material = meshMatt;
         
-        transform.Translate(-(p1 + p2 + p3) / 3);
-
         if (SetPoints(p1, p2, p3))
         {
             UpdateMesh();
@@ -106,6 +110,7 @@ public class TriangleMesh : MeshBase
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
+        mesh.normals = AddMeshNormals(vertices.Length);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
@@ -135,8 +140,6 @@ public class TriangleMesh : MeshBase
         }
     }
     
-    
-
     #endregion
     
 }

@@ -1,7 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Convex shape, constructed upon given set of points
+/// using QuickHull algorithm (https://en.wikipedia.org/wiki/Quickhull).
+/// 
+/// Colliders:
+///     - Polygon
+/// 
+/// </summary>
 public class ConvexMesh : MeshBase {
 
     //mesh data
@@ -91,6 +98,7 @@ public class ConvexMesh : MeshBase {
         mesh.vertices = meshVertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.normals = AddMeshNormals(meshVertices.Count);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
@@ -100,7 +108,7 @@ public class ConvexMesh : MeshBase {
 
     public override void UpdateCollider()
     {
-        C_PC2D.points = ConvertVec3ToVec2_collider(meshVertices.ToArray());
+        C_PC2D.points = ConvertVec3ToVec2(meshVertices.ToArray());
     }
 
     public override void GetOrAddComponents()

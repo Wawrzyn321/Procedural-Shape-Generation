@@ -1,25 +1,35 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// Base class for all Meshes.
+/// </summary>
 public abstract class MeshBase : MonoBehaviour {
 
+    //common mesh components
     protected Mesh mesh;
     protected MeshFilter C_MF;
     protected MeshRenderer C_MR;
-    protected Material matt;
     
+    //math constants
     protected static readonly float deg90 = Mathf.Deg2Rad * 90f;
     protected static readonly float deg360 = 2 * Mathf.PI;
+
+    //when enabled, mesh.Optimize() is invoked with building the mesh
+    //impact on performance: https://docs.unity3d.com/ScriptReference/Mesh.Optimize.html
     protected static bool OptimizeMesh = true;
 
+    //update mesh in MeshFilter component
     public abstract void UpdateMesh();
+    //update attached colliders
     public abstract void UpdateCollider();
+    //find necessary components
     public abstract void GetOrAddComponents();
 
-    public Vector2 GetCenter()
+    //return center of object (this function may be overrided, if origin should be changed)
+    public virtual Vector2 GetCenter()
     {
         return transform.position;
     }
@@ -33,6 +43,18 @@ public abstract class MeshBase : MonoBehaviour {
         return Math.Sign((v1.x - v.x) * (v2.y - v.y) - (v2.x - v.x) * (v1.y - v.y));
     }
 
+    //in case of sprites, all normals can be just {Vector3.up}
+    protected Vector3[] AddMeshNormals(int verticesLength)
+    {
+        Vector3[] normals = new Vector3[verticesLength];
+        for (int i = 0; i < verticesLength; i++)
+        {
+            normals[i] = Vector3.up;
+        }
+        return normals;
+    }
+
+    //convert Vector3 array to Vector3 one
     protected static Vector2[] ConvertVec3ToVec2(Vector3[] verts3D)
     {
         Vector2[] verts2D = new Vector2[verts3D.Length];
@@ -40,16 +62,6 @@ public abstract class MeshBase : MonoBehaviour {
         {
             verts2D[i] = verts3D[i];
         }
-        return verts2D;
-    }
-    protected static Vector2[] ConvertVec3ToVec2_collider(Vector3[] verts3D)
-    {
-        Vector2[] verts2D = new Vector2[verts3D.Length+1];
-        for (int i = 0; i < verts3D.Length; i++)
-        {
-            verts2D[i] = verts3D[i];
-        }
-        verts2D[verts2D.Length - 1] = verts3D[0];
         return verts2D;
     }
 
@@ -115,7 +127,7 @@ public abstract class MeshBase : MonoBehaviour {
 
     #region UV Unwrapping
 
-    protected static Vector4 GetMinXCoordinate(Vector3[] vec)
+    protected static Vector4 GetBounds(Vector3[] vec)
     {
         /* x - minX
          * y - minY
@@ -147,7 +159,7 @@ public abstract class MeshBase : MonoBehaviour {
         }
         return new Vector4(x, y, z, w);
     }
-    protected static Vector4 GetMinXCoordinate(Vector2[] vec)
+    protected static Vector4 GetBounds(Vector2[] vec)
     {
         /* x - minX
          * y - minY
@@ -182,7 +194,7 @@ public abstract class MeshBase : MonoBehaviour {
     protected static List<Vector2> UVUnwrap(Vector3[] vertices)
     {
         List<Vector2> uv = new List<Vector2>();
-        Vector4 boundingBox = GetMinXCoordinate(vertices);
+        Vector4 boundingBox = GetBounds(vertices);
         float length = boundingBox.z - boundingBox.x;
         float width = boundingBox.w - boundingBox.y;
         for (int i = 0; i < vertices.Length; i++)
@@ -196,7 +208,7 @@ public abstract class MeshBase : MonoBehaviour {
     protected static List<Vector2> UVUnwrap(Vector2[] vertices)
     {
         List<Vector2> uv = new List<Vector2>();
-        Vector4 boundingBox = GetMinXCoordinate(vertices);
+        Vector4 boundingBox = GetBounds(vertices);
         float length = boundingBox.z - boundingBox.x;
         float width = boundingBox.w - boundingBox.y;
         for (int i = 0; i < vertices.Length; i++)
@@ -240,8 +252,7 @@ public abstract class MeshBase : MonoBehaviour {
     //set material
     public void SetMaterial(Material material)
     {
-        matt = material;
-        C_MR.material = matt;
+        C_MR.material = material;
     }
 
     //set material texture
@@ -253,8 +264,7 @@ public abstract class MeshBase : MonoBehaviour {
     //set material and texture
     public void SetMaterial(Material material, Texture texture)
     {
-        matt = material;
-        C_MR.material = matt;
+        C_MR.material = material;
         C_MR.material.mainTexture = texture;
     }
 

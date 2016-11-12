@@ -1,7 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
 
+/// <summary>
+/// Similar to circle, but only given fraction of shape is filled.
+/// If ratio is equal to one, we got a circle.
+/// 
+/// Colliders:
+///     - Polygon (if {sidesToFill} is less than {sides})
+///     - Circle (in other case)
+/// 
+/// </summary>
 public class CakeMesh : MeshBase
 {
 
@@ -151,6 +159,7 @@ public class CakeMesh : MeshBase
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.normals = AddMeshNormals(vertices.Count);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {

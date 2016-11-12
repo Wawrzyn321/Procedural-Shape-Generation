@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Circle with peak.
+/// If peak is within the circle radius, it
+/// degenerates to plain circle.
+/// 
+/// Colliders:
+///     - Circle and Polygon (if {shift} exceeds circle)
+///     - Circle (if shape is degenerated)
+/// </summary>
 public class PointedCircleMesh : MeshBase
 {
     //mesh data
@@ -125,6 +134,7 @@ public class PointedCircleMesh : MeshBase
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.normals = AddMeshNormals(vertices.Count);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {

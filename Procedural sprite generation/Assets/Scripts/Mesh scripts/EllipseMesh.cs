@@ -1,7 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
 
+/// <summary>
+/// Simple ellipse shape.
+/// If both radiuses are equal, we consider it as a circle.
+/// 
+/// Colliders:
+///     - Circle (when radiuses are equal)
+///     - Polygon (in other case)
+/// </summary>
 public class EllipseMesh : MeshBase
 {
     //mesh data
@@ -137,6 +144,7 @@ public class EllipseMesh : MeshBase
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.normals = AddMeshNormals(vertices.Count);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {

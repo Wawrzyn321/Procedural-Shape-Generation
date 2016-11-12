@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Demo scene to present all* PSG shapes.
+/// * all but LineMesh, which is presented in {LineMeshDemo}.
+/// </summary>
 public class DemoScene : MonoBehaviour
 {
 

@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
-using System.Collections.Generic;
 
+/// <summary>
+/// Quadrangle of arbitrary vertices.
+/// 
+/// Colliders:
+///     - Polygon
+/// </summary>
 public class QuadrangleMesh : MeshBase {
     
     //mesh data
@@ -141,6 +144,7 @@ public class QuadrangleMesh : MeshBase {
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
+        mesh.normals = AddMeshNormals(vertices.Length);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {

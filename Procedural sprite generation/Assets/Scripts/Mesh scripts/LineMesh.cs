@@ -1,6 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Line, constructed from given set of points.
+/// Includes automatic joining, when first and last vertices are equal.
+/// 
+/// If {useDoubleCollider} is enabled, its collider includes thickness of shape.
+/// In other case, it passes through its center.
+/// 
+/// Colliders:
+///     - Polygon
+/// </summary>
 public class LineMesh : MeshBase
 {
 
@@ -254,6 +264,7 @@ public class LineMesh : MeshBase
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.normals = AddMeshNormals(vertices.Count);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {

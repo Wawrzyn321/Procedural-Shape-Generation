@@ -1,5 +1,11 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Mesh formed in simple star shape.
+/// 
+/// Colliders:
+///     - polygon
+/// </summary>
 public class StarMesh : MeshBase {
 
     //mesh data
@@ -103,6 +109,7 @@ public class StarMesh : MeshBase {
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
+        mesh.normals = AddMeshNormals(vertices.Length);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {

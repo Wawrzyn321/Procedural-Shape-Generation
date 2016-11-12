@@ -1,8 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Gear for PSG.
+/// First radius ({innerRadius}) can be zero.
+/// 
+/// Colliders:
+///     - 2x Polygon (in case {innerRadius}!=0)
+///     - Polygon (if {innerRadius}==0)
+/// </summary>
 public class GearMesh : MeshBase
 {
 
@@ -225,6 +231,7 @@ public class GearMesh : MeshBase
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
+        mesh.normals = AddMeshNormals(vertices.Count);
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
