@@ -2323,6 +2323,12 @@ Units is normalized time.</para>
       </summary>
       <param name="obj"></param>
     </member>
+    <member name="M:UnityEditor.AssetDatabase.GetMainAssetTypeAtPath(System.String)">
+      <summary>
+        <para>Returns the type of the main asset object at assetPath.</para>
+      </summary>
+      <param name="assetPath">Filesystem path of the asset to load.</param>
+    </member>
     <member name="M:UnityEditor.AssetDatabase.GetSubFolders(System.String)">
       <summary>
         <para>Given an absolute path to a directory, this method will return an array of all it's subdirectories.</para>
@@ -2406,6 +2412,12 @@ Units is normalized time.</para>
       </summary>
       <param name="obj"></param>
       <param name="instanceID"></param>
+    </member>
+    <member name="M:UnityEditor.AssetDatabase.IsMainAssetAtPathLoaded(System.String)">
+      <summary>
+        <para>Returns true if the main asset object at assetPath is loaded in memory.</para>
+      </summary>
+      <param name="assetPath">Filesystem path of the asset to load.</param>
     </member>
     <member name="M:UnityEditor.AssetDatabase.IsNativeAsset(UnityEngine.Object)">
       <summary>
@@ -10901,6 +10913,11 @@ This value is the number of screen pixels per point of interface space. For inst
         <para>PS4 Build Subtarget.</para>
       </summary>
     </member>
+    <member name="P:UnityEditor.EditorUserBuildSettings.ps4HardwareTarget">
+      <summary>
+        <para>Specifies which version of PS4 hardware to target.</para>
+      </summary>
+    </member>
     <member name="P:UnityEditor.EditorUserBuildSettings.psmBuildSubtarget">
       <summary>
         <para>PSM Build Subtarget.</para>
@@ -13558,6 +13575,11 @@ Note: Use HandleUtility.GetHandleSize where you might want to have constant scre
         <para>Supported iOS deployment versions.</para>
       </summary>
     </member>
+    <member name="F:UnityEditor.iOSTargetOSVersion.iOS_10_0">
+      <summary>
+        <para>iOS 10.0.</para>
+      </summary>
+    </member>
     <member name="F:UnityEditor.iOSTargetOSVersion.iOS_4_0">
       <summary>
         <para>iOS 4.0.</para>
@@ -13611,6 +13633,41 @@ Note: Use HandleUtility.GetHandleSize where you might want to have constant scre
     <member name="F:UnityEditor.iOSTargetOSVersion.iOS_8_1">
       <summary>
         <para>iOS 8.1.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.iOSTargetOSVersion.iOS_8_2">
+      <summary>
+        <para>iOS 8.2.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.iOSTargetOSVersion.iOS_8_3">
+      <summary>
+        <para>iOS 8.3.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.iOSTargetOSVersion.iOS_8_4">
+      <summary>
+        <para>iOS 8.4.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.iOSTargetOSVersion.iOS_9_0">
+      <summary>
+        <para>iOS 9.0.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.iOSTargetOSVersion.iOS_9_1">
+      <summary>
+        <para>iOS 9.1.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.iOSTargetOSVersion.iOS_9_2">
+      <summary>
+        <para>iOS 9.2.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.iOSTargetOSVersion.iOS_9_3">
+      <summary>
+        <para>iOS 9.3.</para>
       </summary>
     </member>
     <member name="F:UnityEditor.iOSTargetOSVersion.Unknown">
@@ -16665,6 +16722,11 @@ To force a reload of the mask, simply set  ModelImporterClipAnimation.maskSource
         <para>Should insecure HTTP downloads be allowed?</para>
       </summary>
     </member>
+    <member name="P:UnityEditor.PlayerSettings.iOS.appleDeveloperTeamID">
+      <summary>
+        <para>Set this property with your Apple Developer Team ID. You can find this on the Apple Developer website under &lt;a href="https:developer.apple.comaccount#membership"&gt; Account &gt; Membership &lt;/a&gt; . This sets the Team ID for the generated Xcode project, allowing developers to use the Build and Run functionality. An Apple Developer Team ID must be set here for automatic signing of your app.</para>
+      </summary>
+    </member>
     <member name="P:UnityEditor.PlayerSettings.iOS.applicationDisplayName">
       <summary>
         <para>iOS application display name.</para>
@@ -16675,9 +16737,24 @@ To force a reload of the mask, simply set  ModelImporterClipAnimation.maskSource
         <para>The build number of the bundle.</para>
       </summary>
     </member>
+    <member name="P:UnityEditor.PlayerSettings.iOS.cameraUsageDescription">
+      <summary>
+        <para>Describes the reason for access to the user's camera.</para>
+      </summary>
+    </member>
     <member name="P:UnityEditor.PlayerSettings.iOS.exitOnSuspend">
       <summary>
         <para>Application should exit when suspended to background.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEditor.PlayerSettings.iOS.locationUsageDescription">
+      <summary>
+        <para>Describes the reason for access to the user's location data.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEditor.PlayerSettings.iOS.microphoneUsageDescription">
+      <summary>
+        <para>Describes the reason for access to the user's microphone.</para>
       </summary>
     </member>
     <member name="P:UnityEditor.PlayerSettings.iOS.overrideIPodMusic">
@@ -17382,6 +17459,12 @@ Note: calling this function will implicitly call Application.SetStackTraceLogTyp
         <para>Tizen specific player settings.</para>
       </summary>
     </member>
+    <member name="P:UnityEditor.PlayerSettings.Tizen.minOSVersion">
+      <summary>
+        <para>Minimum Tizen OS version that this application is compatible with. 
+        IMPORTANT: For example: if you choose Tizen 2.4 your application will only run on devices with Tizen 2.4 or later.</para>
+      </summary>
+    </member>
     <member name="P:UnityEditor.PlayerSettings.Tizen.productDescription">
       <summary>
         <para>Description of your project to be displayed in the Tizen Store.</para>
@@ -17632,6 +17715,11 @@ Note: calling this function will implicitly call Application.SetStackTraceLogTyp
         <para>tvOS specific player settings.</para>
       </summary>
     </member>
+    <member name="P:UnityEditor.PlayerSettings.tvOS.requireExtendedGameController">
+      <summary>
+        <para>Indicates that the game requires an extended game controller.</para>
+      </summary>
+    </member>
     <member name="P:UnityEditor.PlayerSettings.tvOS.sdkVersion">
       <summary>
         <para>Active tvOS SDK version used for build.</para>
@@ -17640,141 +17728,6 @@ Note: calling this function will implicitly call Application.SetStackTraceLogTyp
     <member name="P:UnityEditor.PlayerSettings.tvOS.targetOSVersion">
       <summary>
         <para>Deployment minimal version of tvOS.</para>
-      </summary>
-    </member>
-    <member name="T:UnityEditor.PlayerSettings.WiiU">
-      <summary>
-        <para>Wii U specific player settings.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.accountBossSize">
-      <summary>
-        <para>Account's size in kiB for BOSS.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.accountSaveSize">
-      <summary>
-        <para>Account's size in kiB for SAVE.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.addOnUniqueIDs">
-      <summary>
-        <para>Unique IDs of Add-ons.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.allowScreenCapture">
-      <summary>
-        <para>Allow screen capture during gameplay.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.commonBossSize">
-      <summary>
-        <para>Common account's size in kiB for BOSS.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.commonSaveSize">
-      <summary>
-        <para>Common account's size in kiB for SAVE.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.controllerCount">
-      <summary>
-        <para>Max number of supported Wii controllers.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.gamePadMSAA">
-      <summary>
-        <para>GamePad's MSAA quality.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.gamePadStartupScreen">
-      <summary>
-        <para>Image displayed on GamePad during startup.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.groupID">
-      <summary>
-        <para>Group ID.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.joinGameId">
-      <summary>
-        <para>Join-in game ID (game server ID) provided by Nintendo.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.joinGameModeMask">
-      <summary>
-        <para>Join-in game mode mask.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.loaderThreadStackSize">
-      <summary>
-        <para>Stack size for the loader thread in kilobytes.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.mainThreadStackSize">
-      <summary>
-        <para>Stack size for the main thread in kilobytes.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.olvAccessKey">
-      <summary>
-        <para>OLV access key provided by Nintendo.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.profilerLibraryPath">
-      <summary>
-        <para>Path to CPU profiler library that should be passed to linker.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.supportsBalanceBoard">
-      <summary>
-        <para>Is Balance Board is supported?</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.supportsClassicController">
-      <summary>
-        <para>Is Classic Controller supported?</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.supportsMotionPlus">
-      <summary>
-        <para>Is Motion Plus extension controller supported?</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.supportsNunchuk">
-      <summary>
-        <para>Is Nunchuk extension supported?</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.supportsProController">
-      <summary>
-        <para>Is Pro Controller supported?</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.systemHeapSize">
-      <summary>
-        <para>System heap size in kilobytes.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.tinCode">
-      <summary>
-        <para>TIN (Title Identification Number) provided by Nintendo.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.titleID">
-      <summary>
-        <para>Title ID.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.tvResolution">
-      <summary>
-        <para>TV resolution.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.WiiU.tvStartupScreen">
-      <summary>
-        <para>Image displayed on TV during startup.</para>
       </summary>
     </member>
     <member name="T:UnityEditor.PlayerSettings.WSA">
@@ -17892,197 +17845,6 @@ For more information - https:msdn.microsoft.comlibrarywindowsappshh779671https:m
     <member name="F:UnityEditor.PlayerSettings.WSASupportedFileType.fileType">
       <summary>
         <para>File type extension. For ex., .myUnityGame</para>
-      </summary>
-    </member>
-    <member name="T:UnityEditor.PlayerSettings.XboxOne">
-      <summary>
-        <para>Xbox One Specific Player Settings.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.monoLoggingLevel">
-      <summary>
-        <para>This option controls the mono trace log in XboxOne builds. This is a very verbose and expensive tool that can be used to help with debugging a potential mono issue.</para>
-      </summary>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.AddAllowedProductId(System.String)">
-      <summary>
-        <para>Add a ProductId to the list of products that can load the content package created from your project.  This setting is only available for content packages.</para>
-      </summary>
-      <param name="id"></param>
-      <returns>
-        <para>Returns false if the product Id was already in the allowed list.</para>
-      </returns>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.AllowedProductIds">
-      <summary>
-        <para>Get the list of projects that can load this content package.  This setting is only available for content packages.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.AppManifestOverridePath">
-      <summary>
-        <para>Xbox One optional parameter that lets you use a specified Manifest file rather than generated for you.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.ContentId">
-      <summary>
-        <para>Xbox One Content ID to be used in constructing game package.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.Description">
-      <summary>
-        <para>A friendly description that can be displayed to users.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.DisableKinectGpuReservation">
-      <summary>
-        <para>Disabling the kinect frees up additional GPU resources for use.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.EnablePIXSampling">
-      <summary>
-        <para>Enable sampling profiler in development builds to provide better profile markers for PIX, including Start and Update markers for script behaviors.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.EnableVariableGPU">
-      <summary>
-        <para>Turns on notifications that you are gaining/losing GPU resources.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.GameOsOverridePath">
-      <summary>
-        <para>(optional override) Location of Xbox One Game OS image file to link into ERA package being created.</para>
-      </summary>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.GetCapability(System.String)">
-      <summary>
-        <para>Returns a bool indicating if the given capability is enabled or not.  Please see the XDK whitepaper titled "Xbox One Submission Validator" for valid capability names.</para>
-      </summary>
-      <param name="capability"></param>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.GetGameRating(System.String)">
-      <summary>
-        <para>Get the rating value that is specified in the appxmanifest.xml file for the given ratings board.</para>
-      </summary>
-      <param name="name">The name of the ratings board that you want the rating value for.</param>
-      <returns>
-        <para>The current rating level.  The meaning of the value depends on the name of the ratings board.  The value corresponds to the entries the rating board's drop down menu, top most entry being 0 and each item lower in the list being 1 higher than the previous.</para>
-      </returns>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.GetSocketDefinition(System.String,System.String&amp;,System.Int32&amp;,System.Int32[]&amp;,System.String&amp;,System.Int32&amp;,System.Int32[]&amp;)">
-      <summary>
-        <para>Get the values for the socket description with the given name.</para>
-      </summary>
-      <param name="name">The name of the socket description.</param>
-      <param name="port">The port or port range the socket can use.</param>
-      <param name="protocol">The protocol the socket uses.</param>
-      <param name="usages">The allowed usage flags for this socket description.</param>
-      <param name="templateName">The name of the device association template.</param>
-      <param name="sessionRequirment">Mutiplayer requirement setting for the device association template.</param>
-      <param name="deviceUsages">The allowed usage flags for the device association template.</param>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.IsContentPackage">
-      <summary>
-        <para>Indicates if the game is a standalone game or a content package to an existing game.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.PackageUpdateGranularity">
-      <summary>
-        <para>The update granularity the package will be built with.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.PackagingEncryption">
-      <summary>
-        <para>Xbox One optional parameter that causes the makepkg process to encrypt the package for performance testing or with final retail encryption.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.PackagingOverridePath">
-      <summary>
-        <para>Xbox One optional parameter that causes the makepkg process to use your specified layout file rather than generating one for you. Required if working with asset bundles.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.PersistentLocalStorageSize">
-      <summary>
-        <para>Sets the size of the persistent local storage.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.ProductId">
-      <summary>
-        <para>Xbox One Product ID to use when building a streaming install package.</para>
-      </summary>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.RemoveAllowedProductId(System.String)">
-      <summary>
-        <para>Remove a ProductId from the list of products that can load the content package created from your project.  This setting is only available for content packages.</para>
-      </summary>
-      <param name="id"></param>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.RemoveSocketDefinition(System.String)">
-      <summary>
-        <para>Remove the socket description with the given name.</para>
-      </summary>
-      <param name="name"></param>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.SandboxId">
-      <summary>
-        <para>Xbox One makepkg option. Specifies the Sandbox ID to be used when building a streaming install package.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.SCID">
-      <summary>
-        <para>The service configuration ID for your title.</para>
-      </summary>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.SetCapability(System.String,System.Boolean)">
-      <summary>
-        <para>Mark a specific capability as enabled or enabled in the appxmanifest.xml file.  Please see the XDK whitepaper titled "Xbox One Submission Validator" for valid capability names.</para>
-      </summary>
-      <param name="capability">The name of the capability to set.</param>
-      <param name="value">Whether or not to enable the capability.</param>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.SetGameRating(System.String,System.Int32)">
-      <summary>
-        <para>Set the rating value that is specified in the appxmanifest.xml file.</para>
-      </summary>
-      <param name="name">The name of the ratings board that you are setting the rating value for.</param>
-      <param name="value">The new rating level.  The meaning of the value depends on the name of the ratings board.  The value corresponds to the entries the rating board's drop down menu, top most entry being 0 and each item lower in the list being 1 higher than the previous.</param>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.SetSocketDefinition(System.String,System.String,System.Int32,System.Int32[],System.String,System.Int32,System.Int32[])">
-      <summary>
-        <para>Set the values for the socket description with the given name.</para>
-      </summary>
-      <param name="name">The name of the socket description.</param>
-      <param name="port">The port or port range the socket can use.</param>
-      <param name="protocol">The protocol the socket uses.</param>
-      <param name="usages">The allowed usage flags for this socket description.</param>
-      <param name="templateName">The name of the device association template.</param>
-      <param name="sessionRequirment">Mutiplayer requirement setting for the device association template.</param>
-      <param name="deviceUsages">The allowed usage flags for the device association template.</param>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.SocketNames">
-      <summary>
-        <para>Get the names of the socket descriptions for the project.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.TitleId">
-      <summary>
-        <para>The TitleID uniquely identifying your title to Xbox Live services.</para>
-      </summary>
-    </member>
-    <member name="M:UnityEditor.PlayerSettings.XboxOne.UpdateAllowedProductId(System.Int32,System.String)">
-      <summary>
-        <para>Update the value at the given index in the list of products that can load this content package.  You can use the PlayerSettings.XboxOne.AllowedProductIds property to get the existing productIds and determine their indexes.</para>
-      </summary>
-      <param name="idx"></param>
-      <param name="id"></param>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.UpdateKey">
-      <summary>
-        <para>Xbox One makepkg.exe option. Specifies the update key required when building game updates.</para>
-      </summary>
-    </member>
-    <member name="P:UnityEditor.PlayerSettings.XboxOne.Version">
-      <summary>
-        <para>Xbox One Version Identifier used in the Application Manifest.</para>
       </summary>
     </member>
     <member name="T:UnityEditor.PluginImporter">
@@ -21390,6 +21152,21 @@ Valid values are in the range [0-1], with higher values generating a tighter mes
     <member name="F:UnityEditor.TextureImporterType.Sprite">
       <summary>
         <para>Select this if you will be using your texture for Sprite graphics.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEditor.TizenOSVersion">
+      <summary>
+        <para>Tizen OS compatibility.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.TizenOSVersion.Version23">
+      <summary>
+        <para></para>
+      </summary>
+    </member>
+    <member name="F:UnityEditor.TizenOSVersion.Version24">
+      <summary>
+        <para></para>
       </summary>
     </member>
     <member name="T:UnityEditor.Tool">
