@@ -56,7 +56,7 @@ public class CarDemo : MonoBehaviour {
             new Vector2(-1.5f,-1) + new Vector2(Random.Range(-0.2f, 0.2f),Random.Range(-0.2f, 0.2f)),
             new Vector2(1.5f,-1) + new Vector2(Random.Range(-0.2f, 0.2f),Random.Range(-0.2f, 0.2f)),
             new Vector2(0.3f,0.5f) + new Vector2(Random.Range(-0.2f, 0.2f),Random.Range(-0.2f, 0.2f)),
-            new Vector2(-0.8f,0.5f) + new Vector2(Random.Range(-0.2f, 0.2f),Random.Range(-0.2f, 0.2f))
+            new Vector2(-0.8f,0.5f) + new Vector2(Random.Range(-0.2f, 0.2f),Random.Range(-0.2f, 0.2f))  
         };
         quadScript.Build(verts, material);
 
