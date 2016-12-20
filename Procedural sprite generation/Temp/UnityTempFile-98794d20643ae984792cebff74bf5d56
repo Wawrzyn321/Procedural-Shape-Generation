@@ -82,6 +82,7 @@
 -define:UNITY_EDITOR_64
 -define:UNITY_EDITOR_WIN
 -define:ENABLE_VSTU
+"Assets/Scripts/Demo Scripts/CarDemo.cs"
 "Assets/Scripts/Demo Scripts/DemoScene.cs"
 "Assets/Scripts/Demo Scripts/GearsDemo.cs"
 "Assets/Scripts/Demo Scripts/LineMeshDemo.cs"

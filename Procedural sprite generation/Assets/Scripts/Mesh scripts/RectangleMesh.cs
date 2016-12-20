@@ -32,6 +32,19 @@ public class RectangleMesh : MeshBase
         return rectangleMesh;
     }
 
+    // fill area {from}, {to} by rectangle
+    public static GameObject FillRectangleMesh(Vector3 from, Vector3 to, Material meshMatt, bool attachRigidbody = true)
+    {
+        GameObject rectangleMesh = new GameObject();
+        rectangleMesh.transform.position = (from+to)/2;
+        rectangleMesh.AddComponent<RectangleMesh>().Build(to-from, meshMatt);
+        if (attachRigidbody)
+        {
+            rectangleMesh.AddComponent<Rigidbody2D>();
+        }
+        return rectangleMesh;
+    }
+
     //assign variables, get components and build mesh
     public void Build(Vector2 size, Material meshMatt)
     {
