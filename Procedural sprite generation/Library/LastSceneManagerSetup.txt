@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Demo/Car demo.unity
+- path: Assets/Demo/Test scene.unity
   isLoaded: 1
   isActive: 1

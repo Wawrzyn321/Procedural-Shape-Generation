@@ -82,24 +82,24 @@
 -define:UNITY_EDITOR_64
 -define:UNITY_EDITOR_WIN
 -define:ENABLE_VSTU
-"Assets/Scripts/Demo Scripts/CarDemo.cs"
-"Assets/Scripts/Demo Scripts/DemoScene.cs"
-"Assets/Scripts/Demo Scripts/GearsDemo.cs"
-"Assets/Scripts/Demo Scripts/LineMeshDemo.cs"
-"Assets/Scripts/Mesh scripts/CakeMesh.cs"
-"Assets/Scripts/Mesh scripts/CircleMesh.cs"
-"Assets/Scripts/Mesh scripts/ConvexMesh.cs"
-"Assets/Scripts/Mesh scripts/EllipseMesh.cs"
-"Assets/Scripts/Mesh scripts/GearMesh.cs"
-"Assets/Scripts/Mesh scripts/LineMesh.cs"
-"Assets/Scripts/Mesh scripts/MeshBase.cs"
-"Assets/Scripts/Mesh scripts/PointedCircleMesh.cs"
-"Assets/Scripts/Mesh scripts/QuadrangleMesh.cs"
-"Assets/Scripts/Mesh scripts/RectangleMesh.cs"
-"Assets/Scripts/Mesh scripts/RingMesh.cs"
-"Assets/Scripts/Mesh scripts/StarMesh.cs"
-"Assets/Scripts/Mesh scripts/TriangleMesh.cs"
-Assets/Scripts/PSG_ExtensionMethods.cs
-Assets/Scripts/PSG_MouseDrag.cs
+"Assets/PSG/Scripts/Demo Scripts/CarDemo.cs"
+"Assets/PSG/Scripts/Demo Scripts/DemoScene.cs"
+"Assets/PSG/Scripts/Demo Scripts/GearsDemo.cs"
+"Assets/PSG/Scripts/Demo Scripts/LineMeshDemo.cs"
+"Assets/PSG/Scripts/Mesh scripts/CakeMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/CircleMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/ConvexMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/EllipseMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/GearMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/LineMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/MeshBase.cs"
+"Assets/PSG/Scripts/Mesh scripts/PointedCircleMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/QuadrangleMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/RectangleMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/RingMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/StarMesh.cs"
+"Assets/PSG/Scripts/Mesh scripts/TriangleMesh.cs"
+Assets/PSG/Scripts/PSG_ExtensionMethods.cs
+Assets/PSG/Scripts/PSG_MouseDrag.cs
 -r:"C:\Program Files\Unity\Editor\Data\Mono\lib\mono\unity\System.Runtime.Serialization.dll"
 -r:"C:\Program Files\Unity\Editor\Data\Mono\lib\mono\unity\System.Xml.Linq.dll"
