@@ -77,7 +77,7 @@ public abstract class MeshBase : MonoBehaviour {
         return C_HJ2D;
     }
 
-    //motor is optional parameter
+    //specify motor
     public HingeJoint2D AddHingeJoint(JointMotor2D C_JM2D)
     {
         HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
@@ -87,6 +87,16 @@ public abstract class MeshBase : MonoBehaviour {
         return C_HJ2D;
     }
 
+    //specify motor and connected body
+    public HingeJoint2D AddHingeJoint(JointMotor2D C_JM2D, Rigidbody2D connectedBody)
+    {
+        HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
+        C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+        C_HJ2D.motor = C_JM2D;
+        C_HJ2D.useMotor = true;
+        C_HJ2D.connectedBody = connectedBody;
+        return C_HJ2D;
+    }
     //fix object to background
     public FixedJoint2D AddFixedJoint()
     {
@@ -266,6 +276,12 @@ public abstract class MeshBase : MonoBehaviour {
     {
         C_MR.material = material;
         C_MR.material.mainTexture = texture;
+    }
+
+    //get {MeshRenderer} reference
+    public MeshRenderer GetMeshRenderer()
+    {
+        return C_MR;
     }
 
     #endregion

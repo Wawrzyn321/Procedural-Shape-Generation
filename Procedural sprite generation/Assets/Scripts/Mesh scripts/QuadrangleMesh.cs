@@ -32,8 +32,7 @@ public class QuadrangleMesh : MeshBase {
     }
 
     //assign variables, get components and build mesh
-    public void Build(Vector2[] verts, Material meshMatt)
-    {
+    public void Build(Vector2[] verts, Material meshMatt){
         name = "Quadrangle";
 
         mesh = new Mesh();
