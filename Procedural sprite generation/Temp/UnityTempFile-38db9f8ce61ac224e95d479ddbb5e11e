@@ -82,10 +82,10 @@
 -define:UNITY_EDITOR_64
 -define:UNITY_EDITOR_WIN
 -define:ENABLE_VSTU
+Assets/CarDemo.cs
 "Assets/Scripts/Demo Scripts/DemoScene.cs"
 "Assets/Scripts/Demo Scripts/GearsDemo.cs"
-"Assets/Scripts/Demo Scripts/LineMeshDemoSpawner.cs"
-Assets/Scripts/ExtensionMethods.cs
+"Assets/Scripts/Demo Scripts/LineMeshDemo.cs"
 "Assets/Scripts/Mesh scripts/CakeMesh.cs"
 "Assets/Scripts/Mesh scripts/CircleMesh.cs"
 "Assets/Scripts/Mesh scripts/ConvexMesh.cs"
@@ -99,6 +99,7 @@ Assets/Scripts/ExtensionMethods.cs
 "Assets/Scripts/Mesh scripts/RingMesh.cs"
 "Assets/Scripts/Mesh scripts/StarMesh.cs"
 "Assets/Scripts/Mesh scripts/TriangleMesh.cs"
-Assets/Scripts/MouseDrag.cs
+Assets/Scripts/PSG_ExtensionMethods.cs
+Assets/Scripts/PSG_MouseDrag.cs
 -r:"C:\Program Files\Unity\Editor\Data\Mono\lib\mono\unity\System.Runtime.Serialization.dll"
 -r:"C:\Program Files\Unity\Editor\Data\Mono\lib\mono\unity\System.Xml.Linq.dll"

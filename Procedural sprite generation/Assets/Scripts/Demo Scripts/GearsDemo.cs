@@ -4,7 +4,7 @@
 /// Demo scene showing example of gears with motor.
 /// </summary>
 public class GearsDemo : MonoBehaviour {
-
+        
     public Material material;
     public Texture squareTexture;
 
