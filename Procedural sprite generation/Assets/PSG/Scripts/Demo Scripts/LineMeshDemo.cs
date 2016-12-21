@@ -48,7 +48,7 @@ public class LineMeshDemo : MonoBehaviour {
     private void AddBall()
     {
         Vector3 position = transform.position + new Vector3(Random.Range(-8f, 8f), 0);
-        GameObject ball = CircleMesh.AddCircle(position, 0.5f, 32, material);
+        GameObject ball = CircleMesh.AddCircle(position, 0.5f, 32, material, true);
         ball.GetComponent<CircleMesh>().SetTexture(otherTexture);
     }
     

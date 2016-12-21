@@ -5,7 +5,11 @@ using System.Collections.Generic;
 /// Simple circle for PSG.
 /// 
 /// Colliders:
-///     - Circle
+///     - Circle or Polygon
+/// 
+/// Use CircleCollider to improve performance:
+/// PolygonCollider is advised when sides are
+/// less than 8.
 /// 
 /// </summary>
 
@@ -21,13 +25,14 @@ public class CircleMesh : MeshBase
     //private int sides;
 
     //collider
-    private CircleCollider2D C_CC2D;
+    private bool useCircleCollider;
+    private Collider2D C_C2D;
 
-    public static GameObject AddCircle(Vector3 position, float radius, int sides, Material meshMatt, bool attachRigidbody = true)
+    public static GameObject AddCircle(Vector3 position, float radius, int sides, Material meshMatt, bool useCircleCollider, bool attachRigidbody = true)
     {
         GameObject circle = new GameObject();
         circle.transform.position = position;
-        circle.AddComponent<CircleMesh>().Build(radius, sides, meshMatt);
+        circle.AddComponent<CircleMesh>().Build(radius, sides, meshMatt, useCircleCollider);
         if (attachRigidbody)
         {
             circle.AddComponent<Rigidbody2D>();
@@ -36,11 +41,12 @@ public class CircleMesh : MeshBase
     }
 
     //assign variables, get components and build mesh
-    public void Build(float radius, int sides, Material meshMatt)
+    public void Build(float radius, int sides, Material meshMatt, bool useCircleCollider)
     {
         name = "Circle";
         this.radius = radius;
         //this.sides = sides;
+        this.useCircleCollider = useCircleCollider;
 
         mesh = new Mesh();
         GetOrAddComponents();
@@ -102,14 +108,29 @@ public class CircleMesh : MeshBase
 
     public override void GetOrAddComponents()
     {
-        C_CC2D = gameObject.GetOrAddComponent<CircleCollider2D>();
+        if (useCircleCollider)
+        {
+            C_C2D = gameObject.GetOrAddComponent<CircleCollider2D>();
+        }
+        else
+        {
+            C_C2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+        }
         C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
         C_MF = gameObject.GetOrAddComponent<MeshFilter>();
     }
 
     public override void UpdateCollider()
     {
-        C_CC2D.radius = radius;
+        if (useCircleCollider)
+        {
+            ((CircleCollider2D) C_C2D).radius = radius;
+        }
+
+        else
+        {
+            ((PolygonCollider2D) C_C2D).SetPath(0, ConvertVec3ToVec2(vertices.ToArray()));
+        }
     }
 
     public override void UpdateMesh()

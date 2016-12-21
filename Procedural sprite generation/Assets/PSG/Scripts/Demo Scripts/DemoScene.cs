@@ -93,7 +93,7 @@ public class DemoScene : MonoBehaviour
         float radius = Random.Range(0.5f, 1.5f);
         int sides = Random.Range(8, 16);
 
-        GameObject circle = CircleMesh.AddCircle(pos, radius, sides, material);
+        GameObject circle = CircleMesh.AddCircle(pos, radius, sides, material, sides > 8);
 
         circle.GetComponent<MeshBase>().SetTexture(roundTexture);
     }
