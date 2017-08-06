@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using PSG;
 
 /// <summary>
 /// Demo scene to present all* PSG shapes.

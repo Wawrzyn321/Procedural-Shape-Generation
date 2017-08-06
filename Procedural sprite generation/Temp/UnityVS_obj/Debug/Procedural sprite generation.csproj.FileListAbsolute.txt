@@ -1,0 +1,23 @@
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_obj\Debug\Procedural sprite generation.csprojResolveAssemblyReference.cache
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\Assembly-CSharp.pdb
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\nunit.framework.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEditor.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.Analytics.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.HoloLens.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.Networking.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.TestRunner.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.Timeline.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEditor.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.Networking.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.TestRunner.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\nunit.framework.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.Timeline.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.Analytics.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_bin\Debug\UnityEngine.HoloLens.xml
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_obj\Debug\Assembly-CSharp.dll
+C:\Users\Wawrzyn\Documents\Github\Procedural-Sprite-Generation\Procedural sprite generation\Temp\UnityVS_obj\Debug\Assembly-CSharp.pdb

@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 
-public static class PSG_ExtensionMethods{
-    //returns component of given type, adding it in case it's not already attached
-	public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
+namespace PSG
+{
+    public static class ExtensionMethods
     {
-        T component = gameObject.GetComponent<T>();
-        if (component == null)
+        //returns component of given type, adding it in case it's not already attached
+        public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
-            component = gameObject.gameObject.AddComponent<T>();
+            T component = gameObject.GetComponent<T>();
+            if (component == null)
+            {
+                component = gameObject.gameObject.AddComponent<T>();
+            }
+            return component;
         }
-        return component;
     }
 }

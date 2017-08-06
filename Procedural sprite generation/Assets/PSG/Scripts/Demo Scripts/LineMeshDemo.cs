@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using PSG;
 
 /// <summary>
 /// Demo scene to show PSG's line with some circles.

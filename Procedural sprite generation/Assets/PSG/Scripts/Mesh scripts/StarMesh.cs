@@ -1,141 +1,142 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Mesh formed in simple star shape.
-/// 
-/// Colliders:
-///     - polygon
-/// </summary>
-public class StarMesh : MeshBase {
-
-    //mesh data
-    private Vector3[] vertices;
-    private int[] triangles;
-    private Vector2[] uvs;
-
-    //star data
-    private float radiusA; //horizontal radius
-    private float radiusB; //vertical radius
-    private int sides;
-
-    //collider
-    private PolygonCollider2D C_PC2D;
-
-    public static GameObject AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt, bool attachRigidbody = true)
-    {
-        GameObject star = new GameObject();
-        star.transform.position = position;
-        star.AddComponent<StarMesh>().Build(radiusA, radiusB, sides, meshMatt);
-        if (attachRigidbody)
-        {
-            star.AddComponent<Rigidbody2D>();
-        }
-        return star;
-    }
-
-    //assign variables, get components and build mesh
-    public void Build(float radiusA, float radiusB, int sides, Material meshMatt)
-    {
-        name = "Star";
-
-        this.sides = sides;
-        this.radiusA = radiusA;
-        this.radiusB = radiusB;
-        mesh = new Mesh();
-        GetOrAddComponents();
-
-        C_MR.material = meshMatt;
-
-        if (BuildStarMesh(radiusA, radiusB, sides))
-        {
-            UpdateMesh();
-            UpdateCollider();
-        }
-    }
-
-    //build a star
-    private bool BuildStarMesh(float radiusA, float radiusB, int sides)
+namespace PSG
+{
+    /// <summary>
+    /// Mesh formed in simple star shape.
+    /// 
+    /// Colliders:
+    ///     - polygon
+    /// </summary>
+    public class StarMesh : MeshBase
     {
 
-        #region Validity Check
+        //mesh data
+        private Vector3[] vertices;
+        private int[] triangles;
+        private Vector2[] uvs;
 
-        if (sides < 2)
+        //star data
+        private float radiusA; //horizontal radius
+        private float radiusB; //vertical radius
+        private int sides;
+
+        //collider
+        private PolygonCollider2D C_PC2D;
+
+        public static GameObject AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt, bool attachRigidbody = true)
         {
-            Debug.LogWarning("StarMesh::BuildStar: sides count can't be less than two!");
-            return false;
+            GameObject star = new GameObject();
+            star.transform.position = position;
+            star.AddComponent<StarMesh>().Build(radiusA, radiusB, sides, meshMatt);
+            if (attachRigidbody)
+            {
+                star.AddComponent<Rigidbody2D>();
+            }
+            return star;
         }
-        if (radiusA == 0 || radiusB == 0)
+
+        //assign variables, get components and build mesh
+        public void Build(float radiusA, float radiusB, int sides, Material meshMatt)
         {
-            Debug.LogWarning("StarMesh::BuildStar: any of radiuses can't be equal to zero!");
-            return false;
+            name = "Star";
+
+            this.sides = sides;
+            this.radiusA = radiusA;
+            this.radiusB = radiusB;
+            mesh = new Mesh();
+            GetOrAddComponents();
+
+            C_MR.material = meshMatt;
+
+            if (BuildStarMesh(radiusA, radiusB, sides))
+            {
+                UpdateMesh();
+                UpdateCollider();
+            }
         }
-        if (radiusA < 0)
+
+        //build a star
+        private bool BuildStarMesh(float radiusA, float radiusB, int sides)
         {
-            radiusA = -radiusA;
+
+            #region Validity Check
+
+            if (sides < 2)
+            {
+                Debug.LogWarning("StarMesh::BuildStar: sides count can't be less than two!");
+                return false;
+            }
+            if (radiusA == 0 || radiusB == 0)
+            {
+                Debug.LogWarning("StarMesh::BuildStar: any of radiuses can't be equal to zero!");
+                return false;
+            }
+            if (radiusA < 0)
+            {
+                radiusA = -radiusA;
+            }
+            if (radiusB < 0)
+            {
+                radiusB = -radiusB;
+            }
+
+            #endregion
+
+            vertices = new Vector3[1 + sides * 2];
+            triangles = new int[2 * sides * 3];
+            uvs = new Vector2[1 + sides * 2];
+
+            vertices[0] = new Vector3(0, 0);
+            float angleDelta = 360 / (float)sides / 2 * Mathf.Deg2Rad;
+            float angleShift = -360f / (sides * 4) * Mathf.Deg2Rad;
+            for (int i = 0; i < sides * 2; i++)
+            {
+                Vector3 vertVec = new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift));
+                vertices[1 + i] = vertVec * (i % 2 == 0 ? radiusA : radiusB);
+                triangles[(i * 3 + 2) % triangles.Length] = 0;
+                triangles[(i * 3 + 1) % triangles.Length] = 1 + i % (sides * 2);
+                triangles[i * 3] = 1 + (i + 1) % (sides * 2);
+            }
+
+            uvs = MeshHelper.UVUnwrap(vertices).ToArray();
+
+            return true;
         }
-        if (radiusB < 0)
+
+        #region Abstract Implementation
+
+        public override void UpdateMesh()
         {
-            radiusB = -radiusB;
+            mesh.Clear();
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.uv = uvs;
+            mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
+            C_MF.mesh = mesh;
+        }
+
+        public override void UpdateCollider()
+        {
+            Vector2[] points = new Vector2[sides * 2];
+            float angleDelta = 360 / (float)points.Length * Mathf.Deg2Rad;
+            float angleShift = -360f / (sides * 4) * Mathf.Deg2Rad;
+            for (int i = 0; i < points.Length; i++)
+            {
+                Vector2 vertPos = new Vector2(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift));
+                points[i] = vertPos * (i % 2 == 0 ? radiusA : radiusB);
+            }
+            C_PC2D.SetPath(0, points);
+        }
+
+        public override void GetOrAddComponents()
+        {
+            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
+            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
 
         #endregion
-
-        vertices = new Vector3[1 + sides * 2];
-        triangles = new int[2 * sides * 3];
-        uvs = new Vector2[1 + sides * 2];
-
-        vertices[0] = new Vector3(0, 0);
-        float angleDelta = 360/(float) sides/2*Mathf.Deg2Rad;
-        float angleShift = -360f / (sides * 4) * Mathf.Deg2Rad;
-        for (int i = 0; i < sides*2; i++)
-        {
-            Vector3 vertVec = new Vector3(Mathf.Cos(i * angleDelta+angleShift), Mathf.Sin(i * angleDelta + angleShift));
-            vertices[1 + i] = vertVec*(i%2 == 0 ? radiusA : radiusB);
-            triangles[(i * 3 + 2) % triangles.Length] = 0;
-            triangles[(i*3 + 1)%triangles.Length] = 1 + i%(sides*2);
-            triangles[i*3] = 1 + (i + 1)%(sides*2);
-        }
-
-        uvs = UVUnwrap(vertices).ToArray();
-
-        return true;
     }
 
-    #region Abstract Implementation
-
-    public override void UpdateMesh()
-    {
-        mesh.Clear();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.uv = uvs;
-        mesh.normals = AddMeshNormals(vertices.Length);
-        C_MF.mesh = mesh;
-        if (OptimizeMesh)
-        {
-            var o_115_12_636376465612524550 = C_MF.mesh;
-        }
-    }
-
-    public override void UpdateCollider()
-    {
-        Vector2[] points = new Vector2[sides*2];
-        float angleDelta = 360 / (float)points.Length * Mathf.Deg2Rad;
-        float angleShift = -360f/(sides*4)*Mathf.Deg2Rad;
-        for (int i = 0; i < points.Length; i++)
-        {
-            Vector2 vertPos = new Vector2(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift));
-            points[i] = vertPos * (i % 2 == 0 ? radiusA : radiusB);
-        }
-        C_PC2D.SetPath(0, points);
-    }
-
-    public override void GetOrAddComponents()
-    {
-        C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
-        C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
-        C_MF = gameObject.GetOrAddComponent<MeshFilter>();
-    }
-
-    #endregion
 }
