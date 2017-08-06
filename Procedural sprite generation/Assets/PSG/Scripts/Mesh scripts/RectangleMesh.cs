@@ -108,7 +108,7 @@ public class RectangleMesh : MeshBase
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_110_12_636376465610973521 = C_MF.mesh;
         }
     }
 

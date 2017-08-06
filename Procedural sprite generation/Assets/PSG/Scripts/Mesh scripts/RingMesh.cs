@@ -145,7 +145,7 @@ public class RingMesh : MeshBase
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_147_12_636376465611984181 = C_MF.mesh;
         }
     }
     public override void GetOrAddComponents()

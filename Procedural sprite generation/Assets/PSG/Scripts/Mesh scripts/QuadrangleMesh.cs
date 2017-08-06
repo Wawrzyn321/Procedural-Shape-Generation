@@ -147,7 +147,7 @@ public class QuadrangleMesh : MeshBase {
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_149_12_636376465610593267 = C_MF.mesh;
         }
     }
 

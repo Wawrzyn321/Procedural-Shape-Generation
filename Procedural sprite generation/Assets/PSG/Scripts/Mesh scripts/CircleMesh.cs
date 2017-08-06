@@ -143,7 +143,7 @@ public class CircleMesh : MeshBase
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_145_12_636376465604663070 = C_MF.mesh;
         }
     }
 

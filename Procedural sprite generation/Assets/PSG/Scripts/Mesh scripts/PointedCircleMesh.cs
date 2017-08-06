@@ -138,7 +138,7 @@ public class PointedCircleMesh : MeshBase
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_140_12_636376465609991629 = C_MF.mesh;
         }
     }
 

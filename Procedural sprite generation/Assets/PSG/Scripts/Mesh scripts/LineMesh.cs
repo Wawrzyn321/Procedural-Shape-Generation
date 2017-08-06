@@ -268,7 +268,7 @@ public class LineMesh : MeshBase
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_270_12_636376465609321175 = C_MF.mesh;
         }
     }
     public override void UpdateCollider()

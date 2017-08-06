@@ -163,7 +163,7 @@ public class CakeMesh : MeshBase
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_165_12_636376465603227113 = C_MF.mesh;
         }
     }
 

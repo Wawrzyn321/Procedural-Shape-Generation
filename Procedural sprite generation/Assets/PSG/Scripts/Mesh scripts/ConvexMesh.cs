@@ -102,7 +102,7 @@ public class ConvexMesh : MeshBase {
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_104_12_636376465605983957 = C_MF.mesh;
         }
     }
 

@@ -142,7 +142,7 @@ public class TriangleMesh : MeshBase
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_144_12_636376465613114936 = C_MF.mesh;
         }
     }
     public override void UpdateCollider()

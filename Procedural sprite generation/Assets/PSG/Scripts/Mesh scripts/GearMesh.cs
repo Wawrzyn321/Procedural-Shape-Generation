@@ -235,7 +235,7 @@ public class GearMesh : MeshBase
         C_MF.mesh = mesh;
         if (OptimizeMesh)
         {
-            C_MF.mesh.Optimize();
+            var o_237_12_636376465607600027 = C_MF.mesh;
         }
     }
 
