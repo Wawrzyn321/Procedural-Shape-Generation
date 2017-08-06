@@ -8,8 +8,7 @@ namespace PSG
     /// First radius ({innerRadius}) can be zero.
     /// 
     /// Colliders:
-    ///     - 2x Polygon (in case {innerRadius}!=0)
-    ///     - Polygon (if {innerRadius}==0)
+    ///     - Polygon
     /// </summary>
     public class GearMesh : MeshBase
     {
@@ -26,11 +25,11 @@ namespace PSG
         private float innerRadius;
 
         //colliders
-        private PolygonCollider2D C_EC2D_inner;
-        private PolygonCollider2D C_EC2D_outer;
+        private PolygonCollider2D C_EC2D;
 
-        public static GameObject AddGearMesh(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddGearMesh(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject gear = new GameObject();
             gear.transform.position = position;
             gear.AddComponent<GearMesh>().Build(innerRadius, rootRadius, outerRadius, sides, meshMatt);
@@ -42,8 +41,9 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt)
+        public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Gear";
             this.innerRadius = innerRadius;
             this.rootRadius = rootRadius;
@@ -162,69 +162,33 @@ namespace PSG
 
         public override void GetOrAddComponents()
         {
-            if (innerRadius == 0)
-            {
-                C_EC2D_outer = gameObject.GetOrAddComponent<PolygonCollider2D>();
-            }
-            else
-            {
-                PolygonCollider2D[] C_EC2Ds = GetComponents<PolygonCollider2D>();
-                switch (C_EC2Ds.Length)
-                {
-                    case 0:
-                        C_EC2D_inner = gameObject.AddComponent<PolygonCollider2D>();
-                        C_EC2D_outer = gameObject.AddComponent<PolygonCollider2D>();
-                        break;
-                    case 1:
-                        C_EC2D_inner = C_EC2Ds[0];
-                        C_EC2D_outer = gameObject.AddComponent<PolygonCollider2D>();
-                        break;
-                    default:
-                        C_EC2D_inner = C_EC2Ds[0];
-                        C_EC2D_outer = C_EC2Ds[1];
-                        break;
-                }
-            }
+            C_EC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
 
         public override void UpdateCollider()
         {
-            if (innerRadius != 0)
+            bool isHollow = innerRadius > 0;
+            int numberOfPoints = isHollow ? sides * 6+2 : sides * 4;
+            Vector2[] colliderPoints = new Vector2[numberOfPoints];
+            for (int i = 0; i < sides; i++)
             {
-                Vector2[] points_inner = new Vector2[sides * 2];
-                for (int i = 0; i < points_inner.Length; i++)
-                {
-                    points_inner[i] = vertices[i * 3];
-                }
-                C_EC2D_inner.points = points_inner;
+                colliderPoints[4 * i + 0] = vertices[i * 6 + 1];
+                colliderPoints[4 * i + 1] = vertices[i * 6 + 2];
+                colliderPoints[4 * i + 2] = vertices[i * 6 + 5];
+                colliderPoints[4 * i + 3] = vertices[i * 6 + 4];
             }
-            if (outerRadius != rootRadius)
+            if (isHollow)
             {
-                Vector2[] points_outer = new Vector2[4 * sides];
-                for (int i = 0; i < sides; i++)
-                {
-                    points_outer[4 * i + 0] = vertices[i * 6 + 1];
-                    points_outer[4 * i + 1] = vertices[i * 6 + 2];
-                    points_outer[4 * i + 2] = vertices[i * 6 + 5];
-                    points_outer[4 * i + 3] = vertices[i * 6 + 4];
-                }
-                C_EC2D_outer.points = points_outer;
-            }
-            else
-            {
-                Vector2[] points_outer = new Vector2[sides * 2];
-                float angleDelta = deg360 / sides / 2;
-                float angleShift = angleDelta / 2;
+                colliderPoints[4 * sides] = colliderPoints[0];
                 for (int i = 0; i < sides * 2; i++)
                 {
-                    float x = Mathf.Cos(i * angleDelta + angleShift);
-                    float y = Mathf.Sin(i * angleDelta + angleShift);
-                    points_outer[i] = new Vector2(x, y) * outerRadius;
+                    colliderPoints[sides * 4 + i+1] = vertices[i * 3];
                 }
-                C_EC2D_outer.points = points_outer;
+                colliderPoints[numberOfPoints-1] = vertices[0];
             }
+            C_EC2D.points = colliderPoints;
         }
 
         public override void UpdateMesh()

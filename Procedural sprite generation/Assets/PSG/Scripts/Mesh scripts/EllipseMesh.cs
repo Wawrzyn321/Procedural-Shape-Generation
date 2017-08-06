@@ -8,8 +8,7 @@ namespace PSG
     /// If both radiuses are equal, we consider it as a circle.
     /// 
     /// Colliders:
-    ///     - Circle (when radiuses are equal)
-    ///     - Polygon (in other case)
+    ///     - Polygon
     /// </summary>
     public class EllipseMesh : MeshBase
     {
@@ -23,12 +22,12 @@ namespace PSG
         private float radiusB;
         private int sides;
 
-        //colliders
-        private CircleCollider2D C_CC2D;
+        //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddEllipseMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddEllipseMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ellipse = new GameObject();
             ellipse.transform.position = position;
             ellipse.AddComponent<EllipseMesh>().Build(radiusA, radiusB, sides, meshMatt);
@@ -40,8 +39,9 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(float radiusA, float radiusB, int sides, Material meshMatt)
+        public void Build(float radiusA, float radiusB, int sides, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Ellipse";
             this.radiusA = radiusA;
             this.radiusB = radiusB;
@@ -110,34 +110,20 @@ namespace PSG
 
         public override void GetOrAddComponents()
         {
-            if (radiusA == radiusB)
-            {
-                C_CC2D = gameObject.GetOrAddComponent<CircleCollider2D>();
-            }
-            else
-            {
-                C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
-            }
+            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
 
         public override void UpdateCollider()
         {
-            if (radiusA == radiusB)
+            Vector2[] points = new Vector2[sides + 1];
+            float angleDelta = deg360 / sides;
+            for (int i = 0; i < sides + 1; i++)
             {
-                C_CC2D.radius = radiusA;
+                points[i] = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusA, Mathf.Sin((i + 1) * angleDelta) * radiusB);
             }
-            else
-            {
-                Vector2[] points = new Vector2[sides + 1];
-                float angleDelta = deg360 / sides;
-                for (int i = 0; i < sides + 1; i++)
-                {
-                    points[i] = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusA, Mathf.Sin((i + 1) * angleDelta) * radiusB);
-                }
-                C_PC2D.points = points;
-            }
+            C_PC2D.points = points;
         }
 
         public override void UpdateMesh()

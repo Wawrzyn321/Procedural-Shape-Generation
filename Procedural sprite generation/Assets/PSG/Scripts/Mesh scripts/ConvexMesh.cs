@@ -23,8 +23,9 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddConvexMesh(Vector3 position, Vector3[] vertices, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddConvexMesh(Vector3 position, Vector3[] vertices, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject convex = new GameObject();
             convex.transform.position = position;
             convex.AddComponent<ConvexMesh>().Build(vertices, meshMatt);
@@ -36,8 +37,9 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(Vector3[] vertices, Material meshMatt)
+        public void Build(Vector3[] vertices, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Convex Mesh";
 
             mesh = new Mesh();

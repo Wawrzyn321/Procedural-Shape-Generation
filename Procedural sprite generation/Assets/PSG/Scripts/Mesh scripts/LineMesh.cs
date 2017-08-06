@@ -24,7 +24,7 @@ namespace PSG
         //line data
         private bool useDoubleCollider;
         private Vector2[] lineVerts;
-        //private float lineWidth;
+        private float lineWidth;
 
         //collider
         private PolygonCollider2D C_PC2D;
@@ -33,8 +33,9 @@ namespace PSG
         private List<Vector2> cachedVertsLeft;
         private List<Vector2> cachedVertsRight;
 
-        public static GameObject AddLineMesh(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddLineMesh(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject line = new GameObject();
             line.transform.position = position;
             line.AddComponent<LineMesh>().Build(lineVerts, lineWidth, useDoubleCollider, meshMatt);
@@ -46,12 +47,13 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt)
+        public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Line mesh";
             this.useDoubleCollider = useDoubleCollider;
             this.lineVerts = lineVerts;
-            //this.lineWidth = lineWidth;
+            this.lineWidth = lineWidth;
 
             mesh = new Mesh();
             GetOrAddComponents();

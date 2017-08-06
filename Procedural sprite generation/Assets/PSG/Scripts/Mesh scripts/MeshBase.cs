@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace PSG
@@ -21,6 +19,8 @@ namespace PSG
         protected const float deg90 = Mathf.Deg2Rad * 90f;
         protected const float deg360 = 2 * Mathf.PI;
 
+        #region Abstract and Override
+
         //update mesh in MeshFilter component
         public abstract void UpdateMesh();
         //update attached colliders
@@ -33,6 +33,8 @@ namespace PSG
         {
             return transform.position;
         }
+
+        #endregion
 
         #region Joints Physics
 

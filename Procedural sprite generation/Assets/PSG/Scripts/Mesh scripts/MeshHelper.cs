@@ -7,6 +7,20 @@ namespace PSG
     {
         #region Building helper functions
 
+        public static Material cachedDefaultMaterial;
+        //if material is null, replace it with default
+        public static void CheckMaterial(ref Material meshMatt)
+        {
+            if(meshMatt == null)
+            {
+                if(cachedDefaultMaterial == null)
+                {
+                    cachedDefaultMaterial = new Material(Shader.Find("Sprites/Default"));
+                }
+                meshMatt = cachedDefaultMaterial;
+            }
+        }
+
         // checks the side point {v} it lays on, relative to segment {v1,v2}
         public static int GetSide(Vector3 v1, Vector3 v2, Vector3 v)
         {

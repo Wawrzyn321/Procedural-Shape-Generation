@@ -22,8 +22,9 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddRectangleMesh(Vector3 position, Vector2[] verts, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddRectangleMesh(Vector3 position, Vector2[] verts, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject quad = new GameObject();
             quad.transform.position = position;
             quad.AddComponent<QuadrangleMesh>().Build(verts, meshMatt);
@@ -35,8 +36,9 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(Vector2[] verts, Material meshMatt)
+        public void Build(Vector2[] verts, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Quadrangle";
 
             mesh = new Mesh();

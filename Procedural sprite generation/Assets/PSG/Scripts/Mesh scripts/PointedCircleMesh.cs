@@ -21,15 +21,16 @@ namespace PSG
 
         //p-circle data
         private float radius;
-        //private Vector2 shift;
-        //private int sides;
+        private Vector2 shift;
+        private int sides;
 
         //colliders
         private CircleCollider2D C_CC2D;
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddPointedCircleMesh(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddPointedCircleMesh(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject pointedCircle = new GameObject();
             pointedCircle.transform.position = position;
             pointedCircle.AddComponent<PointedCircleMesh>().Build(radius, sides, shift, meshMatt);
@@ -41,12 +42,13 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(float radius, int sides, Vector2 shift, Material meshMatt)
+        public void Build(float radius, int sides, Vector2 shift, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "PointedCircle";
             this.radius = radius;
-            //this.sides = sides;
-            //this.shift = shift;
+            this.sides = sides;
+            this.shift = shift;
 
             mesh = new Mesh();
             GetOrAddComponents();

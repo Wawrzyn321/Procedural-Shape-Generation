@@ -8,12 +8,10 @@ namespace PSG
     /// degenerates to circle.
     /// 
     /// Colliders:
-    ///     - 2x Polygon(if ring radiuses are different)
-    ///     - Circle (if ring radiuses are equal)
+    ///     - Polygon
     /// </summary>
     public class RingMesh : MeshBase
     {
-
         //mesh data
         private List<Vector3> vertices;
         private List<int> triangles;
@@ -25,12 +23,11 @@ namespace PSG
         private int sides;
 
         //colliders
-        private PolygonCollider2D C_PC2D_outer;
-        private PolygonCollider2D C_PC2D_inner;
-        private CircleCollider2D C_CC2D;
+        private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddRingMesh(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddRingMesh(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ring = new GameObject();
             ring.transform.position = position;
             ring.AddComponent<RingMesh>().Build(innerRadius, outerRadius, sides, meshMatt);
@@ -42,8 +39,9 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(float innerRadius, float outerRadius, int sides, Material meshMatt)
+        public void Build(float innerRadius, float outerRadius, int sides, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Ring";
             this.innerRadius = innerRadius;
             this.outerRadius = outerRadius;
@@ -148,54 +146,34 @@ namespace PSG
         }
         public override void GetOrAddComponents()
         {
-            if (innerRadius == outerRadius)
-            {
-                C_CC2D = gameObject.GetOrAddComponent<CircleCollider2D>();
-            }
-            else
-            {
-                PolygonCollider2D[] C_EC2Ds = GetComponents<PolygonCollider2D>();
-                switch (C_EC2Ds.Length)
-                {
-                    case 0:
-                        C_PC2D_inner = gameObject.AddComponent<PolygonCollider2D>();
-                        C_PC2D_outer = gameObject.AddComponent<PolygonCollider2D>();
-                        break;
-                    case 1:
-                        C_PC2D_inner = C_EC2Ds[0];
-                        C_PC2D_outer = gameObject.AddComponent<PolygonCollider2D>();
-                        break;
-                    default:
-                        C_PC2D_inner = C_EC2Ds[0];
-                        C_PC2D_outer = C_EC2Ds[1];
-                        break;
-                }
-            }
+            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
         public override void UpdateCollider()
         {
-            if (innerRadius == outerRadius)
-            {
-                C_CC2D.radius = innerRadius;
-            }
-            else
-            {
-                Vector2[] points_inner = new Vector2[sides];
-                Vector2[] points_outer = new Vector2[sides];
+            bool isHollow = innerRadius > 0;
+            int numberOfPoints = isHollow ? (sides+1) * 2 : sides;
+            Vector2[] colliderPoints = new Vector2[numberOfPoints];
 
-                float angleDelta = deg360 / sides;
-                points_inner[0] = new Vector2(Mathf.Cos(angleDelta), Mathf.Sin(angleDelta)) * innerRadius;
-                points_outer[0] = new Vector2(Mathf.Cos(angleDelta), Mathf.Sin(angleDelta)) * outerRadius;
-                for (int i = 1; i < sides; i++)
-                {
-                    points_inner[i] = new Vector2(Mathf.Cos((i + 1) * angleDelta), Mathf.Sin((i + 1) * angleDelta)) * innerRadius;
-                    points_outer[i] = new Vector2(Mathf.Cos((i + 1) * angleDelta), Mathf.Sin((i + 1) * angleDelta)) * outerRadius;
-                }
-                C_PC2D_inner.points = points_inner;
-                C_PC2D_outer.points = points_outer;
+            float angleDelta = deg360 / sides;
+            colliderPoints[0] = new Vector2(Mathf.Cos(angleDelta), Mathf.Sin(angleDelta)) * outerRadius;
+            for (int i = 0; i < sides; i++)
+            {
+                colliderPoints[i] = new Vector2(Mathf.Cos((i + 1) * angleDelta), Mathf.Sin((i + 1) * angleDelta)) * outerRadius;
             }
+
+            if (isHollow)
+            {
+                colliderPoints[sides] = colliderPoints[0];
+                for (int i = 0; i < sides; i++)
+                {
+                    colliderPoints[i + sides+1] = new Vector2(Mathf.Cos((i + 1) * angleDelta), Mathf.Sin((i + 1) * angleDelta)) * innerRadius;
+                }
+                colliderPoints[numberOfPoints - 1] = colliderPoints[sides+1];
+            }
+
+            C_PC2D.points = colliderPoints;
         }
 
         #endregion

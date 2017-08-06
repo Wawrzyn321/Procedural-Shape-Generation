@@ -24,17 +24,18 @@ namespace PSG
 
         //circle data
         private float radius;
-        //private int sides;
+        private int sides;
 
         //collider
         private bool useCircleCollider;
         private Collider2D C_C2D;
 
-        public static GameObject AddCircle(Vector3 position, float radius, int sides, Material meshMatt, bool useCircleCollider, bool attachRigidbody = true)
+        public static GameObject AddCircle(Vector3 position, float radius, int sides, bool useCircleCollider, bool attachRigidbody = true, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject circle = new GameObject();
             circle.transform.position = position;
-            circle.AddComponent<CircleMesh>().Build(radius, sides, meshMatt, useCircleCollider);
+            circle.AddComponent<CircleMesh>().Build(radius, sides, useCircleCollider, meshMatt);
             if (attachRigidbody)
             {
                 circle.AddComponent<Rigidbody2D>();
@@ -43,11 +44,12 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(float radius, int sides, Material meshMatt, bool useCircleCollider)
+        public void Build(float radius, int sides, bool useCircleCollider, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Circle";
             this.radius = radius;
-            //this.sides = sides;
+            this.sides = sides;
             this.useCircleCollider = useCircleCollider;
 
             mesh = new Mesh();

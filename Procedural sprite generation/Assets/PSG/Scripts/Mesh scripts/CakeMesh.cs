@@ -8,8 +8,7 @@ namespace PSG
     /// If ratio is equal to one, we got a circle.
     /// 
     /// Colliders:
-    ///     - Polygon (if {sidesToFill} is less than {sides})
-    ///     - Circle (in other case)
+    ///     - Polygon
     /// 
     /// </summary>
     public class CakeMesh : MeshBase
@@ -28,10 +27,10 @@ namespace PSG
 
         //colliders
         private PolygonCollider2D C_PC2D;
-        private CircleCollider2D C_CC2D;
 
-        public static GameObject AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject cake = new GameObject();
             cake.transform.position = position;
             cake.AddComponent<CakeMesh>().Build(radius, sides, sidesToFill, meshMatt);
@@ -43,8 +42,9 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(float radius, int sides, int sidesToFill, Material meshMatt)
+        public void Build(float radius, int sides, int sidesToFill, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Cake";
 
             this.radius = radius;
@@ -124,35 +124,20 @@ namespace PSG
 
         public override void GetOrAddComponents()
         {
-            if (sidesToFill == sides)
-            {
-                C_CC2D = gameObject.GetOrAddComponent<CircleCollider2D>();
-            }
-            else
-            {
-                C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
-            }
-
+            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
 
         public override void UpdateCollider()
         {
-            if (sidesToFill == sides)
+            Vector2[] points = new Vector2[sidesToFill + 3];
+            for (int i = 0; i < vertices.Count - 1; i++)
             {
-                C_CC2D.radius = radius;
+                points[i] = vertices[i];
             }
-            else
-            {
-                Vector2[] points = new Vector2[sidesToFill + 3];
-                for (int i = 0; i < vertices.Count - 1; i++)
-                {
-                    points[i] = vertices[i];
-                }
-                points[points.Length - 1] = points[0];
-                C_PC2D.points = points;
-            }
+            points[points.Length - 1] = points[0];
+            C_PC2D.points = points;
         }
 
         public override void UpdateMesh()

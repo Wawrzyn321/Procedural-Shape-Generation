@@ -30,3 +30,6 @@ sysinfo.txt
 *.unitypackage
 
 Procedural sprite generation/Temp/UnityLockfile
+Procedural sprite generation/Temp
+Procedural sprite generation/Library
+*.bin

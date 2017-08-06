@@ -8,6 +8,7 @@ namespace PSG
     /// Colliders:
     ///     - polygon
     /// </summary>
+    /// 
     public class StarMesh : MeshBase
     {
 
@@ -24,8 +25,9 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt, bool attachRigidbody = true)
+        public static GameObject AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject star = new GameObject();
             star.transform.position = position;
             star.AddComponent<StarMesh>().Build(radiusA, radiusB, sides, meshMatt);
@@ -37,8 +39,9 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(float radiusA, float radiusB, int sides, Material meshMatt)
+        public void Build(float radiusA, float radiusB, int sides, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Star";
 
             this.sides = sides;

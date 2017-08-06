@@ -73,7 +73,7 @@ public class CarDemo : MonoBehaviour {
         CircleMesh rearWheelScript = carElements[1].AddComponent<CircleMesh>();
         float radius = Random.Range(0.2f, 1f);
         int sides = Random.Range(15, 30);
-        rearWheelScript.Build(radius, sides, material, true);
+        rearWheelScript.Build(radius, sides, true, material);
         carElements[1].transform.position = position;
         //add pasive hinge
         rearWheelScript.AddHingeJoint(new JointMotor2D

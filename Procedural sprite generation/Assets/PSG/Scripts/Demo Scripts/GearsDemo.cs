@@ -6,7 +6,6 @@ using PSG;
 /// </summary>
 public class GearsDemo : MonoBehaviour {
         
-    public Material material;
     public Texture squareTexture;
 
     void Start ()
@@ -32,7 +31,7 @@ public class GearsDemo : MonoBehaviour {
         
         //add GearMesh component, build the Gear and add a motor
         GearMesh gearMesh = gear.AddComponent<GearMesh>();
-        gearMesh.Build(1, 1.2f, 1.5f, 12, material);
+        gearMesh.Build(1, 1.2f, 1.5f, 12);
         gearMesh.AddHingeJoint(C_JM2D);
         
         //override default name
@@ -48,7 +47,7 @@ public class GearsDemo : MonoBehaviour {
         gear.transform.position = pos;
 
         GearMesh gearMesh = gear.AddComponent<GearMesh>();
-        gearMesh.Build(1,1.2f,1.5f, 12, material);
+        gearMesh.Build(1,1.2f,1.5f, 12);
         gearMesh.AddHingeJoint();
         
         gearMesh.GetMeshRenderer().material.color = Color.gray;
@@ -59,7 +58,7 @@ public class GearsDemo : MonoBehaviour {
         GameObject box = new GameObject();
 
         RectangleMesh rectangleMesh = box.AddComponent<RectangleMesh>();
-        rectangleMesh.Build(new Vector2(1.2f,1.2f), material);
+        rectangleMesh.Build(new Vector2(1.2f,1.2f));
         rectangleMesh.SetTexture(squareTexture);
         rectangleMesh.SetPhysicsMaterialProperties(1,0);
        

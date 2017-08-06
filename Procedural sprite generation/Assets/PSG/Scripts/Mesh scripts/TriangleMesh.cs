@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEditor;
+using UnityEngine;
 
 namespace PSG
 {
@@ -20,8 +22,11 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt, bool attachRigidbody = true)
+        #region Static Building
+
+        public static GameObject AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt = null, bool attachRigidbody = true)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject triangle = new GameObject();
             triangle.transform.position = position;
             triangle.AddComponent<TriangleMesh>().Build(p1, p2, p3, meshMatt);
@@ -32,21 +37,12 @@ namespace PSG
             return triangle;
         }
 
-        public static GameObject AddTriangle(Vector3 position, Vector2[] vertices, Material meshMatt, bool attachRigidbody = true)
-        {
-            GameObject triangle = new GameObject();
-            triangle.transform.position = position;
-            triangle.AddComponent<TriangleMesh>().Build(vertices[0], vertices[1], vertices[2], meshMatt);
-            if (attachRigidbody)
-            {
-                triangle.AddComponent<Rigidbody2D>();
-            }
-            return triangle;
-        }
+        #endregion
 
         //assign variables, get components and build mesh
-        public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt)
+        public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Triangle";
             mesh = new Mesh();
 
@@ -61,8 +57,9 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(Vector2[] vertices, Material meshMatt)
+        public void Build(Vector2[] vertices, Material meshMatt = null)
         {
+            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Triangle";
             mesh = new Mesh();
 
