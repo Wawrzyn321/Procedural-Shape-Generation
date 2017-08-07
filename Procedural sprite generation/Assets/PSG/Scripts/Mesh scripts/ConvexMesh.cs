@@ -13,7 +13,6 @@ namespace PSG
     /// </summary>
     public class ConvexMesh : MeshBase
     {
-
         //mesh data
         private List<Vector3> points;
         private List<Vector3> meshVertices;
@@ -88,14 +87,13 @@ namespace PSG
             return points;
         }
 
-        //get convex points
-        public List<Vector3> GetOutlinePoints()
-        {
-            return meshVertices;
-        }
-
-
         #region Abstract Implementation
+
+        //gets outline points only
+        public override Vector3[] GetVertices()
+        {
+            return meshVertices.ToArray();
+        }
 
         public override void UpdateMesh()
         {

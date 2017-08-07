@@ -131,6 +131,11 @@ namespace PSG
 
         #region Abstract Implementation
 
+        public override Vector3[] GetVertices()
+        {
+            return vertices;
+        }
+
         public override void GetOrAddComponents()
         {
             C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();

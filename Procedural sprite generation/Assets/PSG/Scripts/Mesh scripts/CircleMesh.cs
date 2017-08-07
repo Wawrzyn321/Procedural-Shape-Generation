@@ -18,9 +18,9 @@ namespace PSG
     public class CircleMesh : MeshBase
     {
         //mesh data
-        private List<Vector3> vertices;
-        private List<int> triangles;
-        private List<Vector2> uvs;
+        private Vector3[] vertices;
+        private int[] triangles;
+        private Vector2[] uvs;
 
         //circle data
         private float radius;
@@ -87,28 +87,43 @@ namespace PSG
 
             #endregion
 
-            vertices = new List<Vector3>();
-            triangles = new List<int>();
-            uvs = new List<Vector2>();
+            vertices = new Vector3[sides + 1];
+            triangles = new int[3*sides];
+            uvs = new Vector2[sides + 1];
 
-            vertices.Add(new Vector3(0, 0));
+            vertices[0] = Vector3.zero;
             //uvs are manually unwrapped here
-            uvs.Add(new Vector2(0.5f, 0.5f));
+            uvs[0] = new Vector2(0.5f, 0.5f);
             float angleDelta = deg360 / sides;
             for (int i = 1; i < sides + 1; i++)
             {
                 Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
-                vertices.Add(vertPos);
-                uvs.Add(vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0));
-                triangles.Add(1 + i % sides);
-                triangles.Add(1 + (i - 1) % sides);
-                triangles.Add(0);
+                vertices[i] = vertPos;
+                uvs[i] = vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0);
+                triangles[(i - 1) * 3 + 0] = (1 + i % sides);
+                triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                triangles[(i - 1) * 3 + 2] = 0;
             }
 
             return true;
         }
 
+        public CircleStructure GetStructure()
+        {
+            return new CircleStructure
+            {
+                radius = radius,
+                sides = sides,
+                useCircleCollider = useCircleCollider
+            };
+        }
+
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices;
+        }
 
         public override void GetOrAddComponents()
         {
@@ -133,17 +148,17 @@ namespace PSG
 
             else
             {
-                ((PolygonCollider2D)C_C2D).SetPath(0, MeshHelper.ConvertVec3ToVec2(vertices.ToArray()));
+                ((PolygonCollider2D)C_C2D).SetPath(0, MeshHelper.ConvertVec3ToVec2(vertices));
             }
         }
 
         public override void UpdateMesh()
         {
             mesh.Clear();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.uv = uvs.ToArray();
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.uv = uvs;
+            mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
             C_MF.mesh = mesh;
         }
 
@@ -151,4 +166,9 @@ namespace PSG
 
     }
 
+    public struct CircleStructure{
+        public float radius;
+        public int sides;
+        public bool useCircleCollider;
+    }
 }

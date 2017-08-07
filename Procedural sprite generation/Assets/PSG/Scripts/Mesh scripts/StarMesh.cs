@@ -107,7 +107,22 @@ namespace PSG
             return true;
         }
 
+        public StarStructure GetStructure()
+        {
+            return new StarStructure
+            {
+                radiusA = radiusA,
+                radiusB = radiusB,
+                sides = sides
+            };
+        }
+
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices;
+        }
 
         public override void UpdateMesh()
         {
@@ -142,4 +157,11 @@ namespace PSG
         #endregion
     }
 
+    [System.Serializable]
+    public struct StarStructure
+    {
+        public float radiusA;
+        public float radiusB;
+        public int sides;
+    }
 }

@@ -123,14 +123,12 @@ namespace PSG
             return true;
         }
 
-        // get triangle vertices
-        public Vector3[] GetVertices()
+        #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
         {
             return vertices;
         }
-
-        #region Abstract Implementation
-
         public override void UpdateMesh()
         {
             mesh.Clear();

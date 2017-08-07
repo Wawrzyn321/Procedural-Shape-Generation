@@ -120,7 +120,23 @@ namespace PSG
             return true;
         }
 
+        public CakeStructure GetStructure()
+        {
+            return new CakeStructure
+            {
+                radius = radius,
+                sides = sides,
+                sidesToFill = sidesToFill,
+                centerShift = centerShift
+            };
+        }
+
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices.ToArray();
+        }
 
         public override void GetOrAddComponents()
         {
@@ -154,4 +170,11 @@ namespace PSG
 
     }
 
+    public struct CakeStructure
+    {
+        public float radius;
+        public int sides;
+        public int sidesToFill;
+        public Vector2 centerShift;
+    }
 }

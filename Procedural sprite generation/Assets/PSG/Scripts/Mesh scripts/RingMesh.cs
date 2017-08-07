@@ -133,7 +133,22 @@ namespace PSG
             return true;
         }
 
+        public RingStructure GetStructure()
+        {
+            return new RingStructure
+            {
+                innerRadius = innerRadius,
+                outerRadius = outerRadius,
+                sides = sides
+            };
+        }
+
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices.ToArray();
+        }
 
         public override void UpdateMesh()
         {
@@ -180,4 +195,11 @@ namespace PSG
 
     }
 
+    [System.Serializable]
+    public struct RingStructure
+    {
+        public float innerRadius;
+        public float outerRadius;
+        public int sides;
+    }
 }

@@ -101,7 +101,18 @@ namespace PSG
             return true;
         }
 
+        //get dimensions of box - equivalent to GetStructure
+        public Vector2 GetSize()
+        {
+            return size;
+        }
+
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices;
+        }
 
         public override void UpdateMesh()
         {
@@ -117,6 +128,7 @@ namespace PSG
         {
             C_BC2D.size = size;
         }
+
         public override void GetOrAddComponents()
         {
             C_BC2D = gameObject.GetOrAddComponent<BoxCollider2D>();

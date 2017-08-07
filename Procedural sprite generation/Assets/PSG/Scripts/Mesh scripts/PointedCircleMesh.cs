@@ -102,7 +102,22 @@ namespace PSG
             return true;
         }
 
+        public PointedCircleStructure GetStructure()
+        {
+            return new PointedCircleStructure
+            {
+                radius = radius,
+                shift = shift,
+                sides = sides
+            };
+        }
+
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices.ToArray();
+        }
 
         public override void GetOrAddComponents()
         {
@@ -145,4 +160,11 @@ namespace PSG
         #endregion
 
     } 
+
+    public struct PointedCircleStructure
+    {
+        public float radius;
+        public Vector2 shift;
+        public int sides;
+    }
 }

@@ -260,7 +260,22 @@ namespace PSG
             return diff;
         }
 
+        public LineMeshStructure GetStructure()
+        {
+            return new LineMeshStructure
+            {
+                useDoubleCollider = useDoubleCollider,
+                lineVerts = lineVerts,
+                lineWidth = lineWidth
+            };
+        }
+
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices.ToArray();
+        }
 
         public override void UpdateMesh()
         {
@@ -308,4 +323,10 @@ namespace PSG
 
     }
 
+    public struct LineMeshStructure
+    {
+        public bool useDoubleCollider;
+        public Vector2[] lineVerts;
+        public float lineWidth;
+    }
 }

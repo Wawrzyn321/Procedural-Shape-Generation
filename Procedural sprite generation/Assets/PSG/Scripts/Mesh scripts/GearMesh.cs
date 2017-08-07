@@ -157,8 +157,23 @@ namespace PSG
 
             return true;
         }
+        public GearStructure GetStructure()
+        {
+            return new GearStructure
+            {
+                innerRadius = innerRadius,
+                rootRadius = rootRadius,
+                outerRadius = outerRadius,
+                sides = sides
+            };
+        }
 
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices.ToArray();
+        }
 
         public override void GetOrAddComponents()
         {
@@ -204,4 +219,12 @@ namespace PSG
         #endregion
     }
 
+    [System.Serializable]
+    public struct GearStructure
+    {
+        public float innerRadius;
+        public float rootRadius;
+        public float outerRadius;
+        public int sides;
+    }
 }

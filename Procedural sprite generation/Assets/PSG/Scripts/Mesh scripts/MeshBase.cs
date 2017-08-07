@@ -19,8 +19,10 @@ namespace PSG
         protected const float deg90 = Mathf.Deg2Rad * 90f;
         protected const float deg360 = 2 * Mathf.PI;
 
-        #region Abstract and Override
+        #region Abstract and Virtual
 
+        //some meshes have List<>, some arrays
+        public abstract Vector3[] GetVertices();
         //update mesh in MeshFilter component
         public abstract void UpdateMesh();
         //update attached colliders

@@ -18,8 +18,8 @@ namespace PSG
         private List<Vector2> uvs;
 
         //ellipse data
-        private float radiusA;
-        private float radiusB;
+        private float radiusHorizontal;
+        private float radiusVertical;
         private int sides;
 
         //collider
@@ -43,8 +43,8 @@ namespace PSG
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Ellipse";
-            this.radiusA = radiusA;
-            this.radiusB = radiusB;
+            this.radiusHorizontal = radiusA;
+            this.radiusVertical = radiusB;
             this.sides = sides;
 
             mesh = new Mesh();
@@ -106,7 +106,22 @@ namespace PSG
             return true;
         }
 
+        public EllipseMeshStruct GetStructure()
+        {
+            return new EllipseMeshStruct
+            {
+                radiusHorizontal = radiusHorizontal,
+                radiusVertical = radiusVertical,
+                sides = sides
+            };
+        }
+
         #region Abstract Implementation
+
+        public override Vector3[] GetVertices()
+        {
+            return vertices.ToArray();
+        }
 
         public override void GetOrAddComponents()
         {
@@ -121,7 +136,7 @@ namespace PSG
             float angleDelta = deg360 / sides;
             for (int i = 0; i < sides + 1; i++)
             {
-                points[i] = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusA, Mathf.Sin((i + 1) * angleDelta) * radiusB);
+                points[i] = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusHorizontal, Mathf.Sin((i + 1) * angleDelta) * radiusVertical);
             }
             C_PC2D.points = points;
         }
@@ -139,4 +154,10 @@ namespace PSG
         #endregion
     }
 
+    public struct EllipseMeshStruct
+    {
+        public float radiusHorizontal;
+        public float radiusVertical;
+        public int sides;
+    }
 }
