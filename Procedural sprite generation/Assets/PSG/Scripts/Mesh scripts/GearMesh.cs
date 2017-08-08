@@ -27,17 +27,19 @@ namespace PSG
         //colliders
         private PolygonCollider2D C_EC2D;
 
-        public static GameObject AddGearMesh(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static GearMesh AddGearMesh(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject gear = new GameObject();
             gear.transform.position = position;
-            gear.AddComponent<GearMesh>().Build(innerRadius, rootRadius, outerRadius, sides, meshMatt);
+
+            GearMesh gearComponent = gear.AddComponent<GearMesh>();
+            gearComponent.Build(innerRadius, rootRadius, outerRadius, sides, meshMatt);
             if (attachRigidbody)
             {
                 gear.AddComponent<Rigidbody2D>();
             }
-            return gear;
+            return gearComponent;
         }
 
         //assign variables, get components and build mesh
@@ -50,7 +52,7 @@ namespace PSG
             this.outerRadius = outerRadius;
             this.sides = sides;
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -208,12 +210,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.uv = uvs.ToArray();
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices.ToArray();
+            _Mesh.triangles = triangles.ToArray();
+            _Mesh.uv = uvs.ToArray();
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
+            C_MF.mesh = _Mesh;
         }
 
         #endregion

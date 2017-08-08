@@ -30,17 +30,18 @@ namespace PSG
         private bool useCircleCollider;
         private Collider2D C_C2D;
 
-        public static GameObject AddCircle(Vector3 position, float radius, int sides, bool useCircleCollider, bool attachRigidbody = true, Material meshMatt = null)
+        public static CircleMesh AddCircle(Vector3 position, float radius, int sides, bool useCircleCollider, bool attachRigidbody = true, Material meshMatt = null)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject circle = new GameObject();
             circle.transform.position = position;
-            circle.AddComponent<CircleMesh>().Build(radius, sides, useCircleCollider, meshMatt);
+            CircleMesh circleComponent = circle.AddComponent<CircleMesh>();
+            circleComponent.Build(radius, sides, useCircleCollider, meshMatt);
             if (attachRigidbody)
             {
                 circle.AddComponent<Rigidbody2D>();
             }
-            return circle;
+            return circleComponent;
         }
 
         //assign variables, get components and build mesh
@@ -52,7 +53,7 @@ namespace PSG
             this.sides = sides;
             this.useCircleCollider = useCircleCollider;
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -154,12 +155,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.uv = uvs;
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices;
+            _Mesh.triangles = triangles;
+            _Mesh.uv = uvs;
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
+            C_MF.mesh = _Mesh;
         }
 
         #endregion

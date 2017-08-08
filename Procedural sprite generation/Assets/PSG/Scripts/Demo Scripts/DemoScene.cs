@@ -43,9 +43,9 @@ public class DemoScene : MonoBehaviour
             verts[i] = new Vector2(x, y);
         }
 
-        GameObject quadrangle = QuadrangleMesh.AddRectangleMesh(pos, verts, material);
+        QuadrangleMesh quadrangle = QuadrangleMesh.AddRectangleMesh(pos, verts, material);
 
-        quadrangle.GetComponent<QuadrangleMesh>().SetTexture(uvGridTexture);
+        quadrangle.SetTexture(uvGridTexture);
     }
     private void AddTriangle(Vector3 pos)
     {
@@ -53,7 +53,7 @@ public class DemoScene : MonoBehaviour
         Vector2 p2 = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         Vector2 p3 = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
 
-        GameObject triangle = TriangleMesh.AddTriangle(pos, p1, p2, p3, material);
+        TriangleMesh triangle = TriangleMesh.AddTriangle(pos, p1, p2, p3, material);
 
         triangle.GetComponent<MeshRenderer>().material.color = Color.red;
 
@@ -64,9 +64,9 @@ public class DemoScene : MonoBehaviour
         int sides = Random.Range(10, 20);
         int sidesToFill = sides - Random.Range(5, 8);
 
-        GameObject cake = CakeMesh.AddCakeMesh(pos, radius, sides, sidesToFill, material);
+        CakeMesh cake = CakeMesh.AddCakeMesh(pos, radius, sides, sidesToFill, material);
         
-        cake.GetComponent<CakeMesh>().SetTexture(roundTexture);
+        cake.SetTexture(roundTexture);
     }
     private void AddPointedCircle(Vector3 pos)
     {
@@ -75,7 +75,7 @@ public class DemoScene : MonoBehaviour
         float y = Random.Range(0.5f, 2f);
         int sides = Random.Range(6, 16);
 
-        GameObject pointedCircle = PointedCircleMesh.AddPointedCircleMesh(pos, radius, sides, new Vector2(x, y), material);
+        PointedCircleMesh pointedCircle = PointedCircleMesh.AddPointedCircleMesh(pos, radius, sides, new Vector2(x, y), material);
 
         pointedCircle.GetComponent<MeshRenderer>().material.color = Color.blue;
     }
@@ -84,8 +84,8 @@ public class DemoScene : MonoBehaviour
         float x = Random.Range(0.3f, 2f);
         float y = Random.Range(0.3f, 2f);
 
-        GameObject rectangle = RectangleMesh.AddRectangleMesh(pos, new Vector2(x, y), material);
-        rectangle.GetComponent<RectangleMesh>().SetTexture(squareTexture);
+        RectangleMesh rectangle = RectangleMesh.AddRectangleMesh(pos, new Vector2(x, y), material);
+        rectangle.SetTexture(squareTexture);
 
         rectangle.GetComponent<MeshRenderer>().material.color = Random.ColorHSV();
     }
@@ -94,7 +94,7 @@ public class DemoScene : MonoBehaviour
         float radius = Random.Range(0.5f, 1.5f);
         int sides = Random.Range(8, 16);
 
-        GameObject circle = CircleMesh.AddCircle(pos, radius, sides, material, sides > 8);
+        CircleMesh circle = CircleMesh.AddCircle(pos, radius, sides, material, sides > 8);
 
         circle.GetComponent<MeshBase>().SetTexture(roundTexture);
     }
@@ -104,7 +104,7 @@ public class DemoScene : MonoBehaviour
         float radiusB = Random.Range(0.2f, 0.9f);
         int sides = Random.Range(8, 16);
 
-        GameObject ellipse = EllipseMesh.AddEllipseMesh(pos, radiusA, radiusB, sides, material);
+        EllipseMesh ellipse = EllipseMesh.AddEllipseMesh(pos, radiusA, radiusB, sides, material);
 
         ellipse.GetComponent<MeshRenderer>().material.color = Color.yellow;
     }
@@ -114,8 +114,8 @@ public class DemoScene : MonoBehaviour
         float outerRadius = innerRadius + Random.Range(0.5f, 0.8f);
         int sides = Random.Range(10, 18);
 
-        GameObject ring = RingMesh.AddRingMesh(pos, innerRadius, outerRadius, sides, material);
-        ring.GetComponent<RingMesh>().SetTexture(otherTexture);
+        RingMesh ring = RingMesh.AddRingMesh(pos, innerRadius, outerRadius, sides, material);
+        ring.SetTexture(otherTexture);
 
         ring.GetComponent<MeshRenderer>().material.color = Color.yellow;
 
@@ -126,9 +126,9 @@ public class DemoScene : MonoBehaviour
         float rB = rA + Random.Range(0.1f, 0.6f);
         int sides = Random.Range(3, 30);
 
-        GameObject star = StarMesh.AddStartMesh(pos, rA, rB, sides, material);
+        StarMesh star = StarMesh.AddStartMesh(pos, rA, rB, sides, material);
 
-        star.GetComponent<StarMesh>().SetTexture(otherTexture);
+        star.SetTexture(otherTexture);
     }
     private void AddConvex(Vector3 pos)
     {
@@ -140,9 +140,9 @@ public class DemoScene : MonoBehaviour
             verts[i] = new Vector3(x, y);
         }
 
-        GameObject convex = ConvexMesh.AddConvexMesh(pos, verts, material);
+        ConvexMesh convex = ConvexMesh.AddConvexMesh(pos, verts, material);
 
-        convex.GetComponent<ConvexMesh>().SetTexture(uvGridTexture);
+        convex.SetTexture(uvGridTexture);
 
     }
     private void AddGear(Vector3 pos)
@@ -152,9 +152,9 @@ public class DemoScene : MonoBehaviour
         float outerRadius = rootRadius + Random.Range(0.3f, 0.5f);
         int sides = Random.Range(3, 17);
 
-        GameObject gear = GearMesh.AddGearMesh(pos, innerRadius, rootRadius, outerRadius, sides, material);
+        GearMesh gear = GearMesh.AddGearMesh(pos, innerRadius, rootRadius, outerRadius, sides, material);
 
-        gear.GetComponent<GearMesh>().AddHingeJoint();
+        gear.AddHingeJoint();
 
         gear.GetComponent<MeshRenderer>().material.color = Color.gray;
     }

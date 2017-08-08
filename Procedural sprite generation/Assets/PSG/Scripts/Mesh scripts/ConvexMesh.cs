@@ -22,17 +22,18 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddConvexMesh(Vector3 position, Vector3[] vertices, Material meshMatt = null, bool attachRigidbody = true)
+        public static ConvexMesh AddConvexMesh(Vector3 position, Vector3[] vertices, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject convex = new GameObject();
             convex.transform.position = position;
-            convex.AddComponent<ConvexMesh>().Build(vertices, meshMatt);
+            ConvexMesh convexComponent = convex.AddComponent<ConvexMesh>();
+            convexComponent.Build(vertices, meshMatt);
             if (attachRigidbody)
             {
                 convex.AddComponent<Rigidbody2D>();
             }
-            return convex;
+            return convexComponent;
         }
 
         //assign variables, get components and build mesh
@@ -41,7 +42,7 @@ namespace PSG
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Convex Mesh";
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -97,12 +98,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = meshVertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.uv = uvs.ToArray();
-            mesh.normals = MeshHelper.AddMeshNormals(meshVertices.Count);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = meshVertices.ToArray();
+            _Mesh.triangles = triangles.ToArray();
+            _Mesh.uv = uvs.ToArray();
+            _Mesh.normals = MeshHelper.AddMeshNormals(meshVertices.Count);
+            C_MF.mesh = _Mesh;
         }
 
         public override void UpdateCollider()

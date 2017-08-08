@@ -33,17 +33,18 @@ namespace PSG
         private List<Vector2> cachedVertsLeft;
         private List<Vector2> cachedVertsRight;
 
-        public static GameObject AddLineMesh(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null, bool attachRigidbody = true)
+        public static LineMesh AddLineMesh(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject line = new GameObject();
             line.transform.position = position;
-            line.AddComponent<LineMesh>().Build(lineVerts, lineWidth, useDoubleCollider, meshMatt);
+            LineMesh lineComponent = line.AddComponent<LineMesh>();
+            lineComponent.Build(lineVerts, lineWidth, useDoubleCollider, meshMatt);
             if (attachRigidbody)
             {
                 line.AddComponent<Rigidbody2D>();
             }
-            return line;
+            return lineComponent;
         }
 
         //assign variables, get components and build mesh
@@ -55,7 +56,7 @@ namespace PSG
             this.lineVerts = lineVerts;
             this.lineWidth = lineWidth;
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -279,12 +280,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.uv = uvs.ToArray();
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices.ToArray();
+            _Mesh.triangles = triangles.ToArray();
+            _Mesh.uv = uvs.ToArray();
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
+            C_MF.mesh = _Mesh;
         }
         public override void UpdateCollider()
         {

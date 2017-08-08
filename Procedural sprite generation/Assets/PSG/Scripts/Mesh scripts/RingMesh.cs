@@ -25,17 +25,18 @@ namespace PSG
         //colliders
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddRingMesh(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static RingMesh AddRingMesh(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ring = new GameObject();
             ring.transform.position = position;
-            ring.AddComponent<RingMesh>().Build(innerRadius, outerRadius, sides, meshMatt);
+            RingMesh ringComponent = ring.AddComponent<RingMesh>();
+            ringComponent.Build(innerRadius, outerRadius, sides, meshMatt);
             if (attachRigidbody)
             {
                 ring.AddComponent<Rigidbody2D>();
             }
-            return ring;
+            return ringComponent;
         }
 
         //assign variables, get components and build mesh
@@ -47,7 +48,7 @@ namespace PSG
             this.outerRadius = outerRadius;
             this.sides = sides;
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -152,12 +153,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.uv = uvs.ToArray();
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices.ToArray();
+            _Mesh.triangles = triangles.ToArray();
+            _Mesh.uv = uvs.ToArray();
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
+            C_MF.mesh = _Mesh;
         }
         public override void GetOrAddComponents()
         {

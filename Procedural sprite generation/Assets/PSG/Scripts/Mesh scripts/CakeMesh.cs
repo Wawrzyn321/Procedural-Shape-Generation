@@ -28,17 +28,18 @@ namespace PSG
         //colliders
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMatt = null, bool attachRigidbody = true)
+        public static CakeMesh AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject cake = new GameObject();
             cake.transform.position = position;
-            cake.AddComponent<CakeMesh>().Build(radius, sides, sidesToFill, meshMatt);
+            CakeMesh cakeComponent = cake.AddComponent<CakeMesh>();
+            cakeComponent.Build(radius, sides, sidesToFill, meshMatt);
             if (attachRigidbody)
             {
                 cake.AddComponent<Rigidbody2D>();
             }
-            return cake;
+            return cakeComponent;
         }
 
         //assign variables, get components and build mesh
@@ -51,7 +52,7 @@ namespace PSG
             this.sides = sides;
             this.sidesToFill = sidesToFill;
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -158,12 +159,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.uv = uvs.ToArray();
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices.ToArray();
+            _Mesh.triangles = triangles.ToArray();
+            _Mesh.uv = uvs.ToArray();
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
+            C_MF.mesh = _Mesh;
         }
 
         #endregion

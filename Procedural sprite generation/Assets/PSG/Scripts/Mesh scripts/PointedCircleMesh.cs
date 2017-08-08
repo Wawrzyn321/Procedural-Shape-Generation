@@ -28,17 +28,18 @@ namespace PSG
         private CircleCollider2D C_CC2D;
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddPointedCircleMesh(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt = null, bool attachRigidbody = true)
+        public static PointedCircleMesh AddPointedCircleMesh(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject pointedCircle = new GameObject();
             pointedCircle.transform.position = position;
-            pointedCircle.AddComponent<PointedCircleMesh>().Build(radius, sides, shift, meshMatt);
+            PointedCircleMesh pointedCircleComponent = pointedCircle.AddComponent<PointedCircleMesh>();
+            pointedCircleComponent.Build(radius, sides, shift, meshMatt);
             if (attachRigidbody)
             {
                 pointedCircle.AddComponent<Rigidbody2D>();
             }
-            return pointedCircle;
+            return pointedCircleComponent;
         }
 
         //assign variables, get components and build mesh
@@ -50,7 +51,7 @@ namespace PSG
             this.sides = sides;
             this.shift = shift;
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -149,12 +150,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.uv = uvs.ToArray();
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices.ToArray();
+            _Mesh.triangles = triangles.ToArray();
+            _Mesh.uv = uvs.ToArray();
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
+            C_MF.mesh = _Mesh;
         }
 
         #endregion

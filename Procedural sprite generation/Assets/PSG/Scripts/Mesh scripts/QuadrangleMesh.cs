@@ -22,17 +22,18 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddRectangleMesh(Vector3 position, Vector2[] verts, Material meshMatt = null, bool attachRigidbody = true)
+        public static QuadrangleMesh AddRectangleMesh(Vector3 position, Vector2[] verts, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject quad = new GameObject();
             quad.transform.position = position;
-            quad.AddComponent<QuadrangleMesh>().Build(verts, meshMatt);
+            QuadrangleMesh quadComponent = quad.AddComponent<QuadrangleMesh>();
+            quadComponent.Build(verts, meshMatt);
             if (attachRigidbody)
             {
                 quad.AddComponent<Rigidbody2D>();
             }
-            return quad;
+            return quadComponent;
         }
 
         //assign variables, get components and build mesh
@@ -41,7 +42,7 @@ namespace PSG
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Quadrangle";
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -150,12 +151,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.uv = uvs;
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices;
+            _Mesh.triangles = triangles;
+            _Mesh.uv = uvs;
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
+            C_MF.mesh = _Mesh;
         }
 
         #endregion

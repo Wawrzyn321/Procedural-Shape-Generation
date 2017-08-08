@@ -25,17 +25,19 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static StarMesh AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject star = new GameObject();
             star.transform.position = position;
-            star.AddComponent<StarMesh>().Build(radiusA, radiusB, sides, meshMatt);
+
+            StarMesh starComponent = star.AddComponent<StarMesh>();
+            starComponent.Build(radiusA, radiusB, sides, meshMatt);
             if (attachRigidbody)
             {
                 star.AddComponent<Rigidbody2D>();
             }
-            return star;
+            return starComponent;
         }
 
         //assign variables, get components and build mesh
@@ -47,7 +49,7 @@ namespace PSG
             this.sides = sides;
             this.radiusA = radiusA;
             this.radiusB = radiusB;
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -126,12 +128,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.uv = uvs;
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices;
+            _Mesh.triangles = triangles;
+            _Mesh.uv = uvs;
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
+            C_MF.mesh = _Mesh;
         }
 
         public override void UpdateCollider()

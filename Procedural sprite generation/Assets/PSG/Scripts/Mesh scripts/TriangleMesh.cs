@@ -24,17 +24,18 @@ namespace PSG
 
         #region Static Building
 
-        public static GameObject AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt = null, bool attachRigidbody = true)
+        public static TriangleMesh AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject triangle = new GameObject();
             triangle.transform.position = position;
-            triangle.AddComponent<TriangleMesh>().Build(p1, p2, p3, meshMatt);
+            TriangleMesh triangleComponent = triangle.AddComponent<TriangleMesh>();
+            triangleComponent.Build(p1, p2, p3, meshMatt);
             if (attachRigidbody)
             {
                 triangle.AddComponent<Rigidbody2D>();
             }
-            return triangle;
+            return triangleComponent;
         }
 
         #endregion
@@ -44,7 +45,7 @@ namespace PSG
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Triangle";
-            mesh = new Mesh();
+            _Mesh = new Mesh();
 
             GetOrAddComponents();
             C_MR.material = meshMatt;
@@ -61,7 +62,7 @@ namespace PSG
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Triangle";
-            mesh = new Mesh();
+            _Mesh = new Mesh();
 
             GetOrAddComponents();
             C_MR.material = meshMatt;
@@ -76,6 +77,10 @@ namespace PSG
         //build triangle or set its points
         public bool SetPoints(Vector2 p1, Vector2 p2, Vector2 p3)
         {
+            p1 += (Vector2)transform.position;
+            p2 += (Vector2)transform.position;
+            p3 += (Vector2)transform.position;
+
             #region Validity Check
 
             if (p1 == p2 || p2 == p3 || p3 == p1)
@@ -131,12 +136,12 @@ namespace PSG
         }
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.uv = uvs;
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices;
+            _Mesh.triangles = triangles;
+            _Mesh.uv = uvs;
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
+            C_MF.mesh = _Mesh;
         }
         public override void UpdateCollider()
         {

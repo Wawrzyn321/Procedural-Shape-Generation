@@ -25,17 +25,18 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static GameObject AddEllipseMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static EllipseMesh AddEllipseMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ellipse = new GameObject();
             ellipse.transform.position = position;
-            ellipse.AddComponent<EllipseMesh>().Build(radiusA, radiusB, sides, meshMatt);
+            EllipseMesh ellipseComponent = ellipse.AddComponent<EllipseMesh>();
+            ellipseComponent.Build(radiusA, radiusB, sides, meshMatt);
             if (attachRigidbody)
             {
                 ellipse.AddComponent<Rigidbody2D>();
             }
-            return ellipse;
+            return ellipseComponent;
         }
 
         //assign variables, get components and build mesh
@@ -47,7 +48,7 @@ namespace PSG
             this.radiusVertical = radiusB;
             this.sides = sides;
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -143,12 +144,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
-            mesh.uv = uvs.ToArray();
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices.ToArray();
+            _Mesh.triangles = triangles.ToArray();
+            _Mesh.uv = uvs.ToArray();
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
+            C_MF.mesh = _Mesh;
         }
 
         #endregion

@@ -22,31 +22,33 @@ namespace PSG
         //colliders
         private BoxCollider2D C_BC2D;
 
-        public static GameObject AddRectangleMesh(Vector3 position, Vector2 size, Material meshMatt = null, bool attachRigidbody = true)
+        public static RectangleMesh AddRectangleMesh(Vector3 position, Vector2 size, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject rectangleMesh = new GameObject();
             rectangleMesh.transform.position = position;
-            rectangleMesh.AddComponent<RectangleMesh>().Build(size, meshMatt);
+            RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
+            rectangleComponent.Build(size, meshMatt);
             if (attachRigidbody)
             {
                 rectangleMesh.AddComponent<Rigidbody2D>();
             }
-            return rectangleMesh;
+            return rectangleComponent;
         }
 
         // fill area {from}, {to} by rectangle
-        public static GameObject FillRectangleMesh(Vector3 from, Vector3 to, Material meshMatt = null, bool attachRigidbody = true)
+        public static RectangleMesh FillRectangleMesh(Vector3 from, Vector3 to, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject rectangleMesh = new GameObject();
             rectangleMesh.transform.position = (from + to) / 2;
-            rectangleMesh.AddComponent<RectangleMesh>().Build(to - from, meshMatt);
+            RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
+            rectangleComponent.Build(to - from, meshMatt);
             if (attachRigidbody)
             {
                 rectangleMesh.AddComponent<Rigidbody2D>();
             }
-            return rectangleMesh;
+            return rectangleComponent;
         }
 
         //assign variables, get components and build mesh
@@ -56,7 +58,7 @@ namespace PSG
             name = "Rectangle";
             this.size = size;
 
-            mesh = new Mesh();
+            _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
@@ -116,12 +118,12 @@ namespace PSG
 
         public override void UpdateMesh()
         {
-            mesh.Clear();
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.uv = uvs;
-            mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = mesh;
+            _Mesh.Clear();
+            _Mesh.vertices = vertices;
+            _Mesh.triangles = triangles;
+            _Mesh.uv = uvs;
+            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
+            C_MF.mesh = _Mesh;
         }
 
         public override void UpdateCollider()

@@ -11,9 +11,9 @@ namespace PSG
     {
 
         //common mesh components
-        protected Mesh mesh;
-        protected MeshFilter C_MF;
-        protected MeshRenderer C_MR;
+        public Mesh _Mesh { get; protected set; }
+        public MeshFilter C_MF { get; protected set; }
+        public MeshRenderer C_MR { get; protected set; }
 
         //math constants
         protected const float deg90 = Mathf.Deg2Rad * 90f;
@@ -131,6 +131,12 @@ namespace PSG
         public void SetRandomColor()
         {
             C_MR.material.color = Random.ColorHSV();
+        }
+
+        //set color
+        public void SetColor(Color color)
+        {
+            C_MR.material.color = color;
         }
 
         //set material
