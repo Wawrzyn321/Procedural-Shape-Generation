@@ -51,6 +51,21 @@ namespace PSG
             return rectangleComponent;
         }
 
+        // build rectangle from Rect
+        public static RectangleMesh FillRectangleMesh(Rect rect, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            MeshHelper.CheckMaterial(ref meshMatt);
+            GameObject rectangleMesh = new GameObject();
+            rectangleMesh.transform.position = rect.center;
+            RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
+            rectangleComponent.Build(rect.size, meshMatt);
+            if (attachRigidbody)
+            {
+                rectangleMesh.AddComponent<Rigidbody2D>();
+            }
+            return rectangleComponent;
+        }
+
         //assign variables, get components and build mesh
         public void Build(Vector2 size, Material meshMatt = null)
         {
@@ -101,6 +116,12 @@ namespace PSG
             new Vector2(0, 1)
             };
             return true;
+        }
+
+        //convert to quad
+        public QuadrangleMesh ToQuad(bool attachRigidbody = true)
+        {
+            return QuadrangleMesh.AddRectangleMesh(transform.position, MeshHelper.ConvertVec3ToVec2(vertices), C_MR.material, attachRigidbody);
         }
 
         //get dimensions of box - equivalent to GetStructure
