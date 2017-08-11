@@ -63,7 +63,7 @@ public class CarDemo : MonoBehaviour {
 
         body.AddComponent<Rigidbody2D>();
 
-        quadScript.GetMeshRenderer().material.color = Color.green;
+        quadScript.C_MR.material.color = Color.green;
 
     }
     private void AddRearWheel(GameObject body, Vector3 position)
@@ -82,7 +82,7 @@ public class CarDemo : MonoBehaviour {
             maxMotorTorque = 0
         }, body.GetComponent<Rigidbody2D>());
 
-        rearWheelScript.GetMeshRenderer().material.color = Color.black;
+        rearWheelScript.C_MR.material.color = Color.black;
         rearWheelScript.SetPhysicsMaterialProperties(0, 10f);
     }
     private void AddFrontWheel(GameObject body, Vector3 position)
@@ -101,7 +101,7 @@ public class CarDemo : MonoBehaviour {
             maxMotorTorque = 1000
         }, body.GetComponent<Rigidbody2D>());
 
-        frontWheelScript.GetMeshRenderer().material.color = Color.black;
+        frontWheelScript.C_MR.material.color = Color.black;
         frontWheelScript.SetPhysicsMaterialProperties(0, 10f);
     }
 }

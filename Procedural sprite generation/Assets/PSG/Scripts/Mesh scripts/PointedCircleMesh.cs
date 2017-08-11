@@ -176,6 +176,15 @@ namespace PSG
             C_MF.mesh = _Mesh;
         }
 
+        public override void SetCollidersEnabled(bool enable)
+        {
+            Collider2D[] cs = GetComponents<Collider2D>();
+            foreach (Collider2D c in cs)
+            {
+                c.enabled = enable;
+            }
+        }
+
         #endregion
 
     } 

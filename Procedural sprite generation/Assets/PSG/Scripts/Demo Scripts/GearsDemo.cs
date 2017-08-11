@@ -38,7 +38,7 @@ public class GearsDemo : MonoBehaviour {
         gear.name = "Motor gear";
 
         //set mesh's color
-        gearMesh.GetMeshRenderer().material.color = Color.gray;
+        gearMesh.C_MR.material.color = Color.gray;
     }
 
     private void AddGear(Vector3 pos)
@@ -50,7 +50,7 @@ public class GearsDemo : MonoBehaviour {
         gearMesh.Build(1,1.2f,1.5f, 12);
         gearMesh.AddHingeJoint();
         
-        gearMesh.GetMeshRenderer().material.color = Color.gray;
+        gearMesh.C_MR.material.color = Color.gray;
     }
 
     private void AddBox(Vector3 pos)
@@ -63,6 +63,6 @@ public class GearsDemo : MonoBehaviour {
         rectangleMesh.SetPhysicsMaterialProperties(1,0);
        
         box.AddComponent<Rigidbody2D>();
-        rectangleMesh.GetMeshRenderer().material.color = new Color(0.8f,0.8f, 0.3f);
+        rectangleMesh.C_MR.material.color = new Color(0.8f,0.8f, 0.3f);
     }
 }

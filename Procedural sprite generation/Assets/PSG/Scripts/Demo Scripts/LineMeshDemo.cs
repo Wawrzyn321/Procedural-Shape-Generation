@@ -32,7 +32,7 @@ public class LineMeshDemo : MonoBehaviour {
         }
         lineMesh.Build(v, 0.2f, doubleCollider, material);
 
-        lineMesh.GetMeshRenderer().material.color = Color.green;
+        lineMesh.C_MR.material.color = Color.green;
         line.AddComponent<Rigidbody2D>().useAutoMass = true;
     }
 

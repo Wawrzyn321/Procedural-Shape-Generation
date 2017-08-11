@@ -23,10 +23,13 @@ namespace PSG
 
         //some meshes have List<>, some arrays
         public abstract Vector3[] GetVertices();
+
         //update mesh in MeshFilter component
         public abstract void UpdateMesh();
+
         //update attached colliders
         public abstract void UpdateCollider();
+
         //find necessary components
         public abstract void GetOrAddComponents();
 
@@ -34,6 +37,12 @@ namespace PSG
         public virtual Vector2 GetCenter()
         {
             return transform.position;
+        }
+
+        //most of meshes have only one collider
+        public virtual void SetCollidersEnabled(bool enable)
+        {
+            GetComponent<Collider2D>().enabled = enable;
         }
 
         #endregion
@@ -68,6 +77,7 @@ namespace PSG
             C_HJ2D.connectedBody = connectedBody;
             return C_HJ2D;
         }
+
         //fix object to background
         public FixedJoint2D AddFixedJoint()
         {
@@ -114,7 +124,7 @@ namespace PSG
             PhysicsMaterial2D sharedMaterial = gameObject.GetComponent<Collider2D>().sharedMaterial;
             if (sharedMaterial == null)
             {
-                sharedMaterial = new PhysicsMaterial2D();
+                sharedMaterial = new PhysicsMaterial2D(name+"_PhysicsMaterial2d");
                 gameObject.GetComponent<Collider2D>().sharedMaterial = sharedMaterial;
             }
             sharedMaterial.bounciness = bounciness;
@@ -156,12 +166,6 @@ namespace PSG
         {
             C_MR.material = material;
             C_MR.material.mainTexture = texture;
-        }
-
-        //get {MeshRenderer} reference
-        public MeshRenderer GetMeshRenderer()
-        {
-            return C_MR;
         }
 
         #endregion

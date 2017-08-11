@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 using PSG;
-using System.Collections.Generic;
-
-//DISABLE COLLIDERS
 
 public class ConvexMeshDemo : MonoBehaviour {
 
@@ -12,13 +9,21 @@ public class ConvexMeshDemo : MonoBehaviour {
 
     private Vector3[] allVertices;
 
-	void Start () {
+    private Material convexMaterial;
+
+    void Awake()
+    {
+        MeshHelper.CheckMaterial(ref convexMaterial);
+        convexMaterial.color = new Color(0.8f, 0.8f, 0.9f, 1f);
 
         C_JM2D = new JointMotor2D()
         {
             motorSpeed = 100f,
             maxMotorTorque = 10f
         };
+    }
+
+    void Start () {
 
         meshes = new MeshBase[5];
 
@@ -32,17 +37,19 @@ public class ConvexMeshDemo : MonoBehaviour {
         for(int i = 0; i < meshes.Length; i++)
         {
             v += meshes[i].GetVertices().Length;
+
+            meshes[i].AddHingeJoint(C_JM2D);
+            meshes[i].SetCollidersEnabled(false);
         }
         allVertices = new Vector3[v];
 
-        convexMesh = ConvexMesh.AddConvexMesh(Vector3.zero, UpdateVertices(), null, false);
+        convexMesh = ConvexMesh.AddConvexMesh(Vector3.zero, UpdateVertices(), convexMaterial, false);
         convexMesh.C_MR.sortingOrder = -1;
-        convexMesh.C_MR.material.color = Color.white * 0.5f;
     }
 
     void FixedUpdate()
     {
-        convexMesh.Build(UpdateVertices());
+        convexMesh.Build(UpdateVertices(), convexMaterial);
     }
 
     private Vector3[] UpdateVertices()
@@ -51,7 +58,7 @@ public class ConvexMeshDemo : MonoBehaviour {
         for(int i = 0; i < meshes.Length; i++)
         {
             Vector3[] vertices = meshes[i].GetVertices();
-            for(int j =0;j<vertices.Length;j++, index++)
+            for (int j = 0; j < vertices.Length; j++, index++)
             {
                 allVertices[index] = meshes[i].transform.TransformPoint(vertices[j]);
             }
@@ -62,54 +69,45 @@ public class ConvexMeshDemo : MonoBehaviour {
     private MeshBase AddGear()
     {
         Vector3 pos = new Vector3(-7, 3, 0);
-        GearMesh gearMesh = GearMesh.AddGear(pos, 0, 0.9f, 1.2f, 5, null, false);
+        GearMesh gearMesh = 
+            GearMesh.AddGear(pos, 0, 0.9f, 1.2f, 5, null, false);
         gearMesh.SetColor(Color.red);
-        gearMesh.AddHingeJoint(C_JM2D);
-        gearMesh.GetComponent<Collider2D>().enabled = false;
         return gearMesh;
     }
 
     private MeshBase AddStar()
     {
         Vector3 pos = new Vector3(1.5f, 3, 0);
-        StarMesh starMesh = StarMesh.AddStar(pos, 0.7f, 1.4f, 12, null, false);
+        StarMesh starMesh = 
+            StarMesh.AddStar(pos, 0.7f, 1.4f, 12, null, false);
         starMesh.SetColor(Color.yellow);
-        starMesh.AddHingeJoint(C_JM2D);
-        starMesh.GetComponent<Collider2D>().enabled = false;
         return starMesh;
     }
 
     private MeshBase AddBox()
     {
         Vector3 pos = new Vector3(0, -4, 0);
-        RectangleMesh rectangleMesh = RectangleMesh.AddRectangle(pos, new Vector2(0.5f, 2.5f), null, false);
+        RectangleMesh rectangleMesh = 
+            RectangleMesh.AddRectangle(pos, new Vector2(0.5f, 2.5f), null, false);
         rectangleMesh.SetColor(Color.blue);
-        rectangleMesh.AddHingeJoint(C_JM2D);
-        rectangleMesh.GetComponent<Collider2D>().enabled = false;
         return rectangleMesh;
     }
 
     private MeshBase AddPointedCircle()
     {
         Vector3 pos = new Vector3(6.7f, -1.25f, 0);
-        PointedCircleMesh pointedCircleMesh = PointedCircleMesh.AddPointedCircle(pos, 0.8f, 6, new Vector2(2, 2.5f), null, false);
+        PointedCircleMesh pointedCircleMesh = 
+            PointedCircleMesh.AddPointedCircle(pos, 0.8f, 6, new Vector2(2, 2.5f), null, false);
         pointedCircleMesh.SetColor(Color.gray);
-        pointedCircleMesh.AddHingeJoint(C_JM2D);
-        Collider2D[] ce = pointedCircleMesh.GetComponents<Collider2D>();
-        foreach (Collider2D c in ce)
-        {
-            c.enabled = false;
-        }
         return pointedCircleMesh;
     }
 
     private MeshBase AddTriangleMesh()
     {
         Vector3 pos = new Vector3(-5, 0.7f, 0);
-        TriangleMesh triangleMesh = TriangleMesh.AddTriangle(pos, new Vector2(-1, -1), new Vector2(2, 1), new Vector2(-1, 2), null, false);
+        TriangleMesh triangleMesh = 
+            TriangleMesh.AddTriangle(pos, new Vector2(-1, -1), new Vector2(2, 1), new Vector2(-1, 2), null, false);
         triangleMesh.SetColor(Color.green);
-        triangleMesh.AddHingeJoint(C_JM2D);
-        triangleMesh.GetComponent<Collider2D>().enabled = false;
         return triangleMesh;
     }
 }
