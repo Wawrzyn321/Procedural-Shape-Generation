@@ -29,7 +29,7 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static GearMesh AddGearMesh(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static GearMesh AddGear(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject gear = new GameObject();
@@ -44,9 +44,9 @@ namespace PSG
             return gearComponent;
         }
 
-        public static GearMesh AddGearMesh(Vector3 position, GearStructure gearStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static GearMesh AddGear(Vector3 position, GearStructure gearStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddGearMesh(position, gearStructure.innerRadius, gearStructure.rootRadius, gearStructure.outerRadius, gearStructure.sides, meshMatt, attachRigidbody);
+            return AddGear(position, gearStructure.innerRadius, gearStructure.rootRadius, gearStructure.outerRadius, gearStructure.sides, meshMatt, attachRigidbody);
         }
 
         #endregion

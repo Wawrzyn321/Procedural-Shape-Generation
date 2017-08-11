@@ -27,7 +27,7 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static EllipseMesh AddEllipseMesh(Vector3 position, float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static EllipseMesh AddEllipse(Vector3 position, float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ellipse = new GameObject();
@@ -41,9 +41,9 @@ namespace PSG
             return ellipseComponent;
         }
 
-        public static EllipseMesh AddEllipseMesh(Vector3 position, EllipseMeshStructure ellipseMeshStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static EllipseMesh AddEllipse(Vector3 position, EllipseStructure ellipseStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddEllipseMesh(position, ellipseMeshStructure.radiusHorizontal, ellipseMeshStructure.radiusVertical, ellipseMeshStructure.sides, meshMatt, attachRigidbody);
+            return AddEllipse(position, ellipseStructure.radiusHorizontal, ellipseStructure.radiusVertical, ellipseStructure.sides, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -71,9 +71,9 @@ namespace PSG
             }
         }
 
-        public void Build(EllipseMeshStructure ellipseMeshStructure, Material meshMatt = null)
+        public void Build(EllipseStructure ellipseStructure, Material meshMatt = null)
         {
-            Build(ellipseMeshStructure.radiusHorizontal, ellipseMeshStructure.radiusVertical, ellipseMeshStructure.sides, meshMatt);
+            Build(ellipseStructure.radiusHorizontal, ellipseStructure.radiusVertical, ellipseStructure.sides, meshMatt);
         }
 
         #endregion
@@ -125,9 +125,9 @@ namespace PSG
             return true;
         }
 
-        public EllipseMeshStructure GetStructure()
+        public EllipseStructure GetStructure()
         {
-            return new EllipseMeshStructure
+            return new EllipseStructure
             {
                 radiusHorizontal = radiusHorizontal,
                 radiusVertical = radiusVertical,
@@ -173,7 +173,7 @@ namespace PSG
         #endregion
     }
 
-    public struct EllipseMeshStructure
+    public struct EllipseStructure
     {
         public float radiusHorizontal;
         public float radiusVertical;

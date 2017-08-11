@@ -35,7 +35,7 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static LineMesh AddLineMesh(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null, bool attachRigidbody = true)
+        public static LineMesh AddLine(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject line = new GameObject();
@@ -49,9 +49,9 @@ namespace PSG
             return lineComponent;
         }
 
-        public static LineMesh AddLineMesh(Vector3 position, LineMeshStructure lineMeshStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static LineMesh AddLine(Vector3 position, LineStructure lineStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddLineMesh(position, lineMeshStructure.lineVerts, lineMeshStructure.lineWidth, lineMeshStructure.useDoubleCollider, meshMatt, attachRigidbody);
+            return AddLine(position, lineStructure.lineVerts, lineStructure.lineWidth, lineStructure.useDoubleCollider, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -79,9 +79,9 @@ namespace PSG
             }
         }
 
-        public void Build(LineMeshStructure lineMeshStructure, Material meshMatt = null)
+        public void Build(LineStructure lineStructure, Material meshMatt = null)
         {
-            Build(lineMeshStructure.lineVerts, lineMeshStructure.lineWidth, lineMeshStructure.useDoubleCollider, meshMatt);
+            Build(lineStructure.lineVerts, lineStructure.lineWidth, lineStructure.useDoubleCollider, meshMatt);
         }
 
         #endregion
@@ -157,7 +157,7 @@ namespace PSG
             for (int i = 0; i < lineVerts.Length - 2; i++, currentVertIndex++)
             {
                 angle = Mathf.Atan2(lineVerts[currentVertIndex + 1].y - lineVerts[currentVertIndex].y, lineVerts[currentVertIndex + 1].x - lineVerts[currentVertIndex].x);
-                angleDiff = oldAngle + AngleDifference(oldAngle, angle) * 0.5f;
+                angleDiff = oldAngle + MeshHelper.AngleDifference(oldAngle, angle) * 0.5f;
                 p1 = new Vector2(Mathf.Cos(angleDiff + deg90), Mathf.Sin(angleDiff + deg90)) * lineWidth;
                 p2 = new Vector2(Mathf.Cos(angleDiff - deg90), Mathf.Sin(angleDiff - deg90)) * lineWidth;
                 if (p1 != p2)
@@ -237,7 +237,7 @@ namespace PSG
                 angle = Mathf.Atan2(
                     lineVerts[1].y - lineVerts[0].y,
                     lineVerts[1].x - lineVerts[0].x);
-                angleDiff = oldAngle + AngleDifference(oldAngle, angle) * 0.5f - deg90;
+                angleDiff = oldAngle + MeshHelper.AngleDifference(oldAngle, angle) * 0.5f - deg90;
                 p1 = new Vector2(Mathf.Cos(angleDiff - deg90), Mathf.Sin(angleDiff - deg90)) * lineWidth;
                 p2 = new Vector2(Mathf.Cos(angleDiff + deg90), Mathf.Sin(angleDiff + deg90)) * lineWidth;
                 vertices[0] = lineVerts[currentVertIndex] + p1;
@@ -264,24 +264,9 @@ namespace PSG
             return true;
         }
 
-        //difference between angles in radians
-        private float AngleDifference(float a, float b)
+        public LineStructure GetStructure()
         {
-            float diff = b - a;
-            if (diff > deg90 * 2)
-            {
-                diff -= deg90 * 4;
-            }
-            if (diff < -deg90 * 2)
-            {
-                diff += deg90 * 4;
-            }
-            return diff;
-        }
-
-        public LineMeshStructure GetStructure()
-        {
-            return new LineMeshStructure
+            return new LineStructure
             {
                 useDoubleCollider = useDoubleCollider,
                 lineVerts = lineVerts,
@@ -342,7 +327,7 @@ namespace PSG
 
     }
 
-    public struct LineMeshStructure
+    public struct LineStructure
     {
         public bool useDoubleCollider;
         public Vector2[] lineVerts;

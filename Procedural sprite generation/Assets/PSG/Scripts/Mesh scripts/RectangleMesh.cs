@@ -24,7 +24,7 @@ namespace PSG
 
         #region Static Methods
         
-        public static RectangleMesh AddRectangleMesh(Vector3 position, Vector2 size, Material meshMatt = null, bool attachRigidbody = true)
+        public static RectangleMesh AddRectangle(Vector3 position, Vector2 size, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject rectangleMesh = new GameObject();
@@ -39,7 +39,7 @@ namespace PSG
         }
 
         // fill area {from}, {to} by rectangle
-        public static RectangleMesh FillRectangleMesh(Vector3 from, Vector3 to, Material meshMatt = null, bool attachRigidbody = true)
+        public static RectangleMesh FillRectangle(Vector3 from, Vector3 to, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject rectangleMesh = new GameObject();
@@ -54,7 +54,7 @@ namespace PSG
         }
 
         // build rectangle from Rect
-        public static RectangleMesh FillRectangleMesh(Rect rect, Material meshMatt = null, bool attachRigidbody = true)
+        public static RectangleMesh FillRectangle(Rect rect, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject rectangleMesh = new GameObject();
@@ -125,7 +125,7 @@ namespace PSG
         //convert to quad
         public QuadrangleMesh ToQuad(bool attachRigidbody = true)
         {
-            return QuadrangleMesh.AddRectangleMesh(transform.position, MeshHelper.ConvertVec3ToVec2(vertices), C_MR.material, attachRigidbody);
+            return QuadrangleMesh.AddQuadrangle(transform.position, MeshHelper.ConvertVec3ToVec2(vertices), C_MR.material, attachRigidbody);
         }
 
         //get dimensions of box - equivalent to GetStructure

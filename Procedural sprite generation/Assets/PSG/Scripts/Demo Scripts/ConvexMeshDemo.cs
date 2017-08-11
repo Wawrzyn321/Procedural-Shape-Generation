@@ -62,7 +62,7 @@ public class ConvexMeshDemo : MonoBehaviour {
     private MeshBase AddGear()
     {
         Vector3 pos = new Vector3(-7, 3, 0);
-        GearMesh gearMesh = GearMesh.AddGearMesh(pos, 0, 0.9f, 1.2f, 5, null, false);
+        GearMesh gearMesh = GearMesh.AddGear(pos, 0, 0.9f, 1.2f, 5, null, false);
         gearMesh.SetColor(Color.red);
         gearMesh.AddHingeJoint(C_JM2D);
         gearMesh.GetComponent<Collider2D>().enabled = false;
@@ -72,7 +72,7 @@ public class ConvexMeshDemo : MonoBehaviour {
     private MeshBase AddStar()
     {
         Vector3 pos = new Vector3(1.5f, 3, 0);
-        StarMesh starMesh = StarMesh.AddStartMesh(pos, 0.7f, 1.4f, 12, null, false);
+        StarMesh starMesh = StarMesh.AddStar(pos, 0.7f, 1.4f, 12, null, false);
         starMesh.SetColor(Color.yellow);
         starMesh.AddHingeJoint(C_JM2D);
         starMesh.GetComponent<Collider2D>().enabled = false;
@@ -82,7 +82,7 @@ public class ConvexMeshDemo : MonoBehaviour {
     private MeshBase AddBox()
     {
         Vector3 pos = new Vector3(0, -4, 0);
-        RectangleMesh rectangleMesh = RectangleMesh.AddRectangleMesh(pos, new Vector2(0.5f, 2.5f), null, false);
+        RectangleMesh rectangleMesh = RectangleMesh.AddRectangle(pos, new Vector2(0.5f, 2.5f), null, false);
         rectangleMesh.SetColor(Color.blue);
         rectangleMesh.AddHingeJoint(C_JM2D);
         rectangleMesh.GetComponent<Collider2D>().enabled = false;
@@ -92,7 +92,7 @@ public class ConvexMeshDemo : MonoBehaviour {
     private MeshBase AddPointedCircle()
     {
         Vector3 pos = new Vector3(6.7f, -1.25f, 0);
-        PointedCircleMesh pointedCircleMesh = PointedCircleMesh.AddPointedCircleMesh(pos, 0.8f, 6, new Vector2(2, 2.5f), null, false);
+        PointedCircleMesh pointedCircleMesh = PointedCircleMesh.AddPointedCircle(pos, 0.8f, 6, new Vector2(2, 2.5f), null, false);
         pointedCircleMesh.SetColor(Color.gray);
         pointedCircleMesh.AddHingeJoint(C_JM2D);
         Collider2D[] ce = pointedCircleMesh.GetComponents<Collider2D>();

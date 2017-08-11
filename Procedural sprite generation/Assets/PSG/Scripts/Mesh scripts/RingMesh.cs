@@ -27,7 +27,7 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static RingMesh AddRingMesh(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static RingMesh AddRing(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ring = new GameObject();
@@ -41,9 +41,9 @@ namespace PSG
             return ringComponent;
         }
 
-        public static RingMesh AddRingMesh(Vector3 position, RingStructure ringStructure, Material meshMatt = null, bool attachRigidbody = false)
+        public static RingMesh AddRing(Vector3 position, RingStructure ringStructure, Material meshMatt = null, bool attachRigidbody = false)
         {
-            return AddRingMesh(position, ringStructure.innerRadius, ringStructure.outerRadius, ringStructure.sides, meshMatt, attachRigidbody);
+            return AddRing(position, ringStructure.innerRadius, ringStructure.outerRadius, ringStructure.sides, meshMatt, attachRigidbody);
         }
 
         #endregion

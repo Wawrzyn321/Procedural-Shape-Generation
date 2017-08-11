@@ -5,20 +5,48 @@ namespace PSG
 {
     public static class MeshHelper
     {
-        #region Building helper functions
+        #region Material
 
         public static Material cachedDefaultMaterial;
         //if material is null, replace it with default
         public static void CheckMaterial(ref Material meshMatt)
         {
-            if(meshMatt == null)
+            if (meshMatt == null)
             {
-                if(cachedDefaultMaterial == null)
+                if (cachedDefaultMaterial == null)
                 {
                     cachedDefaultMaterial = new Material(Shader.Find("Sprites/Default"));
                 }
                 meshMatt = cachedDefaultMaterial;
             }
+        }
+
+        #endregion
+
+        #region Building helper functions
+
+        //checks if point v is within triangle {v1,v2,v3}
+        public static bool IsPointInTriangle(Vector2 v, Vector2 v1, Vector2 v2, Vector2 v3)
+        {
+            double a1 = GetSide(v, v1, v2);
+            double a2 = GetSide(v, v2, v3);
+            double a3 = GetSide(v, v3, v1);
+            return (a1 >= 0 && a2 >= 0 && a3 >= 0) || (a1 <= 0 && a2 <= 0 && a3 <= 0);
+        }
+
+        //difference between angles in radians
+        public static float AngleDifference(float a, float b)
+        {
+            float diff = b - a;
+            if (diff > Mathf.Deg2Rad * 180f)
+            {
+                diff -= Mathf.Deg2Rad * 360f;
+            }
+            if (diff < -Mathf.Deg2Rad * 180f)
+            {
+                diff += Mathf.Deg2Rad * 360f;
+            }
+            return diff;
         }
 
         // checks the side point {v} it lays on, relative to segment {v1,v2}

@@ -27,7 +27,7 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static StarMesh AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static StarMesh AddStar(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject star = new GameObject();
@@ -42,9 +42,9 @@ namespace PSG
             return starComponent;
         }
 
-        public static StarMesh AddStartMesh(Vector3 position, StarStructure starStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static StarMesh AddStar(Vector3 position, StarStructure starStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddStartMesh(position, starStructure.radiusA, starStructure.radiusB, starStructure.sides, meshMatt, attachRigidbody);
+            return AddStar(position, starStructure.radiusA, starStructure.radiusB, starStructure.sides, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -65,7 +65,7 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildStarMesh(radiusA, radiusB, sides))
+            if (BuildStar(radiusA, radiusB, sides))
             {
                 UpdateMesh();
                 UpdateCollider();
@@ -80,7 +80,7 @@ namespace PSG
         #endregion
 
         //build a star
-        private bool BuildStarMesh(float radiusA, float radiusB, int sides)
+        private bool BuildStar(float radiusA, float radiusB, int sides)
         {
 
             #region Validity Check

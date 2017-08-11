@@ -43,7 +43,7 @@ public class DemoScene : MonoBehaviour
             verts[i] = new Vector2(x, y);
         }
 
-        QuadrangleMesh quadrangle = QuadrangleMesh.AddRectangleMesh(pos, verts, material);
+        QuadrangleMesh quadrangle = QuadrangleMesh.AddQuadrangle(pos, verts, material);
 
         quadrangle.SetTexture(uvGridTexture);
     }
@@ -75,7 +75,7 @@ public class DemoScene : MonoBehaviour
         float y = Random.Range(0.5f, 2f);
         int sides = Random.Range(6, 16);
 
-        PointedCircleMesh pointedCircle = PointedCircleMesh.AddPointedCircleMesh(pos, radius, sides, new Vector2(x, y), material);
+        PointedCircleMesh pointedCircle = PointedCircleMesh.AddPointedCircle(pos, radius, sides, new Vector2(x, y), material);
 
         pointedCircle.GetComponent<MeshRenderer>().material.color = Color.blue;
     }
@@ -84,7 +84,7 @@ public class DemoScene : MonoBehaviour
         float x = Random.Range(0.3f, 2f);
         float y = Random.Range(0.3f, 2f);
 
-        RectangleMesh rectangle = RectangleMesh.AddRectangleMesh(pos, new Vector2(x, y), material);
+        RectangleMesh rectangle = RectangleMesh.AddRectangle(pos, new Vector2(x, y), material);
         rectangle.SetTexture(squareTexture);
 
         rectangle.GetComponent<MeshRenderer>().material.color = Random.ColorHSV();
@@ -104,7 +104,7 @@ public class DemoScene : MonoBehaviour
         float radiusB = Random.Range(0.2f, 0.9f);
         int sides = Random.Range(8, 16);
 
-        EllipseMesh ellipse = EllipseMesh.AddEllipseMesh(pos, radiusA, radiusB, sides, material);
+        EllipseMesh ellipse = EllipseMesh.AddEllipse(pos, radiusA, radiusB, sides, material);
 
         ellipse.GetComponent<MeshRenderer>().material.color = Color.yellow;
     }
@@ -114,7 +114,7 @@ public class DemoScene : MonoBehaviour
         float outerRadius = innerRadius + Random.Range(0.5f, 0.8f);
         int sides = Random.Range(10, 18);
 
-        RingMesh ring = RingMesh.AddRingMesh(pos, innerRadius, outerRadius, sides, material);
+        RingMesh ring = RingMesh.AddRing(pos, innerRadius, outerRadius, sides, material);
         ring.SetTexture(otherTexture);
 
         ring.GetComponent<MeshRenderer>().material.color = Color.yellow;
@@ -126,7 +126,7 @@ public class DemoScene : MonoBehaviour
         float rB = rA + Random.Range(0.1f, 0.6f);
         int sides = Random.Range(3, 30);
 
-        StarMesh star = StarMesh.AddStartMesh(pos, rA, rB, sides, material);
+        StarMesh star = StarMesh.AddStar(pos, rA, rB, sides, material);
 
         star.SetTexture(otherTexture);
     }
@@ -152,7 +152,7 @@ public class DemoScene : MonoBehaviour
         float outerRadius = rootRadius + Random.Range(0.3f, 0.5f);
         int sides = Random.Range(3, 17);
 
-        GearMesh gear = GearMesh.AddGearMesh(pos, innerRadius, rootRadius, outerRadius, sides, material);
+        GearMesh gear = GearMesh.AddGear(pos, innerRadius, rootRadius, outerRadius, sides, material);
 
         gear.AddHingeJoint();
 

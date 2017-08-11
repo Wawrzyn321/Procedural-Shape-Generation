@@ -22,7 +22,7 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static QuadrangleMesh AddRectangleMesh(Vector3 position, Vector2[] verts, Material meshMatt = null, bool attachRigidbody = true)
+        public static QuadrangleMesh AddQuadrangle(Vector3 position, Vector2[] verts, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject quad = new GameObject();
@@ -47,7 +47,7 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildQuadrangleMesh(verts))
+            if (BuildQuadrangle(verts))
             {
                 UpdateMesh();
                 UpdateCollider();
@@ -55,7 +55,7 @@ namespace PSG
         }
 
         //build quad
-        private bool BuildQuadrangleMesh(Vector2[] verts)
+        private bool BuildQuadrangle(Vector2[] verts)
         {
             vertices = new Vector3[4];
             for (int i = 0; i < 4; i++)
@@ -66,7 +66,7 @@ namespace PSG
             uvs = new Vector2[4];
             points = new Vector2[4];
 
-            if (!IsPointInTriangle(verts[3], verts[0], verts[1], verts[2]))
+            if (!MeshHelper.IsPointInTriangle(verts[3], verts[0], verts[1], verts[2]))
             {
 
                 if (MeshHelper.GetSide(verts[3], verts[0], verts[1]) * MeshHelper.GetSide(verts[2], verts[0], verts[1]) <= 0)
@@ -119,15 +119,6 @@ namespace PSG
             uvs = MeshHelper.UVUnwrap(vertices).ToArray();
 
             return true;
-        }
-
-        //checks if point v is within triangle {v1,v2,v3}
-        private bool IsPointInTriangle(Vector2 v, Vector2 v1, Vector2 v2, Vector2 v3)
-        {
-            double a1 = MeshHelper.GetSide(v, v1, v2);
-            double a2 = MeshHelper.GetSide(v, v2, v3);
-            double a3 = MeshHelper.GetSide(v, v3, v1);
-            return (a1 >= 0 && a2 >= 0 && a3 >= 0) || (a1 <= 0 && a2 <= 0 && a3 <= 0);
         }
 
         #region Abstract Implementation

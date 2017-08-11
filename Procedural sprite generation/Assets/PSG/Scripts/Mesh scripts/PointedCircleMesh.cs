@@ -30,7 +30,7 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static PointedCircleMesh AddPointedCircleMesh(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt = null, bool attachRigidbody = true)
+        public static PointedCircleMesh AddPointedCircle(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject pointedCircle = new GameObject();
@@ -44,9 +44,9 @@ namespace PSG
             return pointedCircleComponent;
         }
 
-        public static PointedCircleMesh AddPointedCircleMesh(Vector3 position, PointedCircleStructure pointedCircleStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static PointedCircleMesh AddPointedCircle(Vector3 position, PointedCircleStructure pointedCircleStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddPointedCircleMesh(position, pointedCircleStructure.radius, pointedCircleStructure.sides, pointedCircleStructure.shift, meshMatt, attachRigidbody);
+            return AddPointedCircle(position, pointedCircleStructure.radius, pointedCircleStructure.sides, pointedCircleStructure.shift, meshMatt, attachRigidbody);
         }
 
         #endregion
