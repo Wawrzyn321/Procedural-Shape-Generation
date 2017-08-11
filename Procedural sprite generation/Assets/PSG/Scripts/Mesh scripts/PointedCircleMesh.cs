@@ -28,6 +28,8 @@ namespace PSG
         private CircleCollider2D C_CC2D;
         private PolygonCollider2D C_PC2D;
 
+        #region Static Methods - building from values and from structure
+
         public static PointedCircleMesh AddPointedCircleMesh(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
@@ -41,6 +43,15 @@ namespace PSG
             }
             return pointedCircleComponent;
         }
+
+        public static PointedCircleMesh AddPointedCircleMesh(Vector3 position, PointedCircleStructure pointedCircleStructure, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            return AddPointedCircleMesh(position, pointedCircleStructure.radius, pointedCircleStructure.sides, pointedCircleStructure.shift, meshMatt, attachRigidbody);
+        }
+
+        #endregion
+
+        #region Public Build
 
         //assign variables, get components and build mesh
         public void Build(float radius, int sides, Vector2 shift, Material meshMatt = null)
@@ -62,6 +73,13 @@ namespace PSG
                 UpdateCollider();
             }
         }
+
+        void Build(PointedCircleStructure pointedCircleStructure, Material meshMatt = null)
+        {
+            Build(pointedCircleStructure.radius, pointedCircleStructure.sides, pointedCircleStructure.shift, meshMatt);
+        }
+
+        #endregion
 
         //build p-circle
         private bool BuildPointedCircle(float radius, int sides, Vector2 shift)

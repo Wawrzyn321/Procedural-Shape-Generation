@@ -29,9 +29,11 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        //list of 
+        //list
         private List<Vector2> cachedVertsLeft;
         private List<Vector2> cachedVertsRight;
+
+        #region Static Methods - building from values and from structure
 
         public static LineMesh AddLineMesh(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null, bool attachRigidbody = true)
         {
@@ -46,6 +48,15 @@ namespace PSG
             }
             return lineComponent;
         }
+
+        public static LineMesh AddLineMesh(Vector3 position, LineMeshStructure lineMeshStructure, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            return AddLineMesh(position, lineMeshStructure.lineVerts, lineMeshStructure.lineWidth, lineMeshStructure.useDoubleCollider, meshMatt, attachRigidbody);
+        }
+
+        #endregion
+
+        #region Public Build
 
         //assign variables, get components and build mesh
         public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null)
@@ -67,6 +78,13 @@ namespace PSG
                 UpdateCollider();
             }
         }
+
+        public void Build(LineMeshStructure lineMeshStructure, Material meshMatt = null)
+        {
+            Build(lineMeshStructure.lineVerts, lineMeshStructure.lineWidth, lineMeshStructure.useDoubleCollider, meshMatt);
+        }
+
+        #endregion
 
         //build line
         private bool BuildLine(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider)

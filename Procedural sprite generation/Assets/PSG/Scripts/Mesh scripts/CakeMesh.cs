@@ -28,6 +28,9 @@ namespace PSG
         //colliders
         private PolygonCollider2D C_PC2D;
 
+
+        #region Static Methods - building from values and from structure
+
         public static CakeMesh AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
@@ -41,6 +44,15 @@ namespace PSG
             }
             return cakeComponent;
         }
+
+        public static CakeMesh AddCakeMesh(Vector3 position, CakeStructure cakeStructure, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            return AddCakeMesh(position, cakeStructure.radius, cakeStructure.sides, cakeStructure.sides, meshMatt, attachRigidbody);
+        }
+
+        #endregion
+
+        #region Public Build
 
         //assign variables, get components and build mesh
         public void Build(float radius, int sides, int sidesToFill, Material meshMatt = null)
@@ -57,15 +69,22 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BakeCake(radius, sides, sidesToFill))
+            if (BuildCake(radius, sides, sidesToFill))
             {
                 UpdateMesh();
                 UpdateCollider();
             }
         }
 
+        public void Build(CakeStructure cakeStructure, Material meshMatt = null)
+        {
+            Build(cakeStructure.radius, cakeStructure.sides, cakeStructure.sidesToFill, meshMatt);
+        }
+
+        #endregion
+
         //build a cake
-        private bool BakeCake(float radius, int sides, int sidesToFill)
+        private bool BuildCake(float radius, int sides, int sidesToFill)
         {
             #region Validity Check
 

@@ -25,13 +25,15 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static EllipseMesh AddEllipseMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        #region Static Methods - building from values and from structure
+
+        public static EllipseMesh AddEllipseMesh(Vector3 position, float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ellipse = new GameObject();
             ellipse.transform.position = position;
             EllipseMesh ellipseComponent = ellipse.AddComponent<EllipseMesh>();
-            ellipseComponent.Build(radiusA, radiusB, sides, meshMatt);
+            ellipseComponent.Build(radiusHorizontal, radiusVertical, sides, meshMatt);
             if (attachRigidbody)
             {
                 ellipse.AddComponent<Rigidbody2D>();
@@ -39,13 +41,22 @@ namespace PSG
             return ellipseComponent;
         }
 
+        public static EllipseMesh AddEllipseMesh(Vector3 position, EllipseMeshStructure ellipseMeshStructure, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            return AddEllipseMesh(position, ellipseMeshStructure.radiusHorizontal, ellipseMeshStructure.radiusVertical, ellipseMeshStructure.sides, meshMatt, attachRigidbody);
+        }
+
+        #endregion
+
+        #region Public Build
+
         //assign variables, get components and build mesh
-        public void Build(float radiusA, float radiusB, int sides, Material meshMatt = null)
+        public void Build(float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Ellipse";
-            this.radiusHorizontal = radiusA;
-            this.radiusVertical = radiusB;
+            this.radiusHorizontal = radiusHorizontal;
+            this.radiusVertical = radiusVertical;
             this.sides = sides;
 
             _Mesh = new Mesh();
@@ -53,12 +64,19 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildEllipse(radiusA, radiusB, sides))
+            if (BuildEllipse(radiusHorizontal, radiusVertical, sides))
             {
                 UpdateMesh();
                 UpdateCollider();
             }
         }
+
+        public void Build(EllipseMeshStructure ellipseMeshStructure, Material meshMatt = null)
+        {
+            Build(ellipseMeshStructure.radiusHorizontal, ellipseMeshStructure.radiusVertical, ellipseMeshStructure.sides, meshMatt);
+        }
+
+        #endregion
 
         //build an ellipse
         private bool BuildEllipse(float radiusA, float radiusB, int sides)
@@ -107,9 +125,9 @@ namespace PSG
             return true;
         }
 
-        public EllipseMeshStruct GetStructure()
+        public EllipseMeshStructure GetStructure()
         {
-            return new EllipseMeshStruct
+            return new EllipseMeshStructure
             {
                 radiusHorizontal = radiusHorizontal,
                 radiusVertical = radiusVertical,
@@ -155,7 +173,7 @@ namespace PSG
         #endregion
     }
 
-    public struct EllipseMeshStruct
+    public struct EllipseMeshStructure
     {
         public float radiusHorizontal;
         public float radiusVertical;

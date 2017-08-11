@@ -27,6 +27,8 @@ namespace PSG
         //colliders
         private PolygonCollider2D C_EC2D;
 
+        #region Static Methods - building from values and from structure
+
         public static GearMesh AddGearMesh(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
@@ -41,6 +43,15 @@ namespace PSG
             }
             return gearComponent;
         }
+
+        public static GearMesh AddGearMesh(Vector3 position, GearStructure gearStructure, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            return AddGearMesh(position, gearStructure.innerRadius, gearStructure.rootRadius, gearStructure.outerRadius, gearStructure.sides, meshMatt, attachRigidbody);
+        }
+
+        #endregion
+
+        #region Public Build
 
         //assign variables, get components and build mesh
         public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null)
@@ -63,6 +74,13 @@ namespace PSG
                 UpdateCollider();
             }
         }
+
+        public void Build(GearStructure gearStructure, Material meshMatt = null)
+        {
+            Build(gearStructure.innerRadius, gearStructure.rootRadius, gearStructure.outerRadius, gearStructure.sides, meshMatt);
+        }
+
+        #endregion
 
         //build a gear
         private bool BuildGear(float innerRadius, float rootRadius, float outerRadius, int sides)

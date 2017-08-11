@@ -25,6 +25,8 @@ namespace PSG
         //colliders
         private PolygonCollider2D C_PC2D;
 
+        #region Static Methods - building from values and from structure
+
         public static RingMesh AddRingMesh(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
@@ -38,6 +40,15 @@ namespace PSG
             }
             return ringComponent;
         }
+
+        public static RingMesh AddRingMesh(Vector3 position, RingStructure ringStructure, Material meshMatt = null, bool attachRigidbody = false)
+        {
+            return AddRingMesh(position, ringStructure.innerRadius, ringStructure.outerRadius, ringStructure.sides, meshMatt, attachRigidbody);
+        }
+
+        #endregion
+
+        #region Public Build
 
         //assign variables, get components and build mesh
         public void Build(float innerRadius, float outerRadius, int sides, Material meshMatt = null)
@@ -59,6 +70,13 @@ namespace PSG
                 UpdateCollider();
             }
         }
+
+        public void Build(RingStructure ringStructure, Material meshMatt = null)
+        {
+            Build(ringStructure.innerRadius, ringStructure.outerRadius, ringStructure.sides, meshMatt);
+        }
+
+        #endregion
 
         //build a ring
         private bool BuildRing(float innerRadius, float outerRadius, int sides)

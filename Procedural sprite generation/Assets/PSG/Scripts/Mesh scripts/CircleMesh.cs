@@ -30,7 +30,9 @@ namespace PSG
         private bool useCircleCollider;
         private Collider2D C_C2D;
 
-        public static CircleMesh AddCircle(Vector3 position, float radius, int sides, bool useCircleCollider, bool attachRigidbody = true, Material meshMatt = null)
+        #region Static Methods - building from values and from structure
+
+        public static CircleMesh AddCircle(Vector3 position, float radius, int sides, bool useCircleCollider, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject circle = new GameObject();
@@ -43,6 +45,15 @@ namespace PSG
             }
             return circleComponent;
         }
+
+        public static CircleMesh AddCircle(Vector3 position, CircleStructure circleStructure, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            return AddCircle(position, circleStructure.radius, circleStructure.sides, circleStructure.useCircleCollider, meshMatt, attachRigidbody);
+        }
+
+        #endregion
+
+        #region Public Build
 
         //assign variables, get components and build mesh
         public void Build(float radius, int sides, bool useCircleCollider, Material meshMatt = null)
@@ -64,6 +75,13 @@ namespace PSG
                 UpdateCollider();
             }
         }
+
+        public void Build(CircleStructure circleStructure, Material meshMatt = null)
+        {
+            Build(circleStructure.radius, circleStructure.sides, circleStructure.useCircleCollider, meshMatt);
+        }
+
+        #endregion
 
         //build a circle
         private bool BuildCircle(float radius, int sides)

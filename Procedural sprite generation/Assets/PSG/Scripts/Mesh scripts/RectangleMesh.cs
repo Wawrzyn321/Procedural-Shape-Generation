@@ -22,6 +22,8 @@ namespace PSG
         //colliders
         private BoxCollider2D C_BC2D;
 
+        #region Static Methods
+        
         public static RectangleMesh AddRectangleMesh(Vector3 position, Vector2 size, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
@@ -65,6 +67,8 @@ namespace PSG
             }
             return rectangleComponent;
         }
+
+        #endregion
 
         //assign variables, get components and build mesh
         public void Build(Vector2 size, Material meshMatt = null)

@@ -25,6 +25,8 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
+        #region Static Methods - building from values and from structure
+
         public static StarMesh AddStartMesh(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
@@ -39,6 +41,15 @@ namespace PSG
             }
             return starComponent;
         }
+
+        public static StarMesh AddStartMesh(Vector3 position, StarStructure starStructure, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            return AddStartMesh(position, starStructure.radiusA, starStructure.radiusB, starStructure.sides, meshMatt, attachRigidbody);
+        }
+
+        #endregion
+
+        #region Public Build
 
         //assign variables, get components and build mesh
         public void Build(float radiusA, float radiusB, int sides, Material meshMatt = null)
@@ -60,6 +71,13 @@ namespace PSG
                 UpdateCollider();
             }
         }
+
+        public void Build(StarStructure starStructure, Material meshMatt = null)
+        {
+            Build(starStructure.radiusA, starStructure.radiusB, starStructure.sides, meshMatt);
+        }
+
+        #endregion
 
         //build a star
         private bool BuildStarMesh(float radiusA, float radiusB, int sides)
