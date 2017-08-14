@@ -13,11 +13,6 @@ namespace PSG
     public class GearMesh : MeshBase
     {
 
-        //mesh data
-        private List<Vector3> vertices;
-        private List<int> triangles;
-        private List<Vector2> uvs;
-
         //gear data
         private int sides;
         private float outerRadius;
@@ -25,7 +20,7 @@ namespace PSG
         private float innerRadius;
 
         //colliders
-        private PolygonCollider2D C_EC2D;
+        private PolygonCollider2D C_PC2D;
 
         #region Static Methods - building from values and from structure
 
@@ -120,12 +115,14 @@ namespace PSG
 
             int doubleSides = 2 * sides;
 
-            vertices = new List<Vector3>();
-            triangles = new List<int>();
+            Vertices = new Vector3[6*sides];
+            Triangles = new int[6 * 3 * sides];
 
             float angleDelta = deg360 / doubleSides;
             float angleShift = angleDelta * 0.5f;
             float outerAngleShift = angleDelta * 0.2f;
+
+            int triangleIndex = 0;
 
             for (int i = 0; i < doubleSides; i++)
             {
@@ -144,36 +141,37 @@ namespace PSG
                     outerVertPos =
                         new Vector3(Mathf.Cos(i * angleDelta + angleShift - outerAngleShift), Mathf.Sin(i * angleDelta + angleShift - outerAngleShift)) * outerRadius;
                 }
-                vertices.Add(innerVertPos);
-                vertices.Add(rootVertPos);
-                vertices.Add(outerVertPos);
+                Vertices[i * 3 + 0] = innerVertPos;
+                Vertices[i * 3 + 1] = rootVertPos;
+                Vertices[i * 3 + 2] = outerVertPos;
 
                 int a = 3 * i;
                 int b = 3 * i + 1;
                 int c = (3 * (i + 1)) % (3 * doubleSides);
                 int d = (3 * (i + 1) + 1) % (3 * doubleSides);
-                triangles.Add(d);
-                triangles.Add(b);
-                triangles.Add(c);
-                triangles.Add(b);
-                triangles.Add(a);
-                triangles.Add(c);
+                Triangles[triangleIndex++] = d;
+                Triangles[triangleIndex++] = b;
+                Triangles[triangleIndex++] = c;
+                Triangles[triangleIndex++] = b;
+                Triangles[triangleIndex++] = a;
+                Triangles[triangleIndex++] = c;
 
+                //add tooth
                 if (i % 2 == 0)
                 {
                     a = 3 * i + 1;
                     b = 3 * i + 2;
                     c = (3 * (i + 1) + 1) % (3 * doubleSides);
                     d = (3 * (i + 1) + 2) % (3 * doubleSides);
-                    triangles.Add(d);
-                    triangles.Add(b);
-                    triangles.Add(c);
-                    triangles.Add(b);
-                    triangles.Add(a);
-                    triangles.Add(c);
+                    Triangles[triangleIndex++] = d;
+                    Triangles[triangleIndex++] = b;
+                    Triangles[triangleIndex++] = c;
+                    Triangles[triangleIndex++] = b;
+                    Triangles[triangleIndex++] = a;
+                    Triangles[triangleIndex++] = c;
                 }
             }
-            uvs = MeshHelper.UVUnwrap(vertices.ToArray());
+            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
 
             return true;
         }
@@ -190,18 +188,6 @@ namespace PSG
 
         #region Abstract Implementation
 
-        public override Vector3[] GetVertices()
-        {
-            return vertices.ToArray();
-        }
-
-        public override void GetOrAddComponents()
-        {
-            C_EC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
-            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
-            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
-        }
-
         public override void UpdateCollider()
         {
             bool isHollow = innerRadius > 0;
@@ -209,31 +195,27 @@ namespace PSG
             Vector2[] colliderPoints = new Vector2[numberOfPoints];
             for (int i = 0; i < sides; i++)
             {
-                colliderPoints[4 * i + 0] = vertices[i * 6 + 1];
-                colliderPoints[4 * i + 1] = vertices[i * 6 + 2];
-                colliderPoints[4 * i + 2] = vertices[i * 6 + 5];
-                colliderPoints[4 * i + 3] = vertices[i * 6 + 4];
+                colliderPoints[4 * i + 0] = Vertices[i * 6 + 1];
+                colliderPoints[4 * i + 1] = Vertices[i * 6 + 2];
+                colliderPoints[4 * i + 2] = Vertices[i * 6 + 5];
+                colliderPoints[4 * i + 3] = Vertices[i * 6 + 4];
             }
             if (isHollow)
             {
                 colliderPoints[4 * sides] = colliderPoints[0];
                 for (int i = 0; i < sides * 2; i++)
                 {
-                    colliderPoints[sides * 4 + i+1] = vertices[i * 3];
+                    colliderPoints[sides * 4 + i+1] = Vertices[i * 3];
                 }
-                colliderPoints[numberOfPoints-1] = vertices[0];
+                colliderPoints[numberOfPoints-1] = Vertices[0];
             }
-            C_EC2D.points = colliderPoints;
+            C_PC2D.points = colliderPoints;
         }
-
-        public override void UpdateMesh()
+        public override void GetOrAddComponents()
         {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices.ToArray();
-            _Mesh.triangles = triangles.ToArray();
-            _Mesh.uv = uvs.ToArray();
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = _Mesh;
+            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
+            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
 
         #endregion

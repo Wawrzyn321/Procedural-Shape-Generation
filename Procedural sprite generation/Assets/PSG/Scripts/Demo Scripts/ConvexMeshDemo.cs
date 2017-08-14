@@ -36,7 +36,7 @@ public class ConvexMeshDemo : MonoBehaviour {
         int v = 0;
         for(int i = 0; i < meshes.Length; i++)
         {
-            v += meshes[i].GetVertices().Length;
+            v += meshes[i].Vertices.Length;
 
             meshes[i].AddHingeJoint(C_JM2D);
             meshes[i].SetCollidersEnabled(false);
@@ -57,7 +57,7 @@ public class ConvexMeshDemo : MonoBehaviour {
         int index = 0;
         for(int i = 0; i < meshes.Length; i++)
         {
-            Vector3[] vertices = meshes[i].GetVertices();
+            Vector3[] vertices = meshes[i].Vertices;
             for (int j = 0; j < vertices.Length; j++, index++)
             {
                 allVertices[index] = meshes[i].transform.TransformPoint(vertices[j]);

@@ -14,11 +14,6 @@ namespace PSG
     public class CakeMesh : MeshBase
     {
 
-        //mesh data
-        private List<Vector3> vertices;
-        private List<int> triangles;
-        private List<Vector2> uvs;
-
         //cake data
         private float radius;
         private int sides;
@@ -98,6 +93,11 @@ namespace PSG
                 Debug.LogWarning("CakeMesh::AddCake: sidesToFill can't be biger than sides!");
                 return false;
             }
+            if (sidesToFill < 1)
+            {
+                Debug.LogWarning("CakeMesh::AddCake: sidesToFill can't be less than one!");
+                return false;
+            }
             if (radius == 0)
             {
                 Debug.LogWarning("CakeMesh::AddCake: radius can't be equal to zero!");
@@ -110,32 +110,32 @@ namespace PSG
 
             #endregion
 
-            vertices = new List<Vector3>();
-            triangles = new List<int>();
-            uvs = new List<Vector2>();
+            Vertices = new Vector3[sidesToFill+4];
+            Triangles = new int[sidesToFill * 3];
+            UVs = new Vector2[sidesToFill + 4];
 
-            vertices.Add(new Vector3(0, 0));
-            uvs.Add(new Vector2(0.5f, 0.5f));
+            Vertices[0] = Vector3.zero;
+            UVs[0] = Vector3.one * 0.5f;
             float angleDelta = deg360 / sides;
-            for (int i = 0; i < sidesToFill + 2; i++)
+            for (int i = 0; i < sidesToFill+2; i++)
             {
                 Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
-                vertices.Add(vertPos);
-                uvs.Add(vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0));
+                Vertices[i+1] = vertPos;
+                UVs[i+1] = vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0);
             }
             for (int i = 0; i < sidesToFill; i++)
             {
-                triangles.Add(1 + i + 1);
-                triangles.Add(1 + i);
-                triangles.Add(0);
+                Triangles[i * 3 + 0] = 1 + i + 1;
+                Triangles[i * 3 + 1] = 1 + i;
+                Triangles[i * 3 + 2] = 0;
             }
 
             centerShift = new Vector2(0, 0);
-            for (int i = 0; i < vertices.Count; i++)
+            for (int i = 0; i < Vertices.Length; i++)
             {
-                centerShift += (Vector2)vertices[i];
+                centerShift += (Vector2)Vertices[i];
             }
-            centerShift /= vertices.Count;
+            centerShift /= Vertices.Length;
 
             return true;
         }
@@ -153,9 +153,14 @@ namespace PSG
 
         #region Abstract Implementation
 
-        public override Vector3[] GetVertices()
+        public override void UpdateCollider()
         {
-            return vertices.ToArray();
+            Vector2[] points = new Vector2[sidesToFill + 2];
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = Vertices[i];
+            }
+            C_PC2D.points = points;
         }
 
         public override void GetOrAddComponents()
@@ -163,27 +168,6 @@ namespace PSG
             C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
-        }
-
-        public override void UpdateCollider()
-        {
-            Vector2[] points = new Vector2[sidesToFill + 3];
-            for (int i = 0; i < vertices.Count - 1; i++)
-            {
-                points[i] = vertices[i];
-            }
-            points[points.Length - 1] = points[0];
-            C_PC2D.points = points;
-        }
-
-        public override void UpdateMesh()
-        {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices.ToArray();
-            _Mesh.triangles = triangles.ToArray();
-            _Mesh.uv = uvs.ToArray();
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = _Mesh;
         }
 
         #endregion

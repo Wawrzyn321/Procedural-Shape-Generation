@@ -14,10 +14,7 @@ namespace PSG
     public class ConvexMesh : MeshBase
     {
         //mesh data
-        private List<Vector3> points;
-        private List<Vector3> meshVertices;
-        private List<int> triangles;
-        private List<Vector2> uvs;
+        private Vector3[] baseVertices;
 
         //collider
         private PolygonCollider2D C_PC2D;
@@ -55,11 +52,11 @@ namespace PSG
         }
 
         //build convex shape
-        private bool BuildConvex(Vector3[] verts)
+        private bool BuildConvex(Vector3[] vertices)
         {
             #region Validity Check
 
-            if (verts.Length < 2)
+            if (vertices.Length < 2)
             {
                 Debug.LogWarning("ConvexMesh::BuildConves: verts count must be greater than 2!");
                 return false;
@@ -67,48 +64,34 @@ namespace PSG
 
             #endregion
 
-            points = new List<Vector3>(verts);
-            triangles = new List<int>();
+            baseVertices = vertices;
 
-            meshVertices = QuickHull(points);
-            for (int i = 1; i < meshVertices.Count - 1; i++)
+            Vertices = QuickHull(new List<Vector3>(vertices)).ToArray();
+
+            Triangles = new int[Vertices.Length * 3];
+
+            for (int i = 1; i < Vertices.Length - 1; i++)
             {
-                triangles.Add(0);
-                triangles.Add(i);
-                triangles.Add(i + 1);
+                Triangles[i * 3 + 0] = 0;
+                Triangles[i * 3 + 1] = i;
+                Triangles[i * 3 + 2] = i + 1;
             }
-            uvs = MeshHelper.UVUnwrap(meshVertices.ToArray());
+            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
 
             return true;
         }
 
         //get points set in constructor
-        public List<Vector3> GetBasePoints()
+        public Vector3[] GetBasePoints()
         {
-            return points;
+            return baseVertices;
         }
 
         #region Abstract Implementation
-
-        //gets outline points only
-        public override Vector3[] GetVertices()
-        {
-            return meshVertices.ToArray();
-        }
-
-        public override void UpdateMesh()
-        {
-            _Mesh.Clear();
-            _Mesh.vertices = meshVertices.ToArray();
-            _Mesh.triangles = triangles.ToArray();
-            _Mesh.uv = uvs.ToArray();
-            _Mesh.normals = MeshHelper.AddMeshNormals(meshVertices.Count);
-            C_MF.mesh = _Mesh;
-        }
-
+        
         public override void UpdateCollider()
         {
-            C_PC2D.points = MeshHelper.ConvertVec3ToVec2(meshVertices.ToArray());
+            C_PC2D.points = MeshHelper.ConvertVec3ToVec2(Vertices);
         }
 
         public override void GetOrAddComponents()

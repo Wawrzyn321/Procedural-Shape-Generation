@@ -14,11 +14,6 @@ namespace PSG
     /// </summary>
     public class PointedCircleMesh : MeshBase
     {
-        //mesh data
-        private List<Vector3> vertices;
-        private List<int> triangles;
-        private List<Vector2> uvs;
-
         //p-circle data
         private float radius;
         private Vector2 shift;
@@ -103,20 +98,20 @@ namespace PSG
 
             #endregion
 
-            vertices = new List<Vector3>();
-            triangles = new List<int>();
+            Vertices = new Vector3[sides + 1];
+            Triangles = new int[3 * sides];
 
             float angleDelta = deg360 / sides;
-            vertices.Add(shift);
+            Vertices[0] = shift;
             for (int i = 1; i < sides + 1; i++)
             {
                 Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
-                vertices.Add(vertPos);
-                triangles.Add(1 + i % sides);
-                triangles.Add(1 + (i - 1) % sides);
-                triangles.Add(0);
+                Vertices[i ] = vertPos;
+                Triangles[(i - 1) * 3 + 0] = (1 + i % sides);
+                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                Triangles[(i - 1) * 3 + 2] = 0;
             }
-            uvs = MeshHelper.UVUnwrap(vertices.ToArray());
+            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
 
             return true;
         }
@@ -133,47 +128,31 @@ namespace PSG
 
         #region Abstract Implementation
 
-        public override Vector3[] GetVertices()
-        {
-            return vertices.ToArray();
-        }
-
-        public override void GetOrAddComponents()
-        {
-            C_CC2D = gameObject.GetOrAddComponent<CircleCollider2D>();
-            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
-            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
-        }
-
         public override void UpdateCollider()
         {
             C_CC2D.radius = radius;
 
-            if (radius < vertices[0].sqrMagnitude)
+            if (radius < Vertices[0].sqrMagnitude)
             {
                 //not added in AddOrGetComponents
                 C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
 
                 Vector2[] C_CC2D_vertices = new Vector2[3];
 
-                float shiftedVertexAngle = Mathf.Atan2(vertices[0].y, vertices[0].x);
+                float shiftedVertexAngle = Mathf.Atan2(Vertices[0].y, Vertices[0].x);
 
-                C_CC2D_vertices[0] = vertices[0];
+                C_CC2D_vertices[0] = Vertices[0];
                 C_CC2D_vertices[1] = new Vector2(Mathf.Cos(shiftedVertexAngle - Mathf.PI * 0.5f), Mathf.Sin(shiftedVertexAngle - Mathf.PI * 0.5f)) * radius;
                 C_CC2D_vertices[2] = new Vector2(Mathf.Cos(shiftedVertexAngle + Mathf.PI * 0.5f), Mathf.Sin(shiftedVertexAngle + Mathf.PI * 0.5f)) * radius;
 
                 C_PC2D.SetPath(0, C_CC2D_vertices);
             }
         }
-
-        public override void UpdateMesh()
+        public override void GetOrAddComponents()
         {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices.ToArray();
-            _Mesh.triangles = triangles.ToArray();
-            _Mesh.uv = uvs.ToArray();
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = _Mesh;
+            C_CC2D = gameObject.GetOrAddComponent<CircleCollider2D>();
+            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
+            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
 
         public override void SetCollidersEnabled(bool enable)

@@ -12,11 +12,6 @@ namespace PSG
     /// </summary>
     public class RingMesh : MeshBase
     {
-        //mesh data
-        private List<Vector3> vertices;
-        private List<int> triangles;
-        private List<Vector2> uvs;
-
         //ring data
         private float innerRadius;
         private float outerRadius;
@@ -102,12 +97,6 @@ namespace PSG
             {
                 outerRadius = -outerRadius;
             }
-
-            #endregion
-
-            vertices = new List<Vector3>();
-            triangles = new List<int>();
-
             //swap radiuses if inner one is greater than outer
             if (innerRadius > outerRadius)
             {
@@ -116,38 +105,47 @@ namespace PSG
                 outerRadius = tempRadius;
             }
 
-            //build ordinary circle
-            if (innerRadius == outerRadius)
+            #endregion
+
+            bool isCircle = innerRadius == 0;
+
+            Vertices = new Vector3[isCircle ? sides + 1 : 2 * sides];
+            Triangles = new int[isCircle ? 3 * sides : 6 * sides];
+
+            if (isCircle)
             {
-                vertices.Add(new Vector3(0, 0));
+                //build ordinary circle
+                Vertices[0] = Vector3.zero;
                 float angleDelta = deg360 / sides;
                 for (int i = 1; i < sides + 1; i++)
                 {
-                    Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * innerRadius;
-                    vertices.Add(vertPos);
-                    triangles.Add(0);
-                    triangles.Add(1 + (i - 1) % sides);
-                    triangles.Add(1 + i % sides);
+                    Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * outerRadius;
+                    Vertices[i] = vertPos;
+                    Triangles[(i-1) * 3 + 0] = 0;
+                    Triangles[(i-1) * 3 + 1] = 1 + (i - 1) % sides;
+                    Triangles[(i-1) * 3 + 2] = 1 + i % sides;
                 }
             }
             else
             {
+                //build a ring!
                 float angleDelta = deg360 / sides;
+                int triangleIndex = 0;
                 for (int i = 0; i < sides; i++)
                 {
                     Vector3 vertPosInner = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * innerRadius;
                     Vector3 vertPosOuter = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * outerRadius;
-                    vertices.Add(vertPosInner);
-                    vertices.Add(vertPosOuter);
-                    triangles.Add(i * 2 + 0);
-                    triangles.Add((i * 2 + 2) % (sides * 2));
-                    triangles.Add((i * 2 + 1) % (sides * 2));
-                    triangles.Add((i * 2 + 3) % (sides * 2));
-                    triangles.Add((i * 2 + 1) % (sides * 2));
-                    triangles.Add((i * 2 + 2) % (sides * 2));
+                    Vertices[i] = vertPosInner;
+                    Vertices[i + sides] = vertPosOuter;
+                    Triangles[triangleIndex++] = i;
+                    Triangles[triangleIndex++] = (i + 1) % (sides);
+                    Triangles[triangleIndex++] = (i + sides);
+                    Triangles[triangleIndex++] = (i + 1) % (sides*2);
+                    Triangles[triangleIndex++] = (i + sides);
+                    Triangles[triangleIndex++] = (i + sides + 1) % (sides*2);
                 }
             }
-            uvs = MeshHelper.UVUnwrap(vertices.ToArray());
+            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
 
             return true;
         }
@@ -164,26 +162,6 @@ namespace PSG
 
         #region Abstract Implementation
 
-        public override Vector3[] GetVertices()
-        {
-            return vertices.ToArray();
-        }
-
-        public override void UpdateMesh()
-        {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices.ToArray();
-            _Mesh.triangles = triangles.ToArray();
-            _Mesh.uv = uvs.ToArray();
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = _Mesh;
-        }
-        public override void GetOrAddComponents()
-        {
-            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
-            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
-            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
-        }
         public override void UpdateCollider()
         {
             bool isHollow = innerRadius > 0;
@@ -208,6 +186,13 @@ namespace PSG
             }
 
             C_PC2D.points = colliderPoints;
+        }
+
+        public override void GetOrAddComponents()
+        {
+            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
+            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
 
         #endregion

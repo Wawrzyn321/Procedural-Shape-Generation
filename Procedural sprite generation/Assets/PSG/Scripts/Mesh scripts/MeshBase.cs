@@ -9,6 +9,11 @@ namespace PSG
     /// </summary>
     public abstract class MeshBase : MonoBehaviour
     {
+        //mesh data
+        public Vector3[] Vertices { get; protected set; }
+        public int[] Triangles { get; protected set; }
+        public Vector2[] UVs { get; protected set; }
+
 
         //common mesh components
         public Mesh _Mesh { get; protected set; }
@@ -21,11 +26,16 @@ namespace PSG
 
         #region Abstract and Virtual
 
-        //some meshes have List<>, some arrays
-        public abstract Vector3[] GetVertices();
-
         //update mesh in MeshFilter component
-        public abstract void UpdateMesh();
+        public virtual void UpdateMesh()
+        {
+            _Mesh.Clear();
+            _Mesh.vertices = Vertices;
+            _Mesh.triangles = Triangles;
+            _Mesh.uv = UVs;
+            _Mesh.normals = MeshHelper.AddMeshNormals(Vertices.Length);
+            C_MF.mesh = _Mesh;
+        }
 
         //update attached colliders
         public abstract void UpdateCollider();

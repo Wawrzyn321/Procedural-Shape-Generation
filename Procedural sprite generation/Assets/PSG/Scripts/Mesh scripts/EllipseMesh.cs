@@ -12,11 +12,6 @@ namespace PSG
     /// </summary>
     public class EllipseMesh : MeshBase
     {
-        //mesh data
-        private List<Vector3> vertices;
-        private List<int> triangles;
-        private List<Vector2> uvs;
-
         //ellipse data
         private float radiusHorizontal;
         private float radiusVertical;
@@ -105,21 +100,21 @@ namespace PSG
 
             #endregion
 
-            vertices = new List<Vector3>();
-            triangles = new List<int>();
-            uvs = new List<Vector2>();
+            Vertices = new Vector3[sides + 1];
+            Triangles = new int[3 * sides];
+            UVs = new Vector2[sides + 1];
 
-            vertices.Add(new Vector3(0, 0));
-            uvs.Add(new Vector2(0.5f, 0.5f));
+            Vertices[0] = Vector3.zero;
+            UVs[0] = Vector3.one * 0.5f;
             float angleDelta = deg360 / sides;
             for (int i = 1; i < sides + 1; i++)
             {
                 Vector3 vertPos = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusA, Mathf.Sin((i + 1) * angleDelta) * radiusB);
-                vertices.Add(vertPos);
-                uvs.Add(new Vector3(vertPos.x / 2 / radiusA, vertPos.y / 2 / radiusB) + new Vector3(0.5f, 0.5f, 0));
-                triangles.Add(1 + i % sides);
-                triangles.Add(1 + (i - 1) % sides);
-                triangles.Add(0);
+                Vertices[i] = vertPos;
+                UVs[i] = new Vector3(vertPos.x / 2 / radiusA, vertPos.y / 2 / radiusB) + new Vector3(0.5f, 0.5f, 0);
+                Triangles[(i - 1) * 3 + 0] = 1 + i % sides;
+                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                Triangles[(i - 1) * 3 + 2] = 0;
             }
 
             return true;
@@ -137,37 +132,21 @@ namespace PSG
 
         #region Abstract Implementation
 
-        public override Vector3[] GetVertices()
-        {
-            return vertices.ToArray();
-        }
-
-        public override void GetOrAddComponents()
-        {
-            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
-            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
-            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
-        }
-
         public override void UpdateCollider()
         {
-            Vector2[] points = new Vector2[sides + 1];
+            Vector2[] points = new Vector2[sides];
             float angleDelta = deg360 / sides;
-            for (int i = 0; i < sides + 1; i++)
+            for (int i = 0; i < sides; i++)
             {
                 points[i] = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusHorizontal, Mathf.Sin((i + 1) * angleDelta) * radiusVertical);
             }
             C_PC2D.points = points;
         }
-
-        public override void UpdateMesh()
+        public override void GetOrAddComponents()
         {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices.ToArray();
-            _Mesh.triangles = triangles.ToArray();
-            _Mesh.uv = uvs.ToArray();
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = _Mesh;
+            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+            C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
+            C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }
 
         #endregion

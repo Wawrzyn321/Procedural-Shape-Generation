@@ -17,11 +17,6 @@ namespace PSG
 
     public class CircleMesh : MeshBase
     {
-        //mesh data
-        private Vector3[] vertices;
-        private int[] triangles;
-        private Vector2[] uvs;
-
         //circle data
         private float radius;
         private int sides;
@@ -106,22 +101,22 @@ namespace PSG
 
             #endregion
 
-            vertices = new Vector3[sides + 1];
-            triangles = new int[3*sides];
-            uvs = new Vector2[sides + 1];
+            Vertices = new Vector3[sides + 1];
+            Triangles = new int[3*sides];
+            UVs = new Vector2[sides + 1];
 
-            vertices[0] = Vector3.zero;
+            Vertices[0] = Vector3.zero;
             //uvs are manually unwrapped here
-            uvs[0] = new Vector2(0.5f, 0.5f);
+            UVs[0] = new Vector2(0.5f, 0.5f);
             float angleDelta = deg360 / sides;
             for (int i = 1; i < sides + 1; i++)
             {
                 Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
-                vertices[i] = vertPos;
-                uvs[i] = vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0);
-                triangles[(i - 1) * 3 + 0] = (1 + i % sides);
-                triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
-                triangles[(i - 1) * 3 + 2] = 0;
+                Vertices[i] = vertPos;
+                UVs[i] = vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0);
+                Triangles[(i - 1) * 3 + 0] = (1 + i % sides);
+                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                Triangles[(i - 1) * 3 + 2] = 0;
             }
 
             return true;
@@ -139,9 +134,17 @@ namespace PSG
 
         #region Abstract Implementation
 
-        public override Vector3[] GetVertices()
+        public override void UpdateCollider()
         {
-            return vertices;
+            if (useCircleCollider)
+            {
+                ((CircleCollider2D)C_C2D).radius = radius;
+            }
+
+            else
+            {
+                ((PolygonCollider2D)C_C2D).SetPath(0, MeshHelper.ConvertVec3ToVec2(Vertices));
+            }
         }
 
         public override void GetOrAddComponents()
@@ -156,29 +159,6 @@ namespace PSG
             }
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
-        }
-
-        public override void UpdateCollider()
-        {
-            if (useCircleCollider)
-            {
-                ((CircleCollider2D)C_C2D).radius = radius;
-            }
-
-            else
-            {
-                ((PolygonCollider2D)C_C2D).SetPath(0, MeshHelper.ConvertVec3ToVec2(vertices));
-            }
-        }
-
-        public override void UpdateMesh()
-        {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices;
-            _Mesh.triangles = triangles;
-            _Mesh.uv = uvs;
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = _Mesh;
         }
 
         #endregion

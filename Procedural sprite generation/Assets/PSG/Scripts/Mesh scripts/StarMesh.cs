@@ -11,12 +11,6 @@ namespace PSG
     /// 
     public class StarMesh : MeshBase
     {
-
-        //mesh data
-        private Vector3[] vertices;
-        private int[] triangles;
-        private Vector2[] uvs;
-
         //star data
         private float radiusA; //horizontal radius
         private float radiusB; //vertical radius
@@ -106,23 +100,23 @@ namespace PSG
 
             #endregion
 
-            vertices = new Vector3[1 + sides * 2];
-            triangles = new int[2 * sides * 3];
-            uvs = new Vector2[1 + sides * 2];
+            Vertices = new Vector3[1 + sides * 2];
+            Triangles = new int[2 * sides * 3];
+            UVs = new Vector2[1 + sides * 2];
 
-            vertices[0] = new Vector3(0, 0);
+            Vertices[0] = new Vector3(0, 0);
             float angleDelta = 360 / (float)sides / 2 * Mathf.Deg2Rad;
             float angleShift = -360f / (sides * 4) * Mathf.Deg2Rad;
             for (int i = 0; i < sides * 2; i++)
             {
                 Vector3 vertVec = new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift));
-                vertices[1 + i] = vertVec * (i % 2 == 0 ? radiusA : radiusB);
-                triangles[(i * 3 + 2) % triangles.Length] = 0;
-                triangles[(i * 3 + 1) % triangles.Length] = 1 + i % (sides * 2);
-                triangles[i * 3] = 1 + (i + 1) % (sides * 2);
+                Vertices[1 + i] = vertVec * (i % 2 == 0 ? radiusA : radiusB);
+                Triangles[(i * 3 + 2) % Triangles.Length] = 0;
+                Triangles[(i * 3 + 1) % Triangles.Length] = 1 + i % (sides * 2);
+                Triangles[i * 3] = 1 + (i + 1) % (sides * 2);
             }
 
-            uvs = MeshHelper.UVUnwrap(vertices).ToArray();
+            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
 
             return true;
         }
@@ -138,21 +132,6 @@ namespace PSG
         }
 
         #region Abstract Implementation
-
-        public override Vector3[] GetVertices()
-        {
-            return vertices;
-        }
-
-        public override void UpdateMesh()
-        {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices;
-            _Mesh.triangles = triangles;
-            _Mesh.uv = uvs;
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = _Mesh;
-        }
 
         public override void UpdateCollider()
         {

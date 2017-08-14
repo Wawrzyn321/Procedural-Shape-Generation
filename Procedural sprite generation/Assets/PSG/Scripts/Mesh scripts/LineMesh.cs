@@ -16,11 +16,6 @@ namespace PSG
     public class LineMesh : MeshBase
     {
 
-        //mesh data
-        private List<Vector3> vertices;
-        private List<int> triangles;
-        private List<Vector2> uvs;
-
         //line data
         private bool useDoubleCollider;
         private Vector2[] lineVerts;
@@ -118,8 +113,8 @@ namespace PSG
             }
             #endregion
 
-            vertices = new List<Vector3>();
-            triangles = new List<int>();
+            List<Vector3> verticesList = new List<Vector3>();
+            List<int> trianglesList = new List<int>();
 
             int currentVertIndex = 0;
             int currentTriIndex = 0;
@@ -130,24 +125,24 @@ namespace PSG
             Vector2 p2 = new Vector2(Mathf.Cos(angle - deg90), Mathf.Sin(angle - deg90)) * lineWidth;
             if (p1 != p2)
             {
-                vertices.Add(lineVerts[currentVertIndex] + p1);
-                vertices.Add(lineVerts[currentVertIndex] + p2);
+                verticesList.Add(lineVerts[currentVertIndex] + p1);
+                verticesList.Add(lineVerts[currentVertIndex] + p2);
                 #region DoubleCollider
                 if (useDoubleCollider)
                 {
-                    cachedVertsLeft.Add(vertices[vertices.Count - 2]);
-                    cachedVertsRight.Add(vertices[vertices.Count - 1]);
+                    cachedVertsLeft.Add(verticesList[verticesList.Count - 2]);
+                    cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
                 }
                 #endregion
             }
             else
             {
-                vertices.Add(lineVerts[currentVertIndex]);
+                verticesList.Add(lineVerts[currentVertIndex]);
                 #region DoubleCollider
                 if (useDoubleCollider)
                 {
-                    cachedVertsLeft.Add(vertices[vertices.Count - 1]);
-                    cachedVertsRight.Add(vertices[vertices.Count - 1]);
+                    cachedVertsLeft.Add(verticesList[verticesList.Count - 1]);
+                    cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
                 }
                 #endregion
             }
@@ -162,32 +157,32 @@ namespace PSG
                 p2 = new Vector2(Mathf.Cos(angleDiff - deg90), Mathf.Sin(angleDiff - deg90)) * lineWidth;
                 if (p1 != p2)
                 {
-                    vertices.Add(lineVerts[currentVertIndex] + p1);
-                    vertices.Add(lineVerts[currentVertIndex] + p2);
-                    triangles.Add(currentTriIndex + 0);
-                    triangles.Add(currentTriIndex + 3);
-                    triangles.Add(currentTriIndex + 1);
-                    triangles.Add(currentTriIndex + 3);
-                    triangles.Add(currentTriIndex + 0);
-                    triangles.Add(currentTriIndex + 2);
+                    verticesList.Add(lineVerts[currentVertIndex] + p1);
+                    verticesList.Add(lineVerts[currentVertIndex] + p2);
+                    trianglesList.Add(currentTriIndex + 0);
+                    trianglesList.Add(currentTriIndex + 3);
+                    trianglesList.Add(currentTriIndex + 1);
+                    trianglesList.Add(currentTriIndex + 3);
+                    trianglesList.Add(currentTriIndex + 0);
+                    trianglesList.Add(currentTriIndex + 2);
                     currentTriIndex += 2;
                 }
                 else
                 {
-                    vertices.Add(lineVerts[currentTriIndex] + p1);
-                    if (vertices[vertices.Count - 1] != vertices[vertices.Count - 2])
+                    verticesList.Add(lineVerts[currentTriIndex] + p1);
+                    if (verticesList[verticesList.Count - 1] != verticesList[verticesList.Count - 2])
                     {
-                        triangles.Add(currentTriIndex + 0);
-                        triangles.Add(currentTriIndex + 3);
-                        triangles.Add(currentTriIndex + 1);
+                        trianglesList.Add(currentTriIndex + 0);
+                        trianglesList.Add(currentTriIndex + 3);
+                        trianglesList.Add(currentTriIndex + 1);
                         currentTriIndex++;
                     }
                 }
                 #region DoubleCollider
                 if (useDoubleCollider)
                 {
-                    cachedVertsLeft.Add(vertices[vertices.Count - 2]);
-                    cachedVertsRight.Add(vertices[vertices.Count - 1]);
+                    cachedVertsLeft.Add(verticesList[verticesList.Count - 2]);
+                    cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
                 }
                 #endregion
                 oldAngle = angle;
@@ -201,31 +196,31 @@ namespace PSG
                 p2 = new Vector2(Mathf.Cos(angle - deg90), Mathf.Sin(angle - deg90)) * lineWidth;
                 if (p1 != p2)
                 {
-                    vertices.Add(lineVerts[currentVertIndex] + p1);
-                    vertices.Add(lineVerts[currentVertIndex] + p2);
-                    triangles.Add(currentTriIndex + 0);
-                    triangles.Add(currentTriIndex + 3);
-                    triangles.Add(currentTriIndex + 1);
-                    triangles.Add(currentTriIndex + 3);
-                    triangles.Add(currentTriIndex + 0);
-                    triangles.Add(currentTriIndex + 2);
+                    verticesList.Add(lineVerts[currentVertIndex] + p1);
+                    verticesList.Add(lineVerts[currentVertIndex] + p2);
+                    trianglesList.Add(currentTriIndex + 0);
+                    trianglesList.Add(currentTriIndex + 3);
+                    trianglesList.Add(currentTriIndex + 1);
+                    trianglesList.Add(currentTriIndex + 3);
+                    trianglesList.Add(currentTriIndex + 0);
+                    trianglesList.Add(currentTriIndex + 2);
                 }
                 else
                 {
                     //make LineMesh loop
-                    if (vertices[vertices.Count - 1] != vertices[vertices.Count - 2])
+                    if (verticesList[verticesList.Count - 1] != verticesList[verticesList.Count - 2])
                     {
-                        vertices.Add(lineVerts[currentTriIndex] + p1);
-                        triangles.Add(currentTriIndex + 0);
-                        triangles.Add(currentTriIndex + 3);
-                        triangles.Add(currentTriIndex + 1);
+                        verticesList.Add(lineVerts[currentTriIndex] + p1);
+                        trianglesList.Add(currentTriIndex + 0);
+                        trianglesList.Add(currentTriIndex + 3);
+                        trianglesList.Add(currentTriIndex + 1);
                     }
                 }
                 #region DoubleCollider
                 if (useDoubleCollider)
                 {
-                    cachedVertsLeft.Add(vertices[vertices.Count - 2]);
-                    cachedVertsRight.Add(vertices[vertices.Count - 1]);
+                    cachedVertsLeft.Add(verticesList[verticesList.Count - 2]);
+                    cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
                 }
                 #endregion
             }
@@ -240,26 +235,29 @@ namespace PSG
                 angleDiff = oldAngle + MeshHelper.AngleDifference(oldAngle, angle) * 0.5f - deg90;
                 p1 = new Vector2(Mathf.Cos(angleDiff - deg90), Mathf.Sin(angleDiff - deg90)) * lineWidth;
                 p2 = new Vector2(Mathf.Cos(angleDiff + deg90), Mathf.Sin(angleDiff + deg90)) * lineWidth;
-                vertices[0] = lineVerts[currentVertIndex] + p1;
-                vertices[1] = lineVerts[currentVertIndex] + p2;
+                verticesList[0] = lineVerts[currentVertIndex] + p1;
+                verticesList[1] = lineVerts[currentVertIndex] + p2;
                 #region DoubleCollider
                 if (useDoubleCollider)
                 {
-                    cachedVertsLeft[0] = vertices[0];
-                    cachedVertsRight[0] = vertices[1];
-                    cachedVertsLeft.Add(vertices[vertices.Count - 2]);
-                    cachedVertsRight.Add(vertices[vertices.Count - 1]);
+                    cachedVertsLeft[0] = verticesList[0];
+                    cachedVertsRight[0] = verticesList[1];
+                    cachedVertsLeft.Add(verticesList[verticesList.Count - 2]);
+                    cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
                 }
                 #endregion
 
-                triangles.Add(0);
-                triangles.Add(vertices.Count - 1);
-                triangles.Add(1);
-                triangles.Add(vertices.Count - 1);
-                triangles.Add(0);
-                triangles.Add(vertices.Count - 2);
+                trianglesList.Add(0);
+                trianglesList.Add(verticesList.Count - 1);
+                trianglesList.Add(1);
+                trianglesList.Add(verticesList.Count - 1);
+                trianglesList.Add(0);
+                trianglesList.Add(verticesList.Count - 2);
             }
-            uvs = MeshHelper.UVUnwrap(vertices.ToArray());
+            Vertices = verticesList.ToArray();
+            Triangles = trianglesList.ToArray();
+
+            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
 
             return true;
         }
@@ -276,20 +274,6 @@ namespace PSG
 
         #region Abstract Implementation
 
-        public override Vector3[] GetVertices()
-        {
-            return vertices.ToArray();
-        }
-
-        public override void UpdateMesh()
-        {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices.ToArray();
-            _Mesh.triangles = triangles.ToArray();
-            _Mesh.uv = uvs.ToArray();
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Count);
-            C_MF.mesh = _Mesh;
-        }
         public override void UpdateCollider()
         {
             if (useDoubleCollider)
@@ -305,7 +289,7 @@ namespace PSG
                     points[i + cachedVertsLeft.Count] = cachedVertsRight[cachedVertsRight.Count - 1 - i];
                 }
                 //when shape isn't closed
-                if (vertices[0] != vertices[vertices.Count - 1])
+                if (Vertices[0] != Vertices[Vertices.Length - 1])
                 {
                     points[points.Length - 1] = cachedVertsLeft[0];
                 }

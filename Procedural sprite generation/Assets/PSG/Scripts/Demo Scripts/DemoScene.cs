@@ -62,7 +62,7 @@ public class DemoScene : MonoBehaviour
     {
         float radius = Random.Range(0.5f, 1.5f);
         int sides = Random.Range(10, 20);
-        int sidesToFill = sides - Random.Range(5, 8);
+        int sidesToFill = sides - Random.Range(5, 10);
 
         CakeMesh cake = CakeMesh.AddCakeMesh(pos, radius, sides, sidesToFill, material);
         
@@ -146,7 +146,7 @@ public class DemoScene : MonoBehaviour
 
     }
     private void AddGear(Vector3 pos)
-    {;
+    {
         float innerRadius = Random.Range(0.3f, 0.5f);
         float rootRadius = innerRadius + Random.Range(0.1f, 0.5f);
         float outerRadius = rootRadius + Random.Range(0.3f, 0.5f);

@@ -7,7 +7,7 @@ namespace PSG
     {
         #region Material
 
-        public static Material cachedDefaultMaterial;
+        private static Material cachedDefaultMaterial;
         //if material is null, replace it with default
         public static void CheckMaterial(ref Material meshMatt)
         {
@@ -81,7 +81,7 @@ namespace PSG
         #endregion
 
         #region UV Unwrapping
-        public static Vector4 GetBounds(Vector3[] vec)
+        private static Vector4 GetBounds(Vector3[] vec)
         {
             /* x - minX
              * y - minY
@@ -113,7 +113,7 @@ namespace PSG
             }
             return new Vector4(x, y, z, w);
         }
-        public static Vector4 GetBounds(Vector2[] vec)
+        private static Vector4 GetBounds(Vector2[] vec)
         {
             /* x - minX
              * y - minY

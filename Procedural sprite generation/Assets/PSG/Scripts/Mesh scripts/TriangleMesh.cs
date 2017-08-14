@@ -13,12 +13,6 @@ namespace PSG
     /// </summary>
     public class TriangleMesh : MeshBase
     {
-
-        //mesh data
-        private Vector3[] vertices;
-        private int[] triangles;
-        private Vector2[] uvs;
-
         //collider
         private PolygonCollider2D C_PC2D;
 
@@ -91,20 +85,20 @@ namespace PSG
 
             #endregion
 
-            if (vertices == null)
+            if (Vertices == null)
             {
-                vertices = new Vector3[3];
+                Vertices = new Vector3[3];
             }
 
-            if (triangles == null)
+            if (Triangles == null)
             {
-                triangles = new int[3];
-                triangles[0] = 0;
-                triangles[1] = 2;
-                triangles[2] = 1;
+                Triangles = new int[3];
+                Triangles[0] = 0;
+                Triangles[1] = 2;
+                Triangles[2] = 1;
             }
 
-            vertices[0] = p1;
+            Vertices[0] = p1;
 
             float sign = MeshHelper.GetSide(p2, p1, p3);
             if (sign == 0)
@@ -114,38 +108,25 @@ namespace PSG
             }
             else if (sign == -1)
             {
-                vertices[1] = p2;
-                vertices[2] = p3;
+                Vertices[1] = p2;
+                Vertices[2] = p3;
             }
             else
             {
-                vertices[1] = p3;
-                vertices[2] = p2;
+                Vertices[1] = p3;
+                Vertices[2] = p2;
             }
 
-            uvs = MeshHelper.UVUnwrap(vertices).ToArray();
+            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
 
             return true;
         }
 
         #region Abstract Implementation
 
-        public override Vector3[] GetVertices()
-        {
-            return vertices;
-        }
-        public override void UpdateMesh()
-        {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices;
-            _Mesh.triangles = triangles;
-            _Mesh.uv = uvs;
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = _Mesh;
-        }
         public override void UpdateCollider()
         {
-            C_PC2D.SetPath(0, MeshHelper.ConvertVec3ToVec2(vertices));
+            C_PC2D.SetPath(0, MeshHelper.ConvertVec3ToVec2(Vertices));
         }
         public override void GetOrAddComponents()
         {

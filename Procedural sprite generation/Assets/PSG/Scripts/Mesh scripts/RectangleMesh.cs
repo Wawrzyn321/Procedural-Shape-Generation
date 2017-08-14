@@ -14,11 +14,6 @@ namespace PSG
         //mesh parameter
         private Vector2 size;
 
-        //mesh data
-        private Vector3[] vertices;
-        private int[] triangles;
-        private Vector2[] uvs;
-
         //colliders
         private BoxCollider2D C_BC2D;
 
@@ -102,7 +97,7 @@ namespace PSG
 
             #endregion
 
-            vertices = new Vector3[]
+            Vertices = new Vector3[]
             {
             new Vector3(-size.x*0.5f, -size.y*0.5f, 0), //topleft
             new Vector3(size.x*0.5f, -size.y*0.5f, 0), //topright
@@ -110,9 +105,9 @@ namespace PSG
             new Vector3(-size.x*0.5f, size.y*0.5f, 0), //downright
             };
 
-            triangles = new int[] { 1, 0, 2, 2, 0, 3 };
+            Triangles = new int[] { 1, 0, 2, 2, 0, 3 };
 
-            uvs = new Vector2[]
+            UVs = new Vector2[]
             {
             new Vector2(0, 0),
             new Vector2(1, 0),
@@ -125,7 +120,7 @@ namespace PSG
         //convert to quad
         public QuadrangleMesh ToQuad(bool attachRigidbody = true)
         {
-            return QuadrangleMesh.AddQuadrangle(transform.position, MeshHelper.ConvertVec3ToVec2(vertices), C_MR.material, attachRigidbody);
+            return QuadrangleMesh.AddQuadrangle(transform.position, MeshHelper.ConvertVec3ToVec2(Vertices), C_MR.material, attachRigidbody);
         }
 
         //get dimensions of box - equivalent to GetStructure
@@ -135,21 +130,6 @@ namespace PSG
         }
 
         #region Abstract Implementation
-
-        public override Vector3[] GetVertices()
-        {
-            return vertices;
-        }
-
-        public override void UpdateMesh()
-        {
-            _Mesh.Clear();
-            _Mesh.vertices = vertices;
-            _Mesh.triangles = triangles;
-            _Mesh.uv = uvs;
-            _Mesh.normals = MeshHelper.AddMeshNormals(vertices.Length);
-            C_MF.mesh = _Mesh;
-        }
 
         public override void UpdateCollider()
         {
