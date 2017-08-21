@@ -55,6 +55,7 @@ namespace PSG
             this.radiusA = radiusA;
             this.radiusB = radiusB;
             _Mesh = new Mesh();
+            
             GetOrAddComponents();
 
             C_MR.material = meshMatt;

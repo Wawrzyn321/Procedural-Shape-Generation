@@ -10,15 +10,32 @@ namespace PSG
     public abstract class MeshBase : MonoBehaviour
     {
         //mesh data
-        public Vector3[] Vertices { get; protected set; }
-        public int[] Triangles { get; protected set; }
-        public Vector2[] UVs { get; protected set; }
+        [SerializeField, HideInInspector]
+        private Vector3[] vertices;
+        public Vector3[] Vertices { get { return vertices; } protected set { vertices = value; } }
+
+        [SerializeField, HideInInspector]
+        private int[] triangles;
+        public int[] Triangles { get { return triangles; } protected set { triangles = value; } }
+
+        [SerializeField, HideInInspector]
+        private Vector2[] uvs;
+        public Vector2[] UVs { get { return uvs; } protected set { uvs = value; } }
 
 
         //common mesh components
-        public Mesh _Mesh { get; protected set; }
-        public MeshFilter C_MF { get; protected set; }
-        public MeshRenderer C_MR { get; protected set; }
+
+        [SerializeField, HideInInspector]
+        private Mesh mesh;
+        public Mesh _Mesh { get { return mesh; } protected set { mesh = value; } }
+
+        [SerializeField, HideInInspector]
+        private MeshFilter c_mf;
+        public MeshFilter C_MF { get { return c_mf; } protected set { c_mf = value; } }
+
+        [SerializeField, HideInInspector]
+        private MeshRenderer c_mr;
+        public MeshRenderer C_MR { get { return c_mr; } protected set { c_mr = value; } }
 
         //math constants
         protected const float deg90 = Mathf.Deg2Rad * 90f;

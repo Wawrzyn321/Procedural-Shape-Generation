@@ -105,8 +105,8 @@ public class ConvexMeshDemo : MonoBehaviour {
     private MeshBase AddTriangleMesh()
     {
         Vector3 pos = new Vector3(-5, 0.7f, 0);
-        TriangleMesh triangleMesh = 
-            TriangleMesh.AddTriangle(pos, new Vector2(-1, -1), new Vector2(2, 1), new Vector2(-1, 2), null, false);
+        TriangleMesh triangleMesh =
+            TriangleMesh.AddTriangle(pos, new Vector2(-3, -3), new Vector2(0, -1), new Vector2(-3, 0), Space.World, null, false);
         triangleMesh.SetColor(Color.green);
         return triangleMesh;
     }

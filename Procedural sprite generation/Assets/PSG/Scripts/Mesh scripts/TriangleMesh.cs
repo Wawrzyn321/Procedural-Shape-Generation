@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,13 +19,13 @@ namespace PSG
 
         #region Static Building
 
-        public static TriangleMesh AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt = null, bool attachRigidbody = true)
+        public static TriangleMesh AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject triangle = new GameObject();
             triangle.transform.position = position;
             TriangleMesh triangleComponent = triangle.AddComponent<TriangleMesh>();
-            triangleComponent.Build(p1, p2, p3, meshMatt);
+            triangleComponent.Build(p1, p2, p3, space, meshMatt);
             if (attachRigidbody)
             {
                 triangle.AddComponent<Rigidbody2D>();
@@ -35,7 +36,7 @@ namespace PSG
         #endregion
 
         //assign variables, get components and build mesh
-        public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Material meshMatt = null)
+        public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMatt = null)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Triangle";
@@ -44,7 +45,8 @@ namespace PSG
             GetOrAddComponents();
             C_MR.material = meshMatt;
 
-            if (SetPoints(p1, p2, p3))
+            Vector2 center = space == Space.Self ? (p1 + p2 + p3) / 3f : Vector2.zero;
+            if (SetPoints(p1 - center, p2 - center, p3 - center))
             {
                 UpdateMesh();
                 UpdateCollider();
@@ -71,10 +73,6 @@ namespace PSG
         //build triangle or set its points
         public bool SetPoints(Vector2 p1, Vector2 p2, Vector2 p3)
         {
-            p1 += (Vector2)transform.position;
-            p2 += (Vector2)transform.position;
-            p3 += (Vector2)transform.position;
-
             #region Validity Check
 
             if (p1 == p2 || p2 == p3 || p3 == p1)

@@ -53,7 +53,7 @@ public class DemoScene : MonoBehaviour
         Vector2 p2 = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         Vector2 p3 = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
 
-        TriangleMesh triangle = TriangleMesh.AddTriangle(pos, p1, p2, p3, material);
+        TriangleMesh triangle = TriangleMesh.AddTriangle(pos, p1, p2, p3, Space.Self, material);
 
         triangle.GetComponent<MeshRenderer>().material.color = Color.red;
 
