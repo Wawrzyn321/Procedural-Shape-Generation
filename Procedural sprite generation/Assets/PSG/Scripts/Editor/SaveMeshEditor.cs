@@ -24,7 +24,7 @@ public class SaveMeshEditor : Editor
         //save MeshFilter's content
         if (GUILayout.Button("Save Mesh Only"))
         {
-            SaveMeshToFile(targetScript._Mesh, targetScript.C_MR.material, targetScript.name);
+            SaveMeshToFile(targetScript.C_MF.sharedMesh, targetScript.C_MR.sharedMaterial, targetScript.name);
         }
         //save GameObject
         if (GUILayout.Button("Save Prefab"))
@@ -44,9 +44,15 @@ public class SaveMeshEditor : Editor
             SaveMaterial(material, name);
         }
 
-        AssetDatabase.CreateAsset(mesh, "Assets/PSG/Saved meshes/" + name + ".asset");
-
-        Debug.Log("Mesh \"" + name + ".asset\" saved succesfully at PSG/Saved meshes");
+        try
+        {
+            AssetDatabase.CreateAsset(mesh, "Assets/PSG/Saved meshes/" + name + ".asset");
+            Debug.Log("Mesh \"" + name + ".asset\" saved succesfully at PSG/Saved meshes");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("PSG::Mesh Generation failed! ("+e+")");
+        }
     }
 
     //save entire GameObject
@@ -55,7 +61,7 @@ public class SaveMeshEditor : Editor
         CheckFolders("Saved prefabs");
 
         //mesh and it's material need to be saved too
-        SaveMeshToFile(meshBase.C_MF.mesh, meshBase.C_MR.material, name + "'mesh");
+        SaveMeshToFile(meshBase.C_MF.sharedMesh, meshBase.C_MR.sharedMaterial, name + "'mesh");
 
         PrefabUtility.CreatePrefab("Assets/PSG/Saved prefabs/" + name + ".prefab", meshBase.gameObject);
 
