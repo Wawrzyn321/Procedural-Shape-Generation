@@ -396,7 +396,7 @@ MonoBehaviour:
   material: {fileID: 0}
   attachRigidbody: 0
   setRandomColor: 0
-  friction: 3.31
+  friction: 0.4
   bounciness: 0.1
 --- !u!4 &237483177
 Transform:

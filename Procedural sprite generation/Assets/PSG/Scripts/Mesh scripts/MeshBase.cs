@@ -41,6 +41,16 @@ namespace PSG
         protected const float deg90 = Mathf.Deg2Rad * 90f;
         protected const float deg360 = 2 * Mathf.PI;
 
+        public Vector3[] GetTransformedVertices()
+        {
+            Vector3[] verts = new Vector3[Vertices.Length];
+            for (int i = 0; i < verts.Length; i++)
+            {
+                verts[i] = transform.TransformPoint(Vertices[i]);
+            }
+            return verts;
+        }
+
         #region Abstract and Virtual
 
         //update mesh in MeshFilter component
