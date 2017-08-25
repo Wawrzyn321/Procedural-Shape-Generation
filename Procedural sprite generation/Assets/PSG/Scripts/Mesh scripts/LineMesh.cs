@@ -11,7 +11,8 @@ namespace PSG
     /// In other case, it passes through its center.
     /// 
     /// Colliders:
-    ///     - Polygon
+    ///     - Polygon (if {useDoubleCollider}
+    ///     - Edge (in other case)
     /// </summary>
     public class LineMesh : MeshBase
     {
@@ -21,10 +22,11 @@ namespace PSG
         private Vector2[] lineVerts;
         private float lineWidth;
 
-        //collider
+        //colliders
         private PolygonCollider2D C_PC2D;
+        private EdgeCollider2D C_EC2D;
 
-        //list
+        //list of cached collider points
         private List<Vector2> cachedVertsLeft;
         private List<Vector2> cachedVertsRight;
 
@@ -297,12 +299,19 @@ namespace PSG
             }
             else
             {
-                C_PC2D.points = lineVerts;
+                C_EC2D.points = lineVerts;
             }
         }
         public override void GetOrAddComponents()
         {
-            C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+            if (useDoubleCollider)
+            {
+                C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+            }
+            else
+            {
+                C_EC2D = gameObject.GetOrAddComponent<EdgeCollider2D>();
+            }
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
         }

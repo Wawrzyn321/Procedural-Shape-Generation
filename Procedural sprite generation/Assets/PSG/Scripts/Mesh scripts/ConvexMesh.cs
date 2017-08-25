@@ -106,7 +106,7 @@ namespace PSG
         #region Convex Hull Algorithm
 
         //get general line equation from two given points
-        private Vector3 GetLineEquation(Vector3 a, Vector3 b)
+        private static Vector3 GetLineEquation(Vector3 a, Vector3 b)
         {
             if (a.x == b.x)
             {
@@ -124,7 +124,7 @@ namespace PSG
             }
         }
 
-        private Vector3? GetLeftmostPoint(List<Vector3> setOfPoints)
+        private static Vector3? GetLeftmostPoint(List<Vector3> setOfPoints)
         {
             Vector3? p = null;
             float mX = float.MaxValue;
@@ -140,7 +140,7 @@ namespace PSG
         }
 
         //get pointer to points of highest x coordinate
-        private Vector3? GetRightmostPoint(List<Vector3> setOfPoints)
+        private static Vector3? GetRightmostPoint(List<Vector3> setOfPoints)
         {
             Vector3? p = null;
             float mX = float.MinValue;
@@ -156,7 +156,7 @@ namespace PSG
         }
 
         //get vector of points on the right of two given setOfPoints
-        private List<Vector3> GetPointsOnRight(List<Vector3> setOfPoints, Vector3 vL, Vector3 vP)
+        private static List<Vector3> GetPointsOnRight(List<Vector3> setOfPoints, Vector3 vL, Vector3 vP)
         {
             List<Vector3> r = new List<Vector3>();
             for (int i = 0; i < setOfPoints.Count; i++)
@@ -170,7 +170,7 @@ namespace PSG
         }
 
         //get points located the farthest from line of given equation
-        private Vector3? GetFarthestPoint(Vector3 lineEquation, List<Vector3> setOfPoints)
+        private static Vector3? GetFarthestPoint(Vector3 lineEquation, List<Vector3> setOfPoints)
         {
             double len = 0;
             Vector3? r = null;
@@ -189,7 +189,7 @@ namespace PSG
         }
 
         //recurrent subroutine to {QuickHull}
-        private List<Vector3> QuickHullSub(Vector3? A, Vector3? B, List<Vector3> setOfPoints)
+        private static List<Vector3> QuickHullSub(Vector3? A, Vector3? B, List<Vector3> setOfPoints)
         {
             if (A.HasValue == false || B.HasValue == false || setOfPoints == null)
             {
@@ -222,7 +222,7 @@ namespace PSG
         }
 
         //Quick Hull main
-        private List<Vector3> QuickHull(List<Vector3> setOfPoints)
+        public static List<Vector3> QuickHull(List<Vector3> setOfPoints)
         {
             if (setOfPoints.Count < 2)
             {

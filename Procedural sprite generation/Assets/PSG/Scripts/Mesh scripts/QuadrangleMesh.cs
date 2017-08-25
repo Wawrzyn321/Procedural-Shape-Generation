@@ -11,9 +11,6 @@ namespace PSG
     public class QuadrangleMesh : MeshBase
     {
 
-        //helper collider array
-        private Vector2[] points;
-
         //collider
         private PolygonCollider2D C_PC2D;
 
@@ -57,58 +54,26 @@ namespace PSG
             {
                 Vertices[i] = verts[i];
             }
-            Triangles = new int[6];
-            UVs = new Vector2[4];
-            points = new Vector2[4];
 
-            if (!MeshHelper.IsPointInTriangle(verts[3], verts[0], verts[1], verts[2]))
+
+            if (MeshHelper.IsPointInTriangle(verts[0], verts[1], verts[2], verts[3]))
             {
-
-                if (MeshHelper.GetSide(verts[3], verts[0], verts[1]) * MeshHelper.GetSide(verts[2], verts[0], verts[1]) <= 0)
+                Triangles = new int[] { 0, 2, 3, 0, 1, 2 };
+            }
+            else if (!MeshHelper.IsPointInTriangle(verts[3], verts[0], verts[1], verts[2]))
+            {
+                if (MeshHelper.IsPointInTriangle(verts[2], verts[0], verts[1], verts[3]))
                 {
-                    Triangles = new int[] { 0, 1, 2, 3, 1, 0 };
-                    points[0] = verts[0];
-                    points[1] = verts[3];
-                    points[2] = verts[1];
-                    points[3] = verts[2];
-                }
-                else if (MeshHelper.GetSide(verts[3], verts[1], verts[2]) * MeshHelper.GetSide(verts[0], verts[1], verts[2]) <= 0)
-                {
-                    Triangles = new int[] { 0, 1, 2, 3, 2, 1 };
-                    points[0] = verts[0];
-                    points[1] = verts[1];
-                    points[2] = verts[3];
-                    points[3] = verts[2];
+                    Triangles = new int[] { 0, 2, 3, 1, 0, 2 };
                 }
                 else
                 {
-                    Triangles = new int[] { 0, 1, 2, 0, 2, 3 };
-                    points = verts;
+                    Triangles = new int[] { 0, 1, 3, 1, 2, 3 }; 
                 }
             }
             else
             {
-                if (MeshHelper.GetSide(verts[0], verts[3], verts[1]) <= 0 && MeshHelper.GetSide(verts[2], verts[3], verts[1]) >= 0)
-                {
-                    Triangles = new int[] { 3, 2, 1, 3, 1, 0 };
-                    points = verts;
-                }
-                else if (MeshHelper.GetSide(verts[0], verts[1], verts[2]) <= 0 && MeshHelper.GetSide(verts[3], verts[1], verts[2]) >= 0)
-                {
-                    Triangles = new int[] { 1, 2, 3, 0, 1, 2 };
-                    points[0] = verts[0];
-                    points[1] = verts[1];
-                    points[2] = verts[3];
-                    points[3] = verts[2];
-                }
-                else
-                {
-                    Triangles = new int[] { 3, 2, 1, 0, 2, 3 };
-                    points[0] = verts[0];
-                    points[1] = verts[3];
-                    points[2] = verts[1];
-                    points[3] = verts[2];
-                }
+                Triangles = new int[] { 0, 1, 3, 2, 3, 1 };
             }
 
             UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
@@ -120,7 +85,7 @@ namespace PSG
 
         public override void UpdateCollider()
         {
-            C_PC2D.points = points;
+            C_PC2D.points = MeshHelper.ConvertVec3ToVec2(Vertices);
         }
 
         public override void GetOrAddComponents()
@@ -132,6 +97,29 @@ namespace PSG
 
         #endregion
 
+        public static bool GetIntersection(Vector3 a, Vector3 b, Vector3 c, Vector3 d, ref Vector3 intersection)
+        {
+            Vector3 e = b - a;
+            Vector3 f = d - c;
+            Vector3 p = new Vector3(-e.y, e.x);
+
+            double divider = Vector3.Dot(f, p);
+            if (divider == 0)
+            {
+                return false;
+            }
+            double h = Vector3.Dot(a - c, p) / divider;
+            if (h == 0 || h == 0)
+            {
+                return false;
+            }
+            if (h > 0 && h < 1)
+            {
+                intersection = c + f * (float)h;
+                return true;
+            }
+            return false;
+        }
     }
 
 }

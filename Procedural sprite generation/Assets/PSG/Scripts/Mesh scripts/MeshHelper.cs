@@ -67,6 +67,11 @@ namespace PSG
             return normals;
         }
 
+        #endregion
+
+        #region Vector Conversion
+
+
         //convert Vector3 array to Vector3 one
         public static Vector2[] ConvertVec3ToVec2(Vector3[] verts3D)
         {
@@ -74,6 +79,39 @@ namespace PSG
             for (int i = 0; i < verts3D.Length; i++)
             {
                 verts2D[i] = verts3D[i];
+            }
+            return verts2D;
+        }
+
+        //inverse ditto
+        public static Vector3[] ConvertVec2ToVec3(Vector2[] vertsD)
+        {
+            Vector3[] verts2D = new Vector3[vertsD.Length];
+            for (int i = 0; i < vertsD.Length; i++)
+            {
+                verts2D[i] = vertsD[i];
+            }
+            return verts2D;
+        }
+
+        //convert Vector3 list to Vector3 array
+        public static Vector2[] ConvertVec3ToVec2(List<Vector3> verts3D)
+        {
+            Vector2[] verts2D = new Vector2[verts3D.Count];
+            for (int i = 0; i < verts3D.Count; i++)
+            {
+                verts2D[i] = verts3D[i];
+            }
+            return verts2D;
+        }
+
+        //inverse ditto
+        public static Vector3[] ConvertVec2ToVec3(List<Vector2> vertsD)
+        {
+            Vector3[] verts2D = new Vector3[vertsD.Count];
+            for (int i = 0; i < vertsD.Count; i++)
+            {
+                verts2D[i] = vertsD[i];
             }
             return verts2D;
         }
