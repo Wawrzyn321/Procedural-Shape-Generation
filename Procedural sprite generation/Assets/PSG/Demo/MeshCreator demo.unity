@@ -329,9 +329,9 @@ GameObject:
   - component: {fileID: 237483177}
   - component: {fileID: 237483176}
   m_Layer: 0
-  m_Name: Spawner
+  m_Name: MeshCreator
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -343,10 +343,61 @@ MonoBehaviour:
   m_GameObject: {fileID: 237483175}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c880e5a0e62266e4a91881ef0355cfb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 15a709ec0a8e31648b702144296edc20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squareTexture: {fileID: 2800000, guid: cbccabdd01d2f624297d32e70c7d2c1f, type: 3}
+  meshType: 0
+  triangleVertex1: {x: -1.5, y: -0.5}
+  triangleVertex2: {x: 1, y: 1}
+  triangleVertex3: {x: 2, y: -0.5}
+  boxSize: {x: 4, y: 2}
+  boxControlPoint: {x: 2, y: 1}
+  circleRadius: 1
+  circleControlPoint: {x: 0.72, y: 0.72}
+  circleSides: 24
+  circleUseCircleCollider: 0
+  quadrangleVertex1: {x: -2, y: 2, z: 0}
+  quadrangleVertex2: {x: 3, y: 1, z: 0}
+  quadrangleVertex3: {x: 4, y: 0, z: 0}
+  quadrangleVertex4: {x: -1, y: -2, z: 0}
+  ellipseHorizontalRadius: 1.2
+  ellipseVerticalRadius: 1
+  ellipseControlPoint: {x: 1.2, y: 1}
+  ellipseSides: 32
+  pointedCircleRadius: 1.2
+  pointedCircleControlPoint: {x: 0.8, y: 0.8}
+  pointedCircleSides: 24
+  pointedCircleShift: {x: 2, y: 2}
+  cakeRadius: 1.1
+  cakeControlPoint: {x: 0.8, y: 0.8}
+  cakeSides: 16
+  cakeSidesToFill: 9
+  convexPoints: []
+  starRadiusA: 0.5
+  starControlPointA: {x: 0.1, y: 0.1}
+  starRadiusB: 1.41
+  starControlPointB: {x: 1, y: 1}
+  starSides: 5
+  gearInnerRadius: 0.1
+  gearInnerControlPoint: {x: 0.1, y: 0.1}
+  gearRootRadius: 0.9
+  gearRootControlPoint: {x: 0.7, y: 0.7}
+  gearOuterRadius: 1.1
+  gearOuterControlPoint: {x: 0.8, y: 0.8}
+  gearSides: 12
+  linePoints:
+  - {x: -2, y: -2}
+  - {x: 0, y: -3}
+  - {x: 2, y: -1}
+  - {x: 3, y: 1}
+  - {x: 2, y: 2}
+  lineWidth: 0.3
+  lineUseDoubleCollider: 0
+  material: {fileID: 0}
+  attachRigidbody: 0
+  setRandomColor: 0
+  friction: 3.31
+  bounciness: 0.1
 --- !u!4 &237483177
 Transform:
   m_ObjectHideFlags: 0

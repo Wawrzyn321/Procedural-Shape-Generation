@@ -498,6 +498,7 @@ GameObject:
   - component: {fileID: 1748410690}
   - component: {fileID: 1748410695}
   - component: {fileID: 1748410696}
+  - component: {fileID: 1748410697}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -679,6 +680,21 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &1748410697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1748410689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4f141f4bd05ada429f0662a9a968c2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zommingSpeed: 0.2
+  zommingDelta: 2
+  allowNegativeSize: 0
+  panningSpeed: 0.5
 --- !u!1 &1909839938
 GameObject:
   m_ObjectHideFlags: 0
