@@ -23,7 +23,7 @@ namespace PSG
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject triangle = new GameObject();
-            triangle.transform.position = position;
+            triangle.transform.position = position + (space == Space.World ? (Vector3)(p1 + p2 + p3) / 3f : Vector3.zero);
             TriangleMesh triangleComponent = triangle.AddComponent<TriangleMesh>();
             triangleComponent.Build(p1, p2, p3, space, meshMatt);
             if (attachRigidbody)
@@ -45,7 +45,7 @@ namespace PSG
             GetOrAddComponents();
             C_MR.material = meshMatt;
 
-            Vector2 center = space == Space.Self ? (p1 + p2 + p3) / 3f : Vector2.zero;
+            Vector2 center = (p1 + p2 + p3) / 3f;
             if (SetPoints(p1 - center, p2 - center, p3 - center))
             {
                 UpdateMesh();
