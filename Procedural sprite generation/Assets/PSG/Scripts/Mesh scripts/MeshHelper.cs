@@ -71,7 +71,6 @@ namespace PSG
 
         #region Vector Conversion
 
-
         //convert Vector3 array to Vector3 one
         public static Vector2[] ConvertVec3ToVec2(Vector3[] verts3D)
         {

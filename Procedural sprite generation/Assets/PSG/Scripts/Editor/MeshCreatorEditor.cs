@@ -12,8 +12,8 @@ public class MeshCreatorEditor : Editor
 
     private void OnEnable()
     {
-        CreateLineList();
-        CreateConvexList();
+        lineReorderableList = CreateVector2List("linePoints");
+        convexReorderableList = CreateVector2List("convexPoints");
     }
 
     //standard override
@@ -264,40 +264,43 @@ public class MeshCreatorEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void CreateConvexList()
+    private ReorderableList CreateVector2List(string propertyName)
     {
-        convexReorderableList = new ReorderableList(serializedObject,
-                        serializedObject.FindProperty("convexPoints"),
-                        true, true, true, true);
-        convexReorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        ReorderableList reorderableList = new ReorderableList(serializedObject,
+            serializedObject.FindProperty(propertyName),
+            true, true, true, true)
         {
-            var element = lineReorderableList.serializedProperty.GetArrayElementAtIndex(index);
-            rect.y += 2;
-            EditorGUI.PropertyField(
-                new Rect(rect.x, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight),
-                element.FindPropertyRelative("x"), GUIContent.none);
-            EditorGUI.PropertyField(
-                new Rect(rect.x + rect.width / 2, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight),
-                element.FindPropertyRelative("y"), GUIContent.none);
+            drawElementCallback = (rect, index, isActive, isFocused) =>
+            {
+                var element = lineReorderableList.serializedProperty.GetArrayElementAtIndex(index);
+                rect.y += 2;
+                EditorGUI.PropertyField(
+                    new Rect(rect.x, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight),
+                    element.FindPropertyRelative("x"), GUIContent.none);
+                EditorGUI.PropertyField(
+                    new Rect(rect.x + rect.width / 2, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight),
+                    element.FindPropertyRelative("y"), GUIContent.none);
+            }
         };
-    }
-
-    private void CreateLineList()
-    {
-        lineReorderableList = new ReorderableList(serializedObject,
-                        serializedObject.FindProperty("linePoints"),
-                        true, true, true, true);
-        lineReorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        reorderableList.onAddCallback = list =>
         {
-            var element = lineReorderableList.serializedProperty.GetArrayElementAtIndex(index);
-            rect.y += 2;
-            EditorGUI.PropertyField(
-                new Rect(rect.x, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight),
-                element.FindPropertyRelative("x"), GUIContent.none);
-            EditorGUI.PropertyField(
-                new Rect(rect.x + rect.width / 2, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight),
-                element.FindPropertyRelative("y"), GUIContent.none);
+            int index = list.serializedProperty.arraySize;
+            list.serializedProperty.arraySize++;
+            list.index = index;
+            var element = list.serializedProperty.GetArrayElementAtIndex(index);
+            if (index == 0)
+            {
+                element.FindPropertyRelative("x").floatValue = 1;
+                element.FindPropertyRelative("y").floatValue = 1;
+            }
+            else
+            {
+                var previous = list.serializedProperty.GetArrayElementAtIndex(index-1);
+                element.FindPropertyRelative("x").floatValue = previous.FindPropertyRelative("x").floatValue;
+                element.FindPropertyRelative("y").floatValue = previous.FindPropertyRelative("y").floatValue;
+            }
         };
+        return reorderableList;
     }
 
     #endregion
