@@ -14,11 +14,11 @@ namespace PSG
         //collider
         private PolygonCollider2D C_PC2D;
 
-        public static QuadrangleMesh AddQuadrangle(Vector3 position, Vector2[] verts, Material meshMatt = null, bool attachRigidbody = true)
+        public static QuadrangleMesh AddQuadrangle(Vector3 position, Vector2[] verts, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject quad = new GameObject();
-            quad.transform.position = position;
+            quad.transform.position = position + (space == Space.World ? (Vector3)(verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f : Vector3.zero);
             QuadrangleMesh quadComponent = quad.AddComponent<QuadrangleMesh>();
             quadComponent.Build(verts, meshMatt);
             if (attachRigidbody)
@@ -39,7 +39,8 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildQuadrangle(verts))
+            Vector2 center = (verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f;
+            if (BuildQuadrangle(verts, center))
             {
                 UpdateMesh();
                 UpdateCollider();
@@ -47,12 +48,12 @@ namespace PSG
         }
 
         //build quad
-        private bool BuildQuadrangle(Vector2[] verts)
+        private bool BuildQuadrangle(Vector2[] verts, Vector2 center)
         {
             Vertices = new Vector3[4];
             for (int i = 0; i < 4; i++)
             {
-                Vertices[i] = verts[i];
+                Vertices[i] = verts[i] - center;
             }
 
 

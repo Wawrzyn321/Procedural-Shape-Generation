@@ -98,7 +98,7 @@ namespace PSG
 
             Vertices[0] = p1;
 
-            float sign = MeshHelper.GetSide(p2, p1, p3);
+            int sign = MeshHelper.GetSide(p2, p1, p3);
             if (sign == 0)
             {
                 Debug.LogWarning("Triangle::SetPoints: Given points are colinear!");

@@ -43,7 +43,7 @@ public class DemoScene : MonoBehaviour
             verts[i] = new Vector2(x, y);
         }
 
-        QuadrangleMesh quadrangle = QuadrangleMesh.AddQuadrangle(pos, verts, material);
+        QuadrangleMesh quadrangle = QuadrangleMesh.AddQuadrangle(pos, verts, Space.Self, material);
 
         quadrangle.SetTexture(uvGridTexture);
     }

@@ -120,7 +120,7 @@ namespace PSG
         //convert to quad
         public QuadrangleMesh ToQuad(bool attachRigidbody = true)
         {
-            return QuadrangleMesh.AddQuadrangle(transform.position, MeshHelper.ConvertVec3ToVec2(Vertices), C_MR.material, attachRigidbody);
+            return QuadrangleMesh.AddQuadrangle(transform.position, MeshHelper.ConvertVec3ToVec2(Vertices), Space.World, C_MR.material, attachRigidbody);
         }
 
         //get dimensions of box - equivalent to GetStructure
