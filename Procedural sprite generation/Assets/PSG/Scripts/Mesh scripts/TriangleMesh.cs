@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PSG
 {
@@ -14,10 +11,15 @@ namespace PSG
     /// </summary>
     public class TriangleMesh : MeshBase
     {
+        //mesh data
+        private Vector3 p1;
+        private Vector3 p2;
+        private Vector3 p3;
+
         //collider
         private PolygonCollider2D C_PC2D;
 
-        #region Static Building
+        #region Static Methods
 
         public static TriangleMesh AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
         {
@@ -41,14 +43,18 @@ namespace PSG
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Triangle";
             _Mesh = new Mesh();
+            Vector2 center = (p1 + p2 + p3) / 3f;
+            this.p1 = p1 - center;
+            this.p2 = p2 - center;
+            this.p3 = p3 - center;
 
             GetOrAddComponents();
             C_MR.material = meshMatt;
 
-            Vector2 center = (p1 + p2 + p3) / 3f;
-            if (SetPoints(p1 - center, p2 - center, p3 - center))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
@@ -63,26 +69,36 @@ namespace PSG
             GetOrAddComponents();
             C_MR.material = meshMatt;
 
-            if (SetPoints(vertices[0], vertices[1], vertices[2]))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
 
-        //build triangle or set its points
-        public bool SetPoints(Vector2 p1, Vector2 p2, Vector2 p3)
-        {
-            #region Validity Check
+        #region Abstract Implementation
 
+        protected override bool ValidateMesh()
+        {
             if (p1 == p2 || p2 == p3 || p3 == p1)
             {
-                Debug.LogWarning("TriangleMesh::SetPoints: some of the points are identity!");
+                Debug.LogWarning("TriangleMesh::ValidateMesh: some of the points are identity!");
                 return false;
             }
 
-            #endregion
+            int sign = MeshHelper.GetSide(p2, p1, p3);
+            if (sign == 0)
+            {
+                Debug.LogWarning("TriangleMesh::ValidateMesh: Given points are colinear!");
+                return false;
+            }
 
+            return true;
+        }
+
+        protected override void BuildMesh()
+        {
             if (Vertices == null)
             {
                 Vertices = new Vector3[3];
@@ -99,12 +115,7 @@ namespace PSG
             Vertices[0] = p1;
 
             int sign = MeshHelper.GetSide(p2, p1, p3);
-            if (sign == 0)
-            {
-                Debug.LogWarning("Triangle::SetPoints: Given points are colinear!");
-                return false;
-            }
-            else if (sign == -1)
+            if (sign == -1)
             {
                 Vertices[1] = p2;
                 Vertices[2] = p3;
@@ -116,16 +127,13 @@ namespace PSG
             }
 
             UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
-
-            return true;
         }
-
-        #region Abstract Implementation
 
         public override void UpdateCollider()
         {
             C_PC2D.SetPath(0, MeshHelper.ConvertVec3ToVec2(Vertices));
         }
+
         public override void GetOrAddComponents()
         {
             C_PC2D = GetComponent<PolygonCollider2D>();
@@ -144,6 +152,7 @@ namespace PSG
                 C_MF = gameObject.AddComponent<MeshFilter>();
             }
         }
+
 
         #endregion
     }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 namespace PSG
 {
@@ -62,9 +61,10 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildPointedCircle(radius, sides, shift))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
@@ -75,46 +75,6 @@ namespace PSG
         }
 
         #endregion
-
-        //build p-circle
-        private bool BuildPointedCircle(float radius, int sides, Vector2 shift)
-        {
-            #region Validity Check
-
-            if (sides < 2)
-            {
-                Debug.LogWarning("PointedCircleMesh::AddPointedCircle: radius can't be equal to zero!");
-                return false;
-            }
-            if (radius == 0)
-            {
-                Debug.LogWarning("PointedCircleMesh::AddPointedCircle: radius can't be equal to zero!");
-                return false;
-            }
-            if (radius < 0)
-            {
-                radius = -radius;
-            }
-
-            #endregion
-
-            Vertices = new Vector3[sides + 1];
-            Triangles = new int[3 * sides];
-
-            float angleDelta = deg360 / sides;
-            Vertices[0] = shift;
-            for (int i = 1; i < sides + 1; i++)
-            {
-                Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
-                Vertices[i ] = vertPos;
-                Triangles[(i - 1) * 3 + 0] = (1 + i % sides);
-                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
-                Triangles[(i - 1) * 3 + 2] = 0;
-            }
-            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
-
-            return true;
-        }
 
         public PointedCircleStructure GetStructure()
         {
@@ -127,6 +87,43 @@ namespace PSG
         }
 
         #region Abstract Implementation
+
+        protected override bool ValidateMesh()
+        {
+            if (sides < 2)
+            {
+                Debug.LogWarning("PointedCircleMesh::ValidateMesh: radius can't be equal to zero!");
+                return false;
+            }
+            if (radius == 0)
+            {
+                Debug.LogWarning("PointedCircleMesh::ValidateMesh: radius can't be equal to zero!");
+                return false;
+            }
+            if (radius < 0)
+            {
+                radius = -radius;
+            }
+            return true;
+        }
+
+        protected override void BuildMesh()
+        {
+            Vertices = new Vector3[sides + 1];
+            Triangles = new int[3 * sides];
+
+            float angleDelta = deg360 / sides;
+            Vertices[0] = shift;
+            for (int i = 1; i < sides + 1; i++)
+            {
+                Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
+                Vertices[i] = vertPos;
+                Triangles[(i - 1) * 3 + 0] = (1 + i % sides);
+                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                Triangles[(i - 1) * 3 + 2] = 0;
+            }
+            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
+        }
 
         public override void UpdateCollider()
         {
@@ -148,6 +145,7 @@ namespace PSG
                 C_PC2D.SetPath(0, C_CC2D_vertices);
             }
         }
+
         public override void GetOrAddComponents()
         {
             C_CC2D = gameObject.GetOrAddComponent<CircleCollider2D>();

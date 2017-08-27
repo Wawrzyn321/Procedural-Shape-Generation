@@ -69,9 +69,10 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildLine(lineVerts, lineWidth, useDoubleCollider))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
@@ -83,20 +84,29 @@ namespace PSG
 
         #endregion
 
-        //build line
-        private bool BuildLine(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider)
+        public LineStructure GetStructure()
         {
-            #region Validity Check
+            return new LineStructure
+            {
+                useDoubleCollider = useDoubleCollider,
+                lineVerts = lineVerts,
+                lineWidth = lineWidth
+            };
+        }
 
+        #region Abstract Implementation
+
+        protected override bool ValidateMesh()
+        {
             if (lineWidth == 0)
             {
-                Debug.LogWarning("LineMesh::BuildLine: Line width can't be equal to zero!");
+                Debug.LogWarning("LineMesh::ValidateMesh: Line width can't be equal to zero!");
                 return false;
             }
 
             if (lineVerts.Length < 1)
             {
-                Debug.LogWarning("LineMesh::BuildLine: Parameter size must be bigger than one!");
+                Debug.LogWarning("LineMesh::ValidateMesh: Parameter size must be bigger than one!");
                 return false;
             }
 
@@ -104,8 +114,11 @@ namespace PSG
             {
                 lineWidth = -lineWidth;
             }
+            return true;
+        }
 
-            #endregion
+        protected override void BuildMesh()
+        {
 
             #region DoubleCollider
             if (useDoubleCollider)
@@ -260,21 +273,7 @@ namespace PSG
             Triangles = trianglesList.ToArray();
 
             UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
-
-            return true;
         }
-
-        public LineStructure GetStructure()
-        {
-            return new LineStructure
-            {
-                useDoubleCollider = useDoubleCollider,
-                lineVerts = lineVerts,
-                lineWidth = lineWidth
-            };
-        }
-
-        #region Abstract Implementation
 
         public override void UpdateCollider()
         {

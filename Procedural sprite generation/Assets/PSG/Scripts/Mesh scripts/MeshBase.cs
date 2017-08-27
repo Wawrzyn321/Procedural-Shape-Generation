@@ -9,6 +9,8 @@ namespace PSG
     /// </summary>
     public abstract class MeshBase : MonoBehaviour
     {
+        public static bool Validate = true;
+
         //mesh data
         [SerializeField, HideInInspector]
         private Vector3[] vertices;
@@ -53,8 +55,14 @@ namespace PSG
 
         #region Abstract and Virtual
 
+        ///check if mesh parameters are valid
+        protected abstract bool ValidateMesh();
+
+        //get vertices, triangles and UVs
+        protected abstract void BuildMesh();
+
         //update mesh in MeshFilter component
-        public virtual void UpdateMesh()
+        public virtual void UpdateMeshFilter()
         {
             _Mesh.Clear();
             _Mesh.vertices = Vertices;

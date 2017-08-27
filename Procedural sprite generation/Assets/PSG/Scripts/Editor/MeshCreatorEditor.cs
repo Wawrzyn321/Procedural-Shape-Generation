@@ -221,7 +221,7 @@ public class MeshCreatorEditor : Editor
             case MeshCreator.MeshType.Quadrangle:
                 Vector2[] verts = new Vector2[4] {meshCreator.quadrangleVertex1, meshCreator.quadrangleVertex2,
                     meshCreator.quadrangleVertex3, meshCreator.quadrangleVertex4 };
-                return QuadrangleMesh.AddQuadrangle(meshCreator.transform.position, verts,
+                return QuadrangleMesh.AddQuadrangle(meshCreator.transform.position, verts, Space.World,
                     meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.Ellipse:
                 return EllipseMesh.AddEllipse(meshCreator.transform.position, meshCreator.ellipseHorizontalRadius,

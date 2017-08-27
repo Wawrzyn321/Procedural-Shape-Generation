@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 namespace PSG
 {
@@ -21,7 +20,7 @@ namespace PSG
         private PolygonCollider2D C_PC2D;
 
         #region Static Methods - building from values and from structure
-
+        
         public static EllipseMesh AddEllipse(Vector3 position, float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
@@ -59,9 +58,10 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildEllipse(radiusHorizontal, radiusVertical, sides))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
@@ -72,53 +72,6 @@ namespace PSG
         }
 
         #endregion
-
-        //build an ellipse
-        private bool BuildEllipse(float radiusA, float radiusB, int sides)
-        {
-
-            #region Validity Check
-
-            if (sides < 2)
-            {
-                Debug.LogWarning("EllipseMesh::BuildEllipse: sides count can't be less than two!");
-                return false;
-            }
-            if (radiusA == 0 || radiusB == 0)
-            {
-                Debug.LogWarning("EllipseMesh::BuildEllipse: radiuses can't be equal to zero!");
-                return false;
-            }
-            if (radiusA < 0)
-            {
-                radiusA = -radiusA;
-            }
-            if (radiusB < 0)
-            {
-                radiusB = -radiusB;
-            }
-
-            #endregion
-
-            Vertices = new Vector3[sides + 1];
-            Triangles = new int[3 * sides];
-            UVs = new Vector2[sides + 1];
-
-            Vertices[0] = Vector3.zero;
-            UVs[0] = Vector3.one * 0.5f;
-            float angleDelta = deg360 / sides;
-            for (int i = 1; i < sides + 1; i++)
-            {
-                Vector3 vertPos = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusA, Mathf.Sin((i + 1) * angleDelta) * radiusB);
-                Vertices[i] = vertPos;
-                UVs[i] = new Vector3(vertPos.x / 2 / radiusA, vertPos.y / 2 / radiusB) + new Vector3(0.5f, 0.5f, 0);
-                Triangles[(i - 1) * 3 + 0] = 1 + i % sides;
-                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
-                Triangles[(i - 1) * 3 + 2] = 0;
-            }
-
-            return true;
-        }
 
         public EllipseStructure GetStructure()
         {
@@ -132,6 +85,49 @@ namespace PSG
 
         #region Abstract Implementation
 
+        protected override bool ValidateMesh()
+        {
+            if (sides < 2)
+            {
+                Debug.LogWarning("EllipseMesh::ValidateMesh: sides count can't be less than two!");
+                return false;
+            }
+            if (radiusHorizontal == 0 || radiusVertical == 0)
+            {
+                Debug.LogWarning("EllipseMesh::ValidateMesh: radiuses can't be equal to zero!");
+                return false;
+            }
+            if (radiusHorizontal < 0)
+            {
+                radiusHorizontal = -radiusHorizontal;
+            }
+            if (radiusVertical < 0)
+            {
+                radiusVertical = -radiusVertical;
+            }
+            return true;
+        }
+
+        protected override void BuildMesh()
+        {
+            Vertices = new Vector3[sides + 1];
+            Triangles = new int[3 * sides];
+            UVs = new Vector2[sides + 1];
+
+            Vertices[0] = Vector3.zero;
+            UVs[0] = Vector3.one * 0.5f;
+            float angleDelta = deg360 / sides;
+            for (int i = 1; i < sides + 1; i++)
+            {
+                Vector3 vertPos = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusHorizontal, Mathf.Sin((i + 1) * angleDelta) * radiusVertical);
+                Vertices[i] = vertPos;
+                UVs[i] = new Vector3(vertPos.x / 2 / radiusHorizontal, vertPos.y / 2 / radiusVertical) + new Vector3(0.5f, 0.5f, 0);
+                Triangles[(i - 1) * 3 + 0] = 1 + i % sides;
+                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                Triangles[(i - 1) * 3 + 2] = 0;
+            }
+        }
+
         public override void UpdateCollider()
         {
             Vector2[] points = new Vector2[sides];
@@ -142,6 +138,7 @@ namespace PSG
             }
             C_PC2D.points = points;
         }
+
         public override void GetOrAddComponents()
         {
             C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();

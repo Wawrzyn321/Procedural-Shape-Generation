@@ -60,9 +60,10 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildStar(radiusA, radiusB, sides))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
@@ -74,20 +75,28 @@ namespace PSG
 
         #endregion
 
-        //build a star
-        private bool BuildStar(float radiusA, float radiusB, int sides)
+        public StarStructure GetStructure()
         {
+            return new StarStructure
+            {
+                radiusA = radiusA,
+                radiusB = radiusB,
+                sides = sides
+            };
+        }
 
-            #region Validity Check
+        #region Abstract Implementation
 
+        protected override bool ValidateMesh()
+        {
             if (sides < 2)
             {
-                Debug.LogWarning("StarMesh::BuildStar: sides count can't be less than two!");
+                Debug.LogWarning("StarMesh::ValidateMesh: sides count can't be less than two!");
                 return false;
             }
             if (radiusA == 0 || radiusB == 0)
             {
-                Debug.LogWarning("StarMesh::BuildStar: any of radiuses can't be equal to zero!");
+                Debug.LogWarning("StarMesh::ValidateMesh: any of radiuses can't be equal to zero!");
                 return false;
             }
             if (radiusA < 0)
@@ -98,9 +107,11 @@ namespace PSG
             {
                 radiusB = -radiusB;
             }
+            return true;
+        }
 
-            #endregion
-
+        protected override void BuildMesh()
+        {
             Vertices = new Vector3[1 + sides * 2];
             Triangles = new int[2 * sides * 3];
             UVs = new Vector2[1 + sides * 2];
@@ -118,21 +129,7 @@ namespace PSG
             }
 
             UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
-
-            return true;
         }
-
-        public StarStructure GetStructure()
-        {
-            return new StarStructure
-            {
-                radiusA = radiusA,
-                radiusB = radiusB,
-                sides = sides
-            };
-        }
-
-        #region Abstract Implementation
 
         public override void UpdateCollider()
         {

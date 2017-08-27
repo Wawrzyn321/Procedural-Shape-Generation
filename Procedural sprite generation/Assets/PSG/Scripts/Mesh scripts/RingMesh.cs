@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System;
 
 namespace PSG
 {
@@ -59,9 +59,10 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildRing(innerRadius, outerRadius, sides))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
@@ -73,40 +74,20 @@ namespace PSG
 
         #endregion
 
-        //build a ring
-        private bool BuildRing(float innerRadius, float outerRadius, int sides)
+        public RingStructure GetStructure()
         {
+            return new RingStructure
+            {
+                innerRadius = innerRadius,
+                outerRadius = outerRadius,
+                sides = sides
+            };
+        }
 
-            #region Validity Check
+        #region Abstract Implementation
 
-            if (sides < 2)
-            {
-                Debug.LogWarning("RingMesh::BuildRing: sides count can't be less than two!");
-                return false;
-            }
-            if (innerRadius == 0 && outerRadius == 0)
-            {
-                Debug.LogWarning("RingMesh::BuildRing: radius can't be equal to zero!");
-                return false;
-            }
-            if (innerRadius < 0)
-            {
-                innerRadius = -innerRadius;
-            }
-            if (outerRadius < 0)
-            {
-                outerRadius = -outerRadius;
-            }
-            //swap radiuses if inner one is greater than outer
-            if (innerRadius > outerRadius)
-            {
-                float tempRadius = innerRadius;
-                innerRadius = outerRadius;
-                outerRadius = tempRadius;
-            }
-
-            #endregion
-
+        protected override void BuildMesh()
+        {
             bool isCircle = innerRadius == 0;
 
             Vertices = new Vector3[isCircle ? sides + 1 : 2 * sides];
@@ -121,9 +102,9 @@ namespace PSG
                 {
                     Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * outerRadius;
                     Vertices[i] = vertPos;
-                    Triangles[(i-1) * 3 + 0] = 0;
-                    Triangles[(i-1) * 3 + 1] = 1 + (i - 1) % sides;
-                    Triangles[(i-1) * 3 + 2] = 1 + i % sides;
+                    Triangles[(i - 1) * 3 + 0] = 0;
+                    Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                    Triangles[(i - 1) * 3 + 2] = 1 + i % sides;
                 }
             }
             else
@@ -140,27 +121,13 @@ namespace PSG
                     Triangles[triangleIndex++] = i;
                     Triangles[triangleIndex++] = (i + 1) % (sides);
                     Triangles[triangleIndex++] = (i + sides);
-                    Triangles[triangleIndex++] = (i + 1) % (sides*2);
+                    Triangles[triangleIndex++] = (i + 1) % (sides * 2);
                     Triangles[triangleIndex++] = (i + sides);
-                    Triangles[triangleIndex++] = (i + sides + 1) % (sides*2);
+                    Triangles[triangleIndex++] = (i + sides + 1) % (sides * 2);
                 }
             }
             UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
-
-            return true;
         }
-
-        public RingStructure GetStructure()
-        {
-            return new RingStructure
-            {
-                innerRadius = innerRadius,
-                outerRadius = outerRadius,
-                sides = sides
-            };
-        }
-
-        #region Abstract Implementation
 
         public override void UpdateCollider()
         {
@@ -193,6 +160,36 @@ namespace PSG
             C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
+        }
+
+        protected override bool ValidateMesh()
+        {
+            if (sides < 2)
+            {
+                Debug.LogWarning("RingMesh::ValidateMesh: sides count can't be less than two!");
+                return false;
+            }
+            if (innerRadius == 0 && outerRadius == 0)
+            {
+                Debug.LogWarning("RingMesh::ValidateMesh: radius can't be equal to zero!");
+                return false;
+            }
+            if (innerRadius < 0)
+            {
+                innerRadius = -innerRadius;
+            }
+            if (outerRadius < 0)
+            {
+                outerRadius = -outerRadius;
+            }
+            //swap radiuses if inner one is greater than outer
+            if (innerRadius > outerRadius)
+            {
+                float tempRadius = innerRadius;
+                innerRadius = outerRadius;
+                outerRadius = tempRadius;
+            }
+            return true;
         }
 
         #endregion

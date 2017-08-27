@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 namespace PSG
 {
@@ -63,9 +62,10 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildGear(innerRadius, rootRadius, outerRadius, sides))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
@@ -77,25 +77,34 @@ namespace PSG
 
         #endregion
 
-        //build a gear
-        private bool BuildGear(float innerRadius, float rootRadius, float outerRadius, int sides)
+        public GearStructure GetStructure()
         {
+            return new GearStructure
+            {
+                innerRadius = innerRadius,
+                rootRadius = rootRadius,
+                outerRadius = outerRadius,
+                sides = sides
+            };
+        }
 
-            #region Validity Check
+        #region Abstract Implementation
 
+        protected override bool ValidateMesh()
+        {
             if (sides < 2)
             {
-                Debug.LogWarning("GearMesh::BuildGear: sides count can't be less than two!");
+                Debug.LogWarning("GearMesh::ValidateMesh: sides count can't be less than two!");
                 return false;
             }
             if (rootRadius == 0)
             {
-                Debug.LogWarning("GearMesh::BuildGear: rootRadius can't be equal to zero!");
+                Debug.LogWarning("GearMesh::ValidateMesh: rootRadius can't be equal to zero!");
                 return false;
             }
             if (outerRadius == 0)
             {
-                Debug.LogWarning("GearMesh::BuildGear: outerRadius can't be equal to zero!");
+                Debug.LogWarning("GearMesh::ValidateMesh: outerRadius can't be equal to zero!");
                 return false;
             }
             if (innerRadius < 0)
@@ -110,12 +119,14 @@ namespace PSG
             {
                 outerRadius = -outerRadius;
             }
+            return true;
+        }
 
-            #endregion
-
+        protected override void BuildMesh()
+        {
             int doubleSides = 2 * sides;
 
-            Vertices = new Vector3[6*sides];
+            Vertices = new Vector3[6 * sides];
             Triangles = new int[6 * 3 * sides];
 
             float angleDelta = deg360 / doubleSides;
@@ -172,21 +183,7 @@ namespace PSG
                 }
             }
             UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
-
-            return true;
         }
-        public GearStructure GetStructure()
-        {
-            return new GearStructure
-            {
-                innerRadius = innerRadius,
-                rootRadius = rootRadius,
-                outerRadius = outerRadius,
-                sides = sides
-            };
-        }
-
-        #region Abstract Implementation
 
         public override void UpdateCollider()
         {

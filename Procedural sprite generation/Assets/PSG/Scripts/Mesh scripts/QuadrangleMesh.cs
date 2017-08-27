@@ -11,8 +11,13 @@ namespace PSG
     public class QuadrangleMesh : MeshBase
     {
 
+        //mesh data
+        private Vector2[] verts;
+
         //collider
         private PolygonCollider2D C_PC2D;
+
+        #region Static Build
 
         public static QuadrangleMesh AddQuadrangle(Vector3 position, Vector2[] verts, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
         {
@@ -28,34 +33,43 @@ namespace PSG
             return quadComponent;
         }
 
+        #endregion
+
         //assign variables, get components and build mesh
         public void Build(Vector2[] verts, Material meshMatt = null)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Quadrangle";
+            this.verts = verts;
 
             _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
 
-            Vector2 center = (verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f;
-            if (BuildQuadrangle(verts, center))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
 
-        //build quad
-        private bool BuildQuadrangle(Vector2[] verts, Vector2 center)
+        #region Abstract Implementation
+
+        protected override bool ValidateMesh()
+        {
+            return true;
+        }
+
+        protected override void BuildMesh()
         {
             Vertices = new Vector3[4];
+            Vector2 center = (verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f;
             for (int i = 0; i < 4; i++)
             {
                 Vertices[i] = verts[i] - center;
             }
-
 
             if (MeshHelper.IsPointInTriangle(verts[0], verts[1], verts[2], verts[3]))
             {
@@ -69,7 +83,7 @@ namespace PSG
                 }
                 else
                 {
-                    Triangles = new int[] { 0, 1, 3, 1, 2, 3 }; 
+                    Triangles = new int[] { 0, 1, 3, 1, 2, 3 };
                 }
             }
             else
@@ -78,11 +92,7 @@ namespace PSG
             }
 
             UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
-
-            return true;
         }
-
-        #region Abstract Implementation
 
         public override void UpdateCollider()
         {
@@ -98,29 +108,6 @@ namespace PSG
 
         #endregion
 
-        public static bool GetIntersection(Vector3 a, Vector3 b, Vector3 c, Vector3 d, ref Vector3 intersection)
-        {
-            Vector3 e = b - a;
-            Vector3 f = d - c;
-            Vector3 p = new Vector3(-e.y, e.x);
-
-            double divider = Vector3.Dot(f, p);
-            if (divider == 0)
-            {
-                return false;
-            }
-            double h = Vector3.Dot(a - c, p) / divider;
-            if (h == 0 || h == 0)
-            {
-                return false;
-            }
-            if (h > 0 && h < 1)
-            {
-                intersection = c + f * (float)h;
-                return true;
-            }
-            return false;
-        }
     }
 
 }

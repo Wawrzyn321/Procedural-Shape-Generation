@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 namespace PSG
 {
@@ -64,9 +63,10 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildCircle(radius, sides))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
@@ -78,31 +78,41 @@ namespace PSG
 
         #endregion
 
-        //build a circle
-        private bool BuildCircle(float radius, int sides)
+        public CircleStructure GetStructure()
         {
+            return new CircleStructure
+            {
+                radius = radius,
+                sides = sides,
+                useCircleCollider = useCircleCollider
+            };
+        }
 
-            #region Validity Check
+        #region Abstract Implementation
 
+        protected override bool ValidateMesh()
+        {
             if (sides < 2)
             {
-                Debug.LogWarning("CircleMesh::AddCircle: sides count can't be less than two!");
+                Debug.LogWarning("CircleMesh::ValidateMesh: sides count can't be less than two!");
                 return false;
             }
             if (radius == 0)
             {
-                Debug.LogWarning("CircleMesh::AddCircle: radius can't be equal to zero!");
+                Debug.LogWarning("CircleMesh::ValidateMesh: radius can't be equal to zero!");
                 return false;
             }
             if (radius < 0)
             {
                 radius = -radius;
             }
+            return true;
+        }
 
-            #endregion
-
+        protected override void BuildMesh()
+        {
             Vertices = new Vector3[sides + 1];
-            Triangles = new int[3*sides];
+            Triangles = new int[3 * sides];
             UVs = new Vector2[sides + 1];
 
             Vertices[0] = Vector3.zero;
@@ -118,21 +128,7 @@ namespace PSG
                 Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
                 Triangles[(i - 1) * 3 + 2] = 0;
             }
-
-            return true;
         }
-
-        public CircleStructure GetStructure()
-        {
-            return new CircleStructure
-            {
-                radius = radius,
-                sides = sides,
-                useCircleCollider = useCircleCollider
-            };
-        }
-
-        #region Abstract Implementation
 
         public override void UpdateCollider()
         {

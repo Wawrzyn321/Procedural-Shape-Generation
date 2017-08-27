@@ -189,7 +189,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'A SIMPLE car test.
+  m_Text: 'A simple yet customizable car test.
 
     Press ''R'' to reset and randomize car.'
 --- !u!222 &119162575

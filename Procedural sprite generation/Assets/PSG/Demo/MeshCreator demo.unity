@@ -348,8 +348,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshType: 0
   triangleVertex1: {x: -1.5, y: -0.5}
-  triangleVertex2: {x: 0.9999998, y: 0.9999993}
-  triangleVertex3: {x: 1.9999999, y: -0.5}
+  triangleVertex2: {x: 1, y: 1}
+  triangleVertex3: {x: 2, y: -0.5}
   boxSize: {x: 4, y: 2}
   boxControlPoint: {x: 2, y: 1}
   circleRadius: 1

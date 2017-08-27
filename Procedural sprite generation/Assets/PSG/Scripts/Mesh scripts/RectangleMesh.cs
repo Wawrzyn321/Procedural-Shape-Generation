@@ -77,25 +77,40 @@ namespace PSG
 
             C_MR.material = meshMatt;
 
-            if (BuildRectangle(size))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
 
-        //build a box
-        private bool BuildRectangle(Vector2 size)
+        //convert to quad
+        public QuadrangleMesh ToQuad(bool attachRigidbody = true)
         {
-            #region  Validity Check
+            return QuadrangleMesh.AddQuadrangle(transform.position, MeshHelper.ConvertVec3ToVec2(Vertices), Space.World, C_MR.material, attachRigidbody);
+        }
 
+        //get dimensions of box - equivalent to GetStructure
+        public Vector2 GetSize()
+        {
+            return size;
+        }
+
+        #region Abstract Implementation
+
+        protected override bool ValidateMesh()
+        {
             if (size.x == 0 || size.y == 0)
             {
-                Debug.LogWarning("RectangleMesh::BuildRectangle: Size of box can't be zero!");
+                Debug.LogWarning("RectangleMesh::ValidateMesh: Size of box can't be zero!");
                 return false;
             }
+            return true;
+        }
 
-            #endregion
+        protected override void BuildMesh()
+        {
 
             Vertices = new Vector3[]
             {
@@ -114,22 +129,7 @@ namespace PSG
             new Vector2(1, 1),
             new Vector2(0, 1)
             };
-            return true;
         }
-
-        //convert to quad
-        public QuadrangleMesh ToQuad(bool attachRigidbody = true)
-        {
-            return QuadrangleMesh.AddQuadrangle(transform.position, MeshHelper.ConvertVec3ToVec2(Vertices), Space.World, C_MR.material, attachRigidbody);
-        }
-
-        //get dimensions of box - equivalent to GetStructure
-        public Vector2 GetSize()
-        {
-            return size;
-        }
-
-        #region Abstract Implementation
 
         public override void UpdateCollider()
         {

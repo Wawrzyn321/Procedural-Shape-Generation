@@ -43,7 +43,7 @@ public class ConvexMeshDemo : MonoBehaviour {
         }
         allVertices = new Vector3[v];
 
-        convexMesh = ConvexMesh.AddConvexMesh(Vector3.zero, UpdateVertices(), Space.Self, convexMaterial, false);
+        convexMesh = ConvexMesh.AddConvexMesh(Vector3.zero, UpdateVertices(), Space.World, convexMaterial, false);
         convexMesh.C_MR.sortingOrder = -1;
     }
 

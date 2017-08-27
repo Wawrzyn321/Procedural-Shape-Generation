@@ -15,27 +15,30 @@ namespace PSG
     {
         //mesh data
         private Vector3[] baseVertices;
+        private Vector3[] vertices;
 
         //collider
         private PolygonCollider2D C_PC2D;
+
+        #region Static Methods
 
         public static ConvexMesh AddConvexMesh(Vector3 position, Vector3[] vertices, Space space, Material meshMatt = null, bool attachRigidbody = true)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             GameObject convex = new GameObject();
 
-            if(space == Space.Self)
+            if (space == Space.Self)
             {
                 convex.transform.position = position;
             }
             else
             {
                 Vector3 center = new Vector3();
-                for(int i = 0; i < vertices.Length; i++)
+                for (int i = 0; i < vertices.Length; i++)
                 {
                     center += vertices[i];
                 }
-                convex.transform.position = position + center/vertices.Length;
+                convex.transform.position = position + center / vertices.Length;
             }
 
             ConvexMesh convexComponent = convex.AddComponent<ConvexMesh>();
@@ -47,37 +50,48 @@ namespace PSG
             return convexComponent;
         }
 
+        #endregion
+
         //assign variables, get components and build mesh
         public void Build(Vector3[] vertices, Material meshMatt = null)
         {
             MeshHelper.CheckMaterial(ref meshMatt);
             name = "Convex Mesh";
+            this.vertices = vertices;
 
             _Mesh = new Mesh();
             GetOrAddComponents();
 
             C_MR.material = meshMatt;
 
-            if (BuildConvex(vertices))
+            if (!Validate || ValidateMesh())
             {
-                UpdateMesh();
+                BuildMesh();
+                UpdateMeshFilter();
                 UpdateCollider();
             }
         }
 
-        //build convex shape
-        private bool BuildConvex(Vector3[] vertices)
+        //get points set in constructor
+        public Vector3[] GetBasePoints()
         {
-            #region Validity Check
+            return baseVertices;
+        }
 
+        #region Abstract Implementation
+
+        protected override bool ValidateMesh()
+        {
             if (vertices.Length < 2)
             {
-                Debug.LogWarning("ConvexMesh::BuildConves: verts count must be greater than 2!");
+                Debug.LogWarning("ConvexMesh::ValidateMesh: verts count must be greater than 2!");
                 return false;
             }
+            return true;
+        }
 
-            #endregion
-
+        protected override void BuildMesh()
+        {
             baseVertices = vertices;
 
             Vertices = QuickHull(new List<Vector3>(vertices)).ToArray();
@@ -102,18 +116,8 @@ namespace PSG
                 Triangles[i * 3 + 2] = i + 1;
             }
             UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
-
-            return true;
         }
 
-        //get points set in constructor
-        public Vector3[] GetBasePoints()
-        {
-            return baseVertices;
-        }
-
-        #region Abstract Implementation
-        
         public override void UpdateCollider()
         {
             C_PC2D.points = MeshHelper.ConvertVec3ToVec2(Vertices);
