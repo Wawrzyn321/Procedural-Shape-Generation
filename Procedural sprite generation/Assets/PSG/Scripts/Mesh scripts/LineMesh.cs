@@ -280,7 +280,7 @@ namespace PSG
         {
             if (useDoubleCollider)
             {
-                Vector2[] points = new Vector2[cachedVertsRight.Count + cachedVertsLeft.Count + 1];
+                Vector2[] points = new Vector2[cachedVertsRight.Count + cachedVertsLeft.Count];
                 for (int i = 0; i < cachedVertsLeft.Count; i++)
                 {
                     points[i] = cachedVertsLeft[i];
@@ -289,11 +289,6 @@ namespace PSG
                 {
                     //reverse order
                     points[i + cachedVertsLeft.Count] = cachedVertsRight[cachedVertsRight.Count - 1 - i];
-                }
-                //when shape isn't closed
-                if (Vertices[0] != Vertices[Vertices.Length - 1])
-                {
-                    points[points.Length - 1] = cachedVertsLeft[0];
                 }
                 C_PC2D.points = points;
             }
