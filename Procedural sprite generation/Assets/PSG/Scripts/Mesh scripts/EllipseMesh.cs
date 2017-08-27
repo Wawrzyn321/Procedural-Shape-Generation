@@ -23,7 +23,6 @@ namespace PSG
         
         public static EllipseMesh AddEllipse(Vector3 position, float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ellipse = new GameObject();
             ellipse.transform.position = position;
             EllipseMesh ellipseComponent = ellipse.AddComponent<EllipseMesh>();
@@ -47,23 +46,12 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Ellipse";
             this.radiusHorizontal = radiusHorizontal;
             this.radiusVertical = radiusVertical;
             this.sides = sides;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMesh();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         public void Build(EllipseStructure ellipseStructure, Material meshMatt = null)
@@ -108,7 +96,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             Vertices = new Vector3[sides + 1];
             Triangles = new int[3 * sides];

@@ -23,7 +23,6 @@ namespace PSG
 
         public static TriangleMesh AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject triangle = new GameObject();
             triangle.transform.position = position + (space == Space.World ? (Vector3)(p1 + p2 + p3) / 3f : Vector3.zero);
             TriangleMesh triangleComponent = triangle.AddComponent<TriangleMesh>();
@@ -40,29 +39,18 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Triangle";
-            _Mesh = new Mesh();
             Vector2 center = (p1 + p2 + p3) / 3f;
             this.p1 = p1 - center;
             this.p2 = p2 - center;
             this.p3 = p3 - center;
 
-            GetOrAddComponents();
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMesh();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         //assign variables, get components and build mesh
         public void Build(Vector2[] vertices, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Triangle";
             _Mesh = new Mesh();
 
@@ -71,7 +59,7 @@ namespace PSG
 
             if (!Validate || ValidateMesh())
             {
-                BuildMesh();
+                BuildMeshComponents();
                 UpdateMeshFilter();
                 UpdateCollider();
             }
@@ -97,7 +85,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             if (Vertices == null)
             {

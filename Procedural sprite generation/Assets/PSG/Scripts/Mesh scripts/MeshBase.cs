@@ -53,13 +53,34 @@ namespace PSG
             return verts;
         }
 
+        protected void BuildMesh(ref Material meshMatt)
+        {
+            if (!Validate || ValidateMesh())
+            {
+                MeshHelper.CheckMaterial(ref meshMatt);
+
+                _Mesh = new Mesh();
+                GetOrAddComponents();
+                C_MR.material = meshMatt;
+
+                BuildMeshComponents();
+                UpdateMeshFilter();
+                UpdateCollider();
+            }
+            else
+            {
+                Debug.LogError("MeshBase::BuildMesh: "+name+" generation failed");
+            }
+        }
+
+
         #region Abstract and Virtual
 
         ///check if mesh parameters are valid
         protected abstract bool ValidateMesh();
 
         //get vertices, triangles and UVs
-        protected abstract void BuildMesh();
+        protected abstract void BuildMeshComponents();
 
         //update mesh in MeshFilter component
         public virtual void UpdateMeshFilter()

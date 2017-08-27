@@ -26,7 +26,6 @@ namespace PSG
 
         public static PointedCircleMesh AddPointedCircle(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject pointedCircle = new GameObject();
             pointedCircle.transform.position = position;
             PointedCircleMesh pointedCircleComponent = pointedCircle.AddComponent<PointedCircleMesh>();
@@ -50,23 +49,12 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(float radius, int sides, Vector2 shift, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "PointedCircle";
             this.radius = radius;
             this.sides = sides;
             this.shift = shift;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMesh();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         void Build(PointedCircleStructure pointedCircleStructure, Material meshMatt = null)
@@ -107,7 +95,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             Vertices = new Vector3[sides + 1];
             Triangles = new int[3 * sides];

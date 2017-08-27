@@ -24,7 +24,6 @@ namespace PSG
 
         public static ConvexMesh AddConvexMesh(Vector3 position, Vector3[] vertices, Space space, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject convex = new GameObject();
 
             if (space == Space.Self)
@@ -55,21 +54,10 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(Vector3[] vertices, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Convex Mesh";
             this.vertices = vertices;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMesh();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         //get points set in constructor
@@ -90,7 +78,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             baseVertices = vertices;
 

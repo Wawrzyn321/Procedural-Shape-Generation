@@ -26,7 +26,6 @@ namespace PSG
 
         public static CakeMesh AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject cake = new GameObject();
             cake.transform.position = position;
             CakeMesh cakeComponent = cake.AddComponent<CakeMesh>();
@@ -50,24 +49,12 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(float radius, int sides, int sidesToFill, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Cake";
-
             this.radius = radius;
             this.sides = sides;
             this.sidesToFill = sidesToFill;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMesh();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         public void Build(CakeStructure cakeStructure, Material meshMatt = null)
@@ -120,7 +107,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             Vertices = new Vector3[sidesToFill + 4];
             Triangles = new int[sidesToFill * 3];

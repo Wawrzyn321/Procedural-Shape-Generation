@@ -23,7 +23,6 @@ namespace PSG
 
         public static StarMesh AddStar(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject star = new GameObject();
             star.transform.position = position;
 
@@ -48,7 +47,6 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(float radiusA, float radiusB, int sides, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Star";
 
             this.sides = sides;
@@ -62,7 +60,7 @@ namespace PSG
 
             if (!Validate || ValidateMesh())
             {
-                BuildMesh();
+                BuildMeshComponents();
                 UpdateMeshFilter();
                 UpdateCollider();
             }
@@ -110,7 +108,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             Vertices = new Vector3[1 + sides * 2];
             Triangles = new int[2 * sides * 3];

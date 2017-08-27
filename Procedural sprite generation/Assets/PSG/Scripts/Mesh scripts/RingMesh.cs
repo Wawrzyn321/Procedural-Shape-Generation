@@ -24,7 +24,6 @@ namespace PSG
 
         public static RingMesh AddRing(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject ring = new GameObject();
             ring.transform.position = position;
             RingMesh ringComponent = ring.AddComponent<RingMesh>();
@@ -48,7 +47,6 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(float innerRadius, float outerRadius, int sides, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Ring";
             this.innerRadius = innerRadius;
             this.outerRadius = outerRadius;
@@ -61,7 +59,7 @@ namespace PSG
 
             if (!Validate || ValidateMesh())
             {
-                BuildMesh();
+                BuildMeshComponents();
                 UpdateMeshFilter();
                 UpdateCollider();
             }
@@ -86,7 +84,7 @@ namespace PSG
 
         #region Abstract Implementation
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             bool isCircle = innerRadius == 0;
 

@@ -21,7 +21,6 @@ namespace PSG
 
         public static QuadrangleMesh AddQuadrangle(Vector3 position, Vector2[] verts, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject quad = new GameObject();
             quad.transform.position = position + (space == Space.World ? (Vector3)(verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f : Vector3.zero);
             QuadrangleMesh quadComponent = quad.AddComponent<QuadrangleMesh>();
@@ -38,21 +37,10 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(Vector2[] verts, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Quadrangle";
             this.verts = verts;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMesh();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         #region Abstract Implementation
@@ -62,7 +50,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             Vertices = new Vector3[4];
             Vector2 center = (verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f;

@@ -64,7 +64,7 @@ namespace PSG
 
             if (!Validate || ValidateMesh())
             {
-                BuildMesh();
+                BuildMeshComponents();
                 UpdateMeshFilter();
                 UpdateCollider();
             }
@@ -122,7 +122,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             int doubleSides = 2 * sides;
 

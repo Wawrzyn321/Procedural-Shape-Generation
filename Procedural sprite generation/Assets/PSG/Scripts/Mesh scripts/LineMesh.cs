@@ -34,7 +34,6 @@ namespace PSG
 
         public static LineMesh AddLine(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject line = new GameObject();
             line.transform.position = position;
             LineMesh lineComponent = line.AddComponent<LineMesh>();
@@ -58,23 +57,12 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Line mesh";
             this.useDoubleCollider = useDoubleCollider;
             this.lineVerts = lineVerts;
             this.lineWidth = lineWidth;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMesh();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         public void Build(LineStructure lineStructure, Material meshMatt = null)
@@ -117,7 +105,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
 
             #region DoubleCollider

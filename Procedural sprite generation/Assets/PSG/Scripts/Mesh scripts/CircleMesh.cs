@@ -28,7 +28,6 @@ namespace PSG
 
         public static CircleMesh AddCircle(Vector3 position, float radius, int sides, bool useCircleCollider, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject circle = new GameObject();
             circle.transform.position = position;
             CircleMesh circleComponent = circle.AddComponent<CircleMesh>();
@@ -52,7 +51,6 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(float radius, int sides, bool useCircleCollider, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Circle";
             this.radius = radius;
             this.sides = sides;
@@ -65,7 +63,7 @@ namespace PSG
 
             if (!Validate || ValidateMesh())
             {
-                BuildMesh();
+                BuildMeshComponents();
                 UpdateMeshFilter();
                 UpdateCollider();
             }
@@ -109,7 +107,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
             Vertices = new Vector3[sides + 1];
             Triangles = new int[3 * sides];

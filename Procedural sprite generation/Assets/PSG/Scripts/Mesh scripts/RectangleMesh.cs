@@ -21,7 +21,6 @@ namespace PSG
         
         public static RectangleMesh AddRectangle(Vector3 position, Vector2 size, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject rectangleMesh = new GameObject();
             rectangleMesh.transform.position = position;
             RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
@@ -36,7 +35,6 @@ namespace PSG
         // fill area {from}, {to} by rectangle
         public static RectangleMesh FillRectangle(Vector3 from, Vector3 to, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject rectangleMesh = new GameObject();
             rectangleMesh.transform.position = (from + to) / 2;
             RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
@@ -51,7 +49,6 @@ namespace PSG
         // build rectangle from Rect
         public static RectangleMesh FillRectangle(Rect rect, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             GameObject rectangleMesh = new GameObject();
             rectangleMesh.transform.position = rect.center;
             RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
@@ -68,21 +65,10 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(Vector2 size, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
             name = "Rectangle";
             this.size = size;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMesh();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         //convert to quad
@@ -109,7 +95,7 @@ namespace PSG
             return true;
         }
 
-        protected override void BuildMesh()
+        protected override void BuildMeshComponents()
         {
 
             Vertices = new Vector3[]
