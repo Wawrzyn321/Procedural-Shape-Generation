@@ -233,8 +233,7 @@ public class MeshCreatorEditor : Editor
                     meshCreator.attachRigidbody);
             case MeshCreator.MeshType.Cake:
                 return CakeMesh.AddCakeMesh(meshCreator.transform.position, meshCreator.cakeRadius, meshCreator.cakeSides,
-                    meshCreator.cakeSidesToFill, meshCreator.material,
-                    meshCreator.attachRigidbody);
+                    meshCreator.cakeSidesToFill, meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.Convex:
                 return ConvexMesh.AddConvexMesh(meshCreator.transform.position,
                     MeshHelper.ConvertVec2ToVec3(meshCreator.convexPoints), Space.World,
@@ -248,7 +247,7 @@ public class MeshCreatorEditor : Editor
                     meshCreator.attachRigidbody);
             case MeshCreator.MeshType.Line:
                 return LineMesh.AddLine(meshCreator.transform.position, meshCreator.linePoints.ToArray(), meshCreator.lineWidth,
-                    meshCreator.lineUseDoubleCollider, meshCreator.material, meshCreator.attachRigidbody);
+                    meshCreator.lineUseDoubleCollider, Space.World, meshCreator.material, meshCreator.attachRigidbody);
         }
         return null;
     }

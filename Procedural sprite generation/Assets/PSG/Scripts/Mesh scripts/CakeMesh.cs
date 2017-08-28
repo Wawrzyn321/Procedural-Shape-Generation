@@ -17,7 +17,6 @@ namespace PSG
         private float radius;
         private int sides;
         private int sidesToFill;
-        private Vector2 centerShift;
 
         //colliders
         private PolygonCollider2D C_PC2D;
@@ -70,8 +69,7 @@ namespace PSG
             {
                 radius = radius,
                 sides = sides,
-                sidesToFill = sidesToFill,
-                centerShift = centerShift
+                sidesToFill = sidesToFill
             };
         }
 
@@ -79,7 +77,6 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-
             if (sides < 2)
             {
                 Debug.LogWarning("CakeMesh::ValidateMesh: sides count can't be less than two!");

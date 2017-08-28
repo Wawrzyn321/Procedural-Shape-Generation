@@ -51,18 +51,12 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(Vector2[] vertices, Material meshMatt = null)
         {
-            name = "Triangle";
-            _Mesh = new Mesh();
+            Vector2 center = (vertices[0] + vertices[1] + vertices[2]) / 3f;
+            p1 = vertices[0] - center;
+            p2 = vertices[1] - center;
+            p3 = vertices[2] - center;
 
-            GetOrAddComponents();
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMeshComponents();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMeshComponents();
         }
 
         #region Abstract Implementation

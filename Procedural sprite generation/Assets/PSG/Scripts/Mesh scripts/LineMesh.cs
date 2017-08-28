@@ -32,10 +32,24 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static LineMesh AddLine(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null, bool attachRigidbody = true)
+        public static LineMesh AddLine(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Space space, Material meshMatt = null, bool attachRigidbody = true)
         {
             GameObject line = new GameObject();
-            line.transform.position = position;
+
+            if (space == Space.Self)
+            {
+                line.transform.position = position;
+            }
+            else
+            {
+                Vector2 center = new Vector2();
+                for (int i = 0; i < lineVerts.Length; i++)
+                {
+                    center += lineVerts[i];
+                }
+                line.transform.position = position + (Vector3)center / lineVerts.Length;
+            }
+
             LineMesh lineComponent = line.AddComponent<LineMesh>();
             lineComponent.Build(lineVerts, lineWidth, useDoubleCollider, meshMatt);
             if (attachRigidbody)
@@ -47,7 +61,7 @@ namespace PSG
 
         public static LineMesh AddLine(Vector3 position, LineStructure lineStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddLine(position, lineStructure.lineVerts, lineStructure.lineWidth, lineStructure.useDoubleCollider, meshMatt, attachRigidbody);
+            return AddLine(position, lineStructure.lineVerts, lineStructure.lineWidth, lineStructure.useDoubleCollider, Space.Self, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -118,6 +132,17 @@ namespace PSG
 
             List<Vector3> verticesList = new List<Vector3>();
             List<int> trianglesList = new List<int>();
+
+            Vector2 center = new Vector2();
+            for (int i = 0; i < lineVerts.Length; i++)
+            {
+                center += lineVerts[i];
+            }
+            center /= lineVerts.Length;
+            for (int i = 0; i < lineVerts.Length; i++)
+            {
+                lineVerts[i] -= center;
+            }
 
             int currentVertIndex = 0;
             int currentTriIndex = 0;

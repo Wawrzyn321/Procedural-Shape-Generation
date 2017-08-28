@@ -52,17 +52,7 @@ namespace PSG
             this.outerRadius = outerRadius;
             this.sides = sides;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMeshComponents();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         public void Build(RingStructure ringStructure, Material meshMatt = null)
@@ -83,6 +73,36 @@ namespace PSG
         }
 
         #region Abstract Implementation
+
+        protected override bool ValidateMesh()
+        {
+            if (sides < 2)
+            {
+                Debug.LogWarning("RingMesh::ValidateMesh: sides count can't be less than two!");
+                return false;
+            }
+            if (innerRadius == 0 && outerRadius == 0)
+            {
+                Debug.LogWarning("RingMesh::ValidateMesh: radius can't be equal to zero!");
+                return false;
+            }
+            if (innerRadius < 0)
+            {
+                innerRadius = -innerRadius;
+            }
+            if (outerRadius < 0)
+            {
+                outerRadius = -outerRadius;
+            }
+            //swap radiuses if inner one is greater than outer
+            if (innerRadius > outerRadius)
+            {
+                float tempRadius = innerRadius;
+                innerRadius = outerRadius;
+                outerRadius = tempRadius;
+            }
+            return true;
+        }
 
         protected override void BuildMeshComponents()
         {
@@ -158,36 +178,6 @@ namespace PSG
             C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
-        }
-
-        protected override bool ValidateMesh()
-        {
-            if (sides < 2)
-            {
-                Debug.LogWarning("RingMesh::ValidateMesh: sides count can't be less than two!");
-                return false;
-            }
-            if (innerRadius == 0 && outerRadius == 0)
-            {
-                Debug.LogWarning("RingMesh::ValidateMesh: radius can't be equal to zero!");
-                return false;
-            }
-            if (innerRadius < 0)
-            {
-                innerRadius = -innerRadius;
-            }
-            if (outerRadius < 0)
-            {
-                outerRadius = -outerRadius;
-            }
-            //swap radiuses if inner one is greater than outer
-            if (innerRadius > outerRadius)
-            {
-                float tempRadius = innerRadius;
-                innerRadius = outerRadius;
-                outerRadius = tempRadius;
-            }
-            return true;
         }
 
         #endregion

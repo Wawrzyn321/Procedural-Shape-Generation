@@ -56,17 +56,7 @@ namespace PSG
             this.sides = sides;
             this.useCircleCollider = useCircleCollider;
 
-            _Mesh = new Mesh();
-            GetOrAddComponents();
-
-            C_MR.material = meshMatt;
-
-            if (!Validate || ValidateMesh())
-            {
-                BuildMeshComponents();
-                UpdateMeshFilter();
-                UpdateCollider();
-            }
+            BuildMesh(ref meshMatt);
         }
 
         public void Build(CircleStructure circleStructure, Material meshMatt = null)
