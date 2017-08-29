@@ -5,7 +5,7 @@ namespace PSG
 {
     public static class MeshHelper
     {
-        #region Material
+        #region Default Material
 
         private static Material cachedDefaultMaterial;
         //if material is null, replace it with default
@@ -23,7 +23,7 @@ namespace PSG
 
         #endregion
 
-        #region Building helper functions
+        #region Math
 
         //checks if point v is within triangle {v1,v2,v3}
         public static bool IsPointInTriangle(Vector2 v, Vector2 v1, Vector2 v2, Vector2 v3)
@@ -56,6 +56,26 @@ namespace PSG
             return System.Math.Sign((v1.x - v.x) * (v2.y - v.y) - (v2.x - v.x) * (v1.y - v.y));
         }
 
+        #endregion
+
+        #region Building helper functions
+
+        //check for duplicates (expensive!)
+        public static bool HasDuplicates(IList<Vector2> verts)
+        {
+            for (int i = 0; i < verts.Count; i++)
+            {
+                for (int j = i + 1; j < verts.Count; j++)
+                {
+                    if (verts[i].Equals(verts[j]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         //in case of sprites, all normals can be just {Vector3.up}
         public static Vector3[] AddMeshNormals(int verticesLength)
         {
@@ -72,29 +92,7 @@ namespace PSG
         #region Vector Conversion
 
         //convert Vector3 array to Vector3 one
-        public static Vector2[] ConvertVec3ToVec2(Vector3[] verts3D)
-        {
-            Vector2[] verts2D = new Vector2[verts3D.Length];
-            for (int i = 0; i < verts3D.Length; i++)
-            {
-                verts2D[i] = verts3D[i];
-            }
-            return verts2D;
-        }
-
-        //inverse ditto
-        public static Vector3[] ConvertVec2ToVec3(Vector2[] vertsD)
-        {
-            Vector3[] verts2D = new Vector3[vertsD.Length];
-            for (int i = 0; i < vertsD.Length; i++)
-            {
-                verts2D[i] = vertsD[i];
-            }
-            return verts2D;
-        }
-
-        //convert Vector3 list to Vector3 array
-        public static Vector2[] ConvertVec3ToVec2(List<Vector3> verts3D)
+        public static Vector2[] ConvertVec3ToVec2(IList<Vector3> verts3D)
         {
             Vector2[] verts2D = new Vector2[verts3D.Count];
             for (int i = 0; i < verts3D.Count; i++)
@@ -105,7 +103,7 @@ namespace PSG
         }
 
         //inverse ditto
-        public static Vector3[] ConvertVec2ToVec3(List<Vector2> vertsD)
+        public static Vector3[] ConvertVec2ToVec3(IList<Vector2> vertsD)
         {
             Vector3[] verts2D = new Vector3[vertsD.Count];
             for (int i = 0; i < vertsD.Count; i++)
@@ -118,7 +116,9 @@ namespace PSG
         #endregion
 
         #region UV Unwrapping
-        private static Vector4 GetBounds(Vector3[] vec)
+
+        //get bounding box of supplied points
+        private static Vector4 GetBounds(IList<Vector3> vec)
         {
             /* x - minX
              * y - minY
@@ -129,7 +129,7 @@ namespace PSG
             float y = float.MaxValue;
             float z = float.MinValue;
             float w = float.MinValue;
-            for (int i = 0; i < vec.Length; i++)
+            for (int i = 0; i < vec.Count; i++)
             {
                 if (vec[i].x < x)
                 {
@@ -150,63 +150,19 @@ namespace PSG
             }
             return new Vector4(x, y, z, w);
         }
-        private static Vector4 GetBounds(Vector2[] vec)
+
+        //return array of Vector2 UVs
+        public static Vector2[] UVUnwrap(IList<Vector3> vertices)
         {
-            /* x - minX
-             * y - minY
-             * z - maxX
-             * w - maxY
-             */
-            float x = float.MaxValue;
-            float y = float.MaxValue;
-            float z = float.MinValue;
-            float w = float.MinValue;
-            for (int i = 0; i < vec.Length; i++)
-            {
-                if (vec[i].x < x)
-                {
-                    x = vec[i].x;
-                }
-                if (vec[i].y < y)
-                {
-                    y = vec[i].y;
-                }
-                if (vec[i].x > z)
-                {
-                    z = vec[i].x;
-                }
-                if (vec[i].y > w)
-                {
-                    w = vec[i].y;
-                }
-            }
-            return new Vector4(x, y, z, w);
-        }
-        public static List<Vector2> UVUnwrap(Vector3[] vertices)
-        {
-            List<Vector2> uv = new List<Vector2>();
+            Vector2[] uv = new Vector2[vertices.Count];
             Vector4 boundingBox = GetBounds(vertices);
             float length = boundingBox.z - boundingBox.x;
             float width = boundingBox.w - boundingBox.y;
-            for (int i = 0; i < vertices.Length; i++)
+            for (int i = 0; i < vertices.Count; i++)
             {
                 float ux = (vertices[i].x - boundingBox.x) / length;
                 float uy = (vertices[i].y - boundingBox.y) / width;
-                uv.Add(new Vector2(ux, uy));
-            }
-            return uv;
-        }
-        public static List<Vector2> UVUnwrap(Vector2[] vertices)
-        {
-            List<Vector2> uv = new List<Vector2>();
-            Vector4 boundingBox = GetBounds(vertices);
-            float length = boundingBox.z - boundingBox.x;
-            float width = boundingBox.w - boundingBox.y;
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                float ux = (vertices[i].x - boundingBox.x) / length;
-                float uy = (vertices[i].y - boundingBox.y) / width;
-                uv.Add(new Vector2(ux, uy));
+                uv[i] = new Vector2(ux, uy);
             }
             return uv;
         }

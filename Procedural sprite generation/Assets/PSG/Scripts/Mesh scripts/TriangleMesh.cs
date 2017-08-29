@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace PSG
 {
@@ -49,7 +50,7 @@ namespace PSG
         }
 
         //assign variables, get components and build mesh
-        public void Build(Vector2[] vertices, Material meshMatt = null)
+        public void Build(IList<Vector2> vertices, Material meshMatt = null)
         {
             Vector2 center = (vertices[0] + vertices[1] + vertices[2]) / 3f;
             p1 = vertices[0] - center;
@@ -108,7 +109,7 @@ namespace PSG
                 Vertices[2] = p2;
             }
 
-            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
+            UVs = MeshHelper.UVUnwrap(Vertices);
         }
 
         public override void UpdateCollider()

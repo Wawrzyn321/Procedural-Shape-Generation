@@ -22,7 +22,7 @@ namespace PSG
 
         #region Static Methods
 
-        public static ConvexMesh AddConvexMesh(Vector3 position, Vector3[] vertices, Space space, Material meshMatt = null, bool attachRigidbody = true)
+        public static ConvexMesh AddConvexMesh(Vector3 position, IList<Vector3> vertices, Space space, Material meshMatt = null, bool attachRigidbody = true)
         {
             GameObject convex = new GameObject();
 
@@ -33,11 +33,11 @@ namespace PSG
             else
             {
                 Vector3 center = new Vector3();
-                for (int i = 0; i < vertices.Length; i++)
+                for (int i = 0; i < vertices.Count; i++)
                 {
                     center += vertices[i];
                 }
-                convex.transform.position = position + center / vertices.Length;
+                convex.transform.position = position + center / vertices.Count;
             }
 
             ConvexMesh convexComponent = convex.AddComponent<ConvexMesh>();
@@ -52,10 +52,10 @@ namespace PSG
         #endregion
 
         //assign variables, get components and build mesh
-        public void Build(Vector3[] vertices, Material meshMatt = null)
+        public void Build(IList<Vector3> vertices, Material meshMatt = null)
         {
             name = "Convex Mesh";
-            this.vertices = vertices;
+            this.vertices = (Vector3[])vertices;
 
             BuildMesh(ref meshMatt);
         }
@@ -103,7 +103,7 @@ namespace PSG
                 Triangles[i * 3 + 1] = i;
                 Triangles[i * 3 + 2] = i + 1;
             }
-            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
+            UVs = MeshHelper.UVUnwrap(Vertices);
         }
 
         public override void UpdateCollider()

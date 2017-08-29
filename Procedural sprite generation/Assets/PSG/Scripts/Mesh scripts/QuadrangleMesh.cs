@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace PSG
 {
@@ -19,7 +20,7 @@ namespace PSG
 
         #region Static Build
 
-        public static QuadrangleMesh AddQuadrangle(Vector3 position, Vector2[] verts, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
+        public static QuadrangleMesh AddQuadrangle(Vector3 position, IList<Vector2> verts, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
         {
             GameObject quad = new GameObject();
             quad.transform.position = position + (space == Space.World ? (Vector3)(verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f : Vector3.zero);
@@ -35,10 +36,10 @@ namespace PSG
         #endregion
 
         //assign variables, get components and build mesh
-        public void Build(Vector2[] verts, Material meshMatt = null)
+        public void Build(IList<Vector2> verts, Material meshMatt = null)
         {
             name = "Quadrangle";
-            this.verts = verts;
+            this.verts = (Vector2[])verts;
 
             BuildMesh(ref meshMatt);
         }
@@ -47,6 +48,11 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
+            if (MeshHelper.HasDuplicates(verts))
+            {
+                Debug.LogWarning("QuadrangleMesh::ValidateMesh: Duplicate points detected!");
+                return false;
+            }
             return true;
         }
 
@@ -79,7 +85,7 @@ namespace PSG
                 Triangles = new int[] { 0, 1, 3, 2, 3, 1 };
             }
 
-            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
+            UVs = MeshHelper.UVUnwrap(Vertices);
         }
 
         public override void UpdateCollider()

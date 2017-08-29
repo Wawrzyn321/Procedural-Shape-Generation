@@ -69,11 +69,11 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null)
+        public void Build(IList<Vector2> lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null)
         {
             name = "Line mesh";
             this.useDoubleCollider = useDoubleCollider;
-            this.lineVerts = lineVerts;
+            this.lineVerts = (Vector2[])lineVerts;
             this.lineWidth = lineWidth;
 
             BuildMesh(ref meshMatt);
@@ -109,6 +109,12 @@ namespace PSG
             if (lineVerts.Length < 1)
             {
                 Debug.LogWarning("LineMesh::ValidateMesh: Parameter size must be bigger than one!");
+                return false;
+            }
+
+            if (MeshHelper.HasDuplicates(lineVerts))
+            {
+                Debug.LogWarning("LineMesh::ValidateMesh: Duplicate points detected!");
                 return false;
             }
 
@@ -285,7 +291,7 @@ namespace PSG
             Vertices = verticesList.ToArray();
             Triangles = trianglesList.ToArray();
 
-            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
+            UVs = MeshHelper.UVUnwrap(Vertices);
         }
 
         public override void UpdateCollider()

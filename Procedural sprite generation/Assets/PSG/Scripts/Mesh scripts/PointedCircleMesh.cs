@@ -110,7 +110,7 @@ namespace PSG
                 Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
                 Triangles[(i - 1) * 3 + 2] = 0;
             }
-            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
+            UVs = MeshHelper.UVUnwrap(Vertices);
         }
 
         public override void UpdateCollider()

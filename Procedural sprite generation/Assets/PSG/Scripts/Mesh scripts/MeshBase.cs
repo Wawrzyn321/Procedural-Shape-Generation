@@ -106,7 +106,7 @@ namespace PSG
         }
 
         #endregion
-
+            
         #region Joints Physics
 
         //add HingeJoint2D at the center of the object and attach it to background

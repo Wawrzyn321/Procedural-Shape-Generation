@@ -144,7 +144,7 @@ namespace PSG
                     Triangles[triangleIndex++] = (i + sides + 1) % (sides * 2);
                 }
             }
-            UVs = MeshHelper.UVUnwrap(Vertices).ToArray();
+            UVs = MeshHelper.UVUnwrap(Vertices);
         }
 
         public override void UpdateCollider()
