@@ -99,12 +99,6 @@ namespace PSG
         //find necessary components
         public abstract void GetOrAddComponents();
 
-        //return center of object (this function may be overrided, if origin should be changed)
-        public virtual Vector2 GetCenter()
-        {
-            return transform.position;
-        }
-
         //most of meshes have only one collider
         public virtual void SetCollidersEnabled(bool enable)
         {
@@ -118,26 +112,44 @@ namespace PSG
         //add HingeJoint2D at the center of the object and attach it to background
         public HingeJoint2D AddHingeJoint()
         {
+            return AddHingeJoint(transform.position);
+        }
+
+        //add HingeJoint2D to the object and attach it to background
+        public HingeJoint2D AddHingeJoint(Vector2 position)
+        {
             HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
-            C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+            C_HJ2D.anchor = transform.InverseTransformPoint(position);
             return C_HJ2D;
         }
 
-        //specify motor
+        //specify motor - by default on center
         public HingeJoint2D AddHingeJoint(JointMotor2D C_JM2D)
         {
+            return AddHingeJoint(C_JM2D, transform.position);
+        }
+
+        //specify motor
+        public HingeJoint2D AddHingeJoint(JointMotor2D C_JM2D, Vector2 position)
+        {
             HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
-            C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+            C_HJ2D.anchor = transform.InverseTransformPoint(position);
             C_HJ2D.motor = C_JM2D;
             C_HJ2D.useMotor = true;
             return C_HJ2D;
         }
 
-        //specify motor and connected body
+        //specify motor and connected body (on center, by default)
         public HingeJoint2D AddHingeJoint(JointMotor2D C_JM2D, Rigidbody2D connectedBody)
         {
+            return AddHingeJoint(C_JM2D, connectedBody, transform.position);
+        }
+
+        //specify motor and connected body
+        public HingeJoint2D AddHingeJoint(JointMotor2D C_JM2D, Rigidbody2D connectedBody, Vector2 position)
+        {
             HingeJoint2D C_HJ2D = gameObject.AddComponent<HingeJoint2D>();
-            C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+            C_HJ2D.anchor = transform.InverseTransformPoint(position);
             C_HJ2D.motor = C_JM2D;
             C_HJ2D.useMotor = true;
             C_HJ2D.connectedBody = connectedBody;
@@ -148,7 +160,7 @@ namespace PSG
         public FixedJoint2D AddFixedJoint()
         {
             FixedJoint2D C_HJ2D = gameObject.AddComponent<FixedJoint2D>();
-            C_HJ2D.anchor = transform.InverseTransformPoint(GetCenter());
+            C_HJ2D.anchor = transform.InverseTransformPoint(transform.position);
             return C_HJ2D;
         }
 
@@ -161,8 +173,8 @@ namespace PSG
             {
                 return false;
             }
-            C_FJ2D.anchor = meshA.transform.InverseTransformPoint(meshA.GetCenter());
-            C_FJ2D.anchor = meshB.transform.InverseTransformPoint(meshB.GetCenter());
+            C_FJ2D.anchor = meshA.transform.InverseTransformPoint(meshA.transform.position);
+            C_FJ2D.anchor = meshB.transform.InverseTransformPoint(meshB.transform.position);
             return true;
         }
 
@@ -175,8 +187,8 @@ namespace PSG
             {
                 return false;
             }
-            C_FJ2D.anchor = transform.InverseTransformPoint(GetCenter());
-            C_FJ2D.anchor = otherMesh.transform.InverseTransformPoint(otherMesh.GetCenter());
+            C_FJ2D.anchor = transform.InverseTransformPoint(transform.position);
+            C_FJ2D.anchor = otherMesh.transform.InverseTransformPoint(otherMesh.transform.position);
             return true;
         }
 

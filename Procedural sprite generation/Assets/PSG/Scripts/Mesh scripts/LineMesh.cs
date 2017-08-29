@@ -59,9 +59,9 @@ namespace PSG
             return lineComponent;
         }
 
-        public static LineMesh AddLine(Vector3 position, LineStructure lineStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static LineMesh AddLine(Vector3 position, LineStructure structure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddLine(position, lineStructure.lineVerts, lineStructure.lineWidth, lineStructure.useDoubleCollider, Space.Self, meshMatt, attachRigidbody);
+            return AddLine(position, structure.lineVerts, structure.lineWidth, structure.useDoubleCollider, Space.Self, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -79,9 +79,9 @@ namespace PSG
             BuildMesh(ref meshMatt);
         }
 
-        public void Build(LineStructure lineStructure, Material meshMatt = null)
+        public void Build(LineStructure structure, Material meshMatt = null)
         {
-            Build(lineStructure.lineVerts, lineStructure.lineWidth, lineStructure.useDoubleCollider, meshMatt);
+            Build(structure.lineVerts, structure.lineWidth, structure.useDoubleCollider, meshMatt);
         }
 
         #endregion

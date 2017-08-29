@@ -57,7 +57,7 @@ namespace PSG
                             if (connectedMeshBase != null)
                             {
                                 //GetCenter overrides object origin
-                                C_SP2D.anchor = connectedBody.transform.InverseTransformPoint(connectedMeshBase.GetCenter());
+                                C_SP2D.anchor = connectedBody.transform.InverseTransformPoint(connectedMeshBase.transform.position);
                             }
                             else
                             {

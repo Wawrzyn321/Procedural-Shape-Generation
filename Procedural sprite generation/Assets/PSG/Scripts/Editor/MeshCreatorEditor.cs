@@ -243,8 +243,7 @@ public class MeshCreatorEditor : Editor
                     meshCreator.starSides, meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.Gear:
                 return GearMesh.AddGear(meshCreator.transform.position, meshCreator.gearInnerRadius, meshCreator.gearRootRadius,
-                    meshCreator.gearOuterRadius, meshCreator.gearSides, meshCreator.material,
-                    meshCreator.attachRigidbody);
+                    meshCreator.gearOuterRadius, meshCreator.gearSides, meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.Line:
                 return LineMesh.AddLine(meshCreator.transform.position, meshCreator.linePoints.ToArray(), meshCreator.lineWidth,
                     meshCreator.lineUseDoubleCollider, Space.World, meshCreator.material, meshCreator.attachRigidbody);
