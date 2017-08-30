@@ -17,6 +17,8 @@ namespace PSG
         private LineRenderer C_LR;
         private SpringJoint2D C_SP2D;
 
+        private const float lineRendererWidth = 0.01f;
+
         void Awake()
         {
             C_LR = GetComponent<LineRenderer>();
@@ -92,6 +94,7 @@ namespace PSG
         {
             if (connectedBody)
             {
+                C_LR.startWidth = C_LR.endWidth = Camera.main.orthographicSize * lineRendererWidth;
                 //drag connected body
                 Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 C_SP2D.connectedAnchor = pos;
