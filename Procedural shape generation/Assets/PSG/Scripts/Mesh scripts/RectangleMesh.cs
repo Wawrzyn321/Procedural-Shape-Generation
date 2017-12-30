@@ -22,6 +22,7 @@ namespace PSG
         public static RectangleMesh AddRectangle(Vector3 position, Vector2 size, Material meshMatt = null, bool attachRigidbody = true)
         {
             GameObject rectangleMesh = new GameObject();
+
             rectangleMesh.transform.position = position;
             RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
             rectangleComponent.Build(size, meshMatt);
@@ -91,6 +92,14 @@ namespace PSG
             {
                 Debug.LogWarning("RectangleMesh::ValidateMesh: Size of box can't be zero!");
                 return false;
+            }
+            if (size.x < 0)
+            {
+                size.x = -size.x;
+            }
+            if (size.y < 0)
+            {
+                size.y = -size.y;
             }
             return true;
         }

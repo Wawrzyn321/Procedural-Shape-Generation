@@ -25,6 +25,16 @@ namespace PSG
 
         #region Math
 
+        public static double AngleBetweenPoints(Vector2 first, Vector2 center, Vector2 last)
+        {
+            double k;
+            double l1 = Vector2.Distance(center, first);
+            double l2 = Vector2.Distance(center, last);
+            double dp = (first.x - center.x) * (last.x - center.x) + (first.y - center.y) * (last.y - center.y);
+            k = dp / l1 / l2;
+            return System.Math.Acos(k) * 180 / System.Math.PI;
+        }
+
         //checks if point v is within triangle {v1,v2,v3}
         public static bool IsPointInTriangle(Vector2 v, Vector2 v1, Vector2 v2, Vector2 v3)
         {

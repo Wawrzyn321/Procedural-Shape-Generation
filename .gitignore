@@ -29,7 +29,8 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-Procedural sprite generation/Library
-Procedural sprite generation/Temp/UnityLockfile
-Procedural sprite generation/Temp
+Procedural shape generation/Library
+Procedural shape generation/Temp/UnityLockfile
+Procedural shape generation/Temp
 *.bin
+Procedural shape generation/.vs/Procedural shape generation/v15/Server/sqlite3/db.lock

@@ -44,6 +44,19 @@ namespace PSG
             BuildMesh(ref meshMatt);
         }
 
+        private static int GetMaxIndex(IList<double> values)
+        {
+            int index = 0;
+            for (int i = 0; i < values.Count; i++)
+            {
+                if (values[i]>values[index])
+                {
+                    index = i;
+                }
+            }
+            return index;
+        }
+
         #region Abstract Implementation
 
         protected override bool ValidateMesh()
@@ -65,24 +78,24 @@ namespace PSG
                 Vertices[i] = verts[i] - center;
             }
 
-            if (MeshHelper.IsPointInTriangle(verts[0], verts[1], verts[2], verts[3]))
+            double[] angles = new double[4];
+            double sum = 0;
+            for (int i = 0; i < 4; i++)
             {
-                Triangles = new int[] { 0, 2, 3, 0, 1, 2 };
+                angles[i] = MeshHelper.AngleBetweenPoints(verts[i], verts[(i + 1) % 4], verts[(i + 2) % 4]);
+                sum += angles[i];
             }
-            else if (!MeshHelper.IsPointInTriangle(verts[3], verts[0], verts[1], verts[2]))
+            if (System.Math.Abs(360 - sum) < 1e-3) //check for clockwise order
             {
-                if (MeshHelper.IsPointInTriangle(verts[2], verts[0], verts[1], verts[3]))
-                {
-                    Triangles = new int[] { 0, 2, 3, 1, 0, 2 };
-                }
-                else
-                {
-                    Triangles = new int[] { 0, 1, 3, 1, 2, 3 };
-                }
+                Triangles = new int []{ 0, 1, 3, 2, 3, 1 };
             }
             else
             {
-                Triangles = new int[] { 0, 1, 3, 2, 3, 1 };
+                int index = GetMaxIndex(angles);
+                int a = (index + 1) % 4;
+                int b = (index + 2) % 4;
+                int c = (index + 3) % 4;
+                Triangles = new int[] { a, index, c, b, a, c };
             }
 
             UVs = MeshHelper.UVUnwrap(Vertices);
