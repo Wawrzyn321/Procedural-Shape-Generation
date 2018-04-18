@@ -112,8 +112,6 @@ public class MeshCreatorEditor : Editor
                     mc.linePoints[i] = Handles.DoPositionHandle(p2 + mc.linePoints[i], Quaternion.identity) - p3;
                 }
                 break;
-            default:
-                break;
         }
     }
 
@@ -204,6 +202,13 @@ public class MeshCreatorEditor : Editor
     }
 
     private MeshBase BuildMesh(MeshCreator meshCreator)
+    {
+        var mesh = GetChoosenMesh(meshCreator);
+        Undo.RegisterCreatedObjectUndo(mesh.gameObject, mesh.name);
+        return mesh;
+    }
+
+    private MeshBase GetChoosenMesh(MeshCreator meshCreator)
     {
         switch (meshCreator.meshType)
         {

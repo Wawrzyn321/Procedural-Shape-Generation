@@ -15,7 +15,7 @@ public class LineMeshDemo : MonoBehaviour {
     void Start ()
     {
         AddLineMesh();
-        StartCoroutine("AddBalls");
+        StartCoroutine(AddBalls());
     }
 
     private void AddLineMesh()
@@ -39,10 +39,11 @@ public class LineMeshDemo : MonoBehaviour {
     private IEnumerator AddBalls()
     {
         yield return new WaitForSeconds(2);
+        WaitForSeconds delay = new WaitForSeconds(0.75f);
         for (int i = 0; i < ballsToSpawn; i++)
         {
             AddBall();
-            yield return new WaitForSeconds(0.75f);
+            yield return delay;
         }
     }
 

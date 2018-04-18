@@ -53,7 +53,14 @@ namespace PSG
             return verts;
         }
 
-        protected void BuildMesh(ref Material meshMatt)
+
+        public void BuildMesh()
+        {
+           Material m = MeshHelper.CachedDefaultMaterial;
+           BuildMesh(ref m);
+        }
+
+        public void BuildMesh(ref Material meshMatt)
         {
             if (!Validate || ValidateMesh())
             {

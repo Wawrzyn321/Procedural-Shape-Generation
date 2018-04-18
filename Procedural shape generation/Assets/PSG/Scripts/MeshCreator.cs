@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// In-editor helper for visual creation of meshes.
+/// 
+/// Most of fields here are public-but-hidden to easily
+/// expose them both to Inspector and MeshCreatorInspector
+/// script.
+/// </summary>
 public class MeshCreator : MonoBehaviour
 {
 

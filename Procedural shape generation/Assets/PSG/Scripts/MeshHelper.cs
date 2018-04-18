@@ -3,21 +3,34 @@ using UnityEngine;
 
 namespace PSG
 {
+    /// <summary>
+    /// Static helper class for mesh creation and other
+    /// utility functions.
+    /// </summary>
     public static class MeshHelper
     {
         #region Default Material
 
         private static Material cachedDefaultMaterial;
-        //if material is null, replace it with default
-        public static void CheckMaterial(ref Material meshMatt)
+        public static Material CachedDefaultMaterial
         {
-            if (meshMatt == null)
+            get
             {
                 if (cachedDefaultMaterial == null)
                 {
                     cachedDefaultMaterial = new Material(Shader.Find("Sprites/Default"));
                 }
-                meshMatt = cachedDefaultMaterial;
+                return cachedDefaultMaterial;
+            }
+            set { cachedDefaultMaterial = value; }
+        }
+
+        //if material is null, replace it with default
+        public static void CheckMaterial(ref Material meshMatt)
+        {
+            if (meshMatt == null)
+            {
+                meshMatt = CachedDefaultMaterial;
             }
         }
 
@@ -27,12 +40,11 @@ namespace PSG
 
         public static double AngleBetweenPoints(Vector2 first, Vector2 center, Vector2 last)
         {
-            double k;
-            double l1 = Vector2.Distance(center, first);
-            double l2 = Vector2.Distance(center, last);
-            double dp = (first.x - center.x) * (last.x - center.x) + (first.y - center.y) * (last.y - center.y);
-            k = dp / l1 / l2;
-            return System.Math.Acos(k) * 180 / System.Math.PI;
+            double centerFirstDistance = Vector2.Distance(center, first);
+            double centerLastDistance = Vector2.Distance(center, last);
+            double deltaPosition = (first.x - center.x) * (last.x - center.x) + (first.y - center.y) * (last.y - center.y);
+            double v = deltaPosition / centerFirstDistance / centerLastDistance;
+            return System.Math.Acos(v) * 180 / System.Math.PI;
         }
 
         //checks if point v is within triangle {v1,v2,v3}
