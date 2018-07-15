@@ -135,18 +135,15 @@ public class MeshCreator : MonoBehaviour
     public float friction = 0.4f;
     [Range(0f, 1f)]
     public float bounciness = 0.1f;
-
+    
     void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
+
         //cache position - 2 and 3 dimensional vectors to prevent type conversion
         Vector2 p2 = transform.position;
         Vector3 p3 = transform.position;
-        DrawGizmos(p2, p3);
-    }
 
-    private void DrawGizmos(Vector2 p2, Vector3 p3)
-    {
         Vector3 lastPos;
         float angleDelta;
         float angleShift;

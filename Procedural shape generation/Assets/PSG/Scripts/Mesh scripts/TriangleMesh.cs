@@ -13,14 +13,23 @@ namespace PSG
     public class TriangleMesh : MeshBase
     {
         //mesh data
+        [SerializeField, HideInInspector]
         private Vector3 p1;
+        [SerializeField, HideInInspector]
         private Vector3 p2;
+        [SerializeField, HideInInspector]
         private Vector3 p3;
 
         //collider
         private PolygonCollider2D C_PC2D;
 
         #region Static Methods
+
+        public static TriangleMesh AddTriangle(Vector3 position, Vector2[] points, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
+        {
+            Debug.Assert(points.Length == 3, "TriangleMesh::AddTriangle: supplied triangle array length must be equal to 3!");
+            return AddTriangle(position, points[0], points[1], points[2], space, meshMatt, attachRigidbody);
+        }
 
         public static TriangleMesh AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
         {

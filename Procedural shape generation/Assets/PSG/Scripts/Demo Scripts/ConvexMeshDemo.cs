@@ -1,6 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using PSG;
 
+/// <summary>
+/// Demo scene for wonders of QuickHull.
+///
+/// Warning: dragging the bodies inside the hull
+/// may create strange results - to prevent this,
+/// create new ConvexMesh instead of using Build().
+/// </summary>
 public class ConvexMeshDemo : MonoBehaviour {
 
     private MeshBase[] meshes;
@@ -8,7 +16,6 @@ public class ConvexMeshDemo : MonoBehaviour {
     private JointMotor2D C_JM2D;
 
     private Vector3[] allVertices;
-
     private Material convexMaterial;
 
     void Awake()
@@ -16,7 +23,7 @@ public class ConvexMeshDemo : MonoBehaviour {
         MeshHelper.CheckMaterial(ref convexMaterial);
         convexMaterial.color = new Color(0.8f, 0.8f, 0.9f, 1f);
 
-        C_JM2D = new JointMotor2D()
+        C_JM2D = new JointMotor2D
         {
             motorSpeed = 100f,
             maxMotorTorque = 10f
@@ -33,18 +40,19 @@ public class ConvexMeshDemo : MonoBehaviour {
         meshes[3] = AddPointedCircle();
         meshes[4] = AddTriangleMesh();
 
-        int v = 0;
-        for(int i = 0; i < meshes.Length; i++)
+        int verticesCount = 0;
+        foreach (MeshBase mesh in meshes)
         {
-            v += meshes[i].Vertices.Length;
+            verticesCount += mesh.Vertices.Length;
 
-            meshes[i].AddHingeJoint(C_JM2D);
-            meshes[i].SetCollidersEnabled(false);
+            mesh.AddHingeJoint(C_JM2D);
+            mesh.SetCollidersEnabled(false);
         }
-        allVertices = new Vector3[v];
+        allVertices = new Vector3[verticesCount];
 
         convexMesh = ConvexMesh.AddConvexMesh(Vector3.zero, UpdateVertices(), Space.World, convexMaterial, false);
-        convexMesh.C_MR.sortingOrder = -1;
+        //move body back a bit
+        convexMesh.transform.Translate(Vector3.forward * 0.1f);
     }
 
     void FixedUpdate()
@@ -55,58 +63,62 @@ public class ConvexMeshDemo : MonoBehaviour {
     private Vector3[] UpdateVertices()
     {
         int index = 0;
-        for(int i = 0; i < meshes.Length; i++)
+        for (int i = 0; i < meshes.Length; i++)
         {
-            Vector3[] vertices = meshes[i].Vertices;
-            for (int j = 0; j < vertices.Length; j++, index++)
-            {
-                allVertices[index] = meshes[i].transform.TransformPoint(vertices[j]);
-            }
+            //get transformed vertices
+            Vector3[] vertices = meshes[i].GetVerticesInGlobalSpace();
+
+            //assign them to source vertices
+            Array.Copy(vertices, 0, allVertices, index, vertices.Length);
+            index += vertices.Length;
         }
         return allVertices;
     }
 
-    private MeshBase AddGear()
+    private GearMesh AddGear()
     {
-        Vector3 pos = new Vector3(-7, 3, 0);
-        GearMesh gearMesh = 
-            GearMesh.AddGear(pos, 0, 0.9f, 1.2f, 5, null, false);
+        Vector3 pos = new Vector3(-7, 3, -0.1f);
+        GearMesh gearMesh = GearMesh.AddGear(pos, 0, 0.9f, 1.2f, 5, null, false);
         gearMesh.SetColor(Color.red);
         return gearMesh;
     }
 
-    private MeshBase AddStar()
+    private StarMesh AddStar()
     {
-        Vector3 pos = new Vector3(1.5f, 3, 0);
-        StarMesh starMesh = 
-            StarMesh.AddStar(pos, 0.7f, 1.4f, 12, null, false);
+        Vector3 pos = new Vector3(1.5f, 3, -0.1f);
+        StarMesh starMesh = StarMesh.AddStar(pos, 0.7f, 1.4f, 12, null, false);
         starMesh.SetColor(Color.yellow);
         return starMesh;
     }
 
-    private MeshBase AddBox()
+    private RectangleMesh AddBox()
     {
-        Vector3 pos = new Vector3(0, -4, 0);
-        RectangleMesh rectangleMesh = 
-            RectangleMesh.AddRectangle(pos, new Vector2(0.5f, 2.5f), null, false);
+        Vector3 pos = new Vector3(0, -4, -0.1f);
+        RectangleMesh rectangleMesh = RectangleMesh.AddRectangle(pos, new Vector2(0.5f, 2.5f), null, false);
         rectangleMesh.SetColor(Color.blue);
         return rectangleMesh;
     }
 
-    private MeshBase AddPointedCircle()
+    private PointedCircleMesh AddPointedCircle()
     {
-        Vector3 pos = new Vector3(6.7f, -1.25f, 0);
+        Vector3 pos = new Vector3(6.7f, -1.25f, -0.1f);
+        Vector2 shift = new Vector2(2, 2.5f);
         PointedCircleMesh pointedCircleMesh = 
-            PointedCircleMesh.AddPointedCircle(pos, 0.8f, 6, new Vector2(2, 2.5f), null, false);
+            PointedCircleMesh.AddPointedCircle(pos, 0.8f, 6, shift, null, false);
         pointedCircleMesh.SetColor(Color.gray);
         return pointedCircleMesh;
     }
 
-    private MeshBase AddTriangleMesh()
+    private TriangleMesh AddTriangleMesh()
     {
-        Vector3 pos = new Vector3(-5, 0.7f, 0);
-        TriangleMesh triangleMesh =
-            TriangleMesh.AddTriangle(pos, new Vector2(-3, -3), new Vector2(0, -1), new Vector2(-3, 0), Space.World, null, false);
+        Vector3 pos = new Vector3(-5, 0.7f, -0.1f);
+        Vector2[] vertices =
+        {
+            new Vector2(-3, -3),
+            new Vector2(0, -1),
+            new Vector2(-3, 0)
+        };
+        TriangleMesh triangleMesh = TriangleMesh.AddTriangle(pos, vertices, Space.World, null, false);
         triangleMesh.SetColor(Color.green);
         return triangleMesh;
     }

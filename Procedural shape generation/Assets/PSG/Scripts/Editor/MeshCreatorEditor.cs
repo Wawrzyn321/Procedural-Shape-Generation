@@ -1,7 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using PSG;
-using System;
 using UnityEditorInternal;
 
 [CustomEditor(typeof(MeshCreator), true)]
@@ -21,7 +20,7 @@ public class MeshCreatorEditor : Editor
     {
         DrawDefaultInspector();
 
-        MeshCreator meshCreatorScript = target as MeshCreator;
+        MeshCreator meshCreatorScript = (MeshCreator) target;
 
         DrawMeshTypeInspector(meshCreatorScript);
 
@@ -33,14 +32,17 @@ public class MeshCreatorEditor : Editor
 
     private void OnSceneGUI()
     {
-        MeshCreator mc = target as MeshCreator;
-        Vector2 p2 = mc.transform.position;
-        Vector3 p3 = mc.transform.position;
-        DrawHandles(mc, p2, p3);
+        MeshCreator mc = (MeshCreator) target;
+        DrawHandles(mc);
     }
 
-    private void DrawHandles(MeshCreator mc, Vector2 p2, Vector3 p3)
+    private void DrawHandles(MeshCreator mc)
     {
+        //cache casted position
+        Vector2 p2 = mc.transform.position;
+        //and this one too, for brevity
+        Vector3 p3 = mc.transform.position;
+
         switch (mc.meshType)
         {
             case MeshCreator.MeshType.Triangle:

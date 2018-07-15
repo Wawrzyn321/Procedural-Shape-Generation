@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using UnityEngine;
 using UnityEditor;
 using PSG;
@@ -26,7 +25,7 @@ public class SaveMeshEditor : Editor
         //save MeshFilter's content
         if (GUILayout.Button("Save Mesh Only"))
         {
-            SaveMeshToFile(targetScript.C_MF.sharedMesh, targetScript.C_MR.sharedMaterial, targetScript.name);
+            SaveMeshToFile(targetScript.C_MF.sharedMesh, targetScript.name);
         }
         //save GameObject
         if (GUILayout.Button("Save Prefab"))
@@ -41,16 +40,18 @@ public class SaveMeshEditor : Editor
     }
 
     //save MeshFilter's mesh
-    private void SaveMeshToFile(Mesh mesh, Material material, string name)
+    private void SaveMeshToFile(Mesh mesh, string name)
     {
         CheckFolders("Saved meshes");
 
+        //make a copy of Mesh to prevent sharing it among other MeshFilters
+        Mesh meshCopy = Instantiate(mesh);
         try
         {
-            AssetDatabase.CreateAsset(mesh, "Assets/PSG/Saved meshes/" + name + ".asset");
+            AssetDatabase.CreateAsset(meshCopy, "Assets/PSG/Saved meshes/" + name + ".asset");
             Debug.Log("Mesh \"" + name + ".asset\" saved succesfully at PSG/Saved meshes");
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Debug.LogError("PSG::Mesh Generation failed! ("+e+")");
         }
@@ -62,7 +63,7 @@ public class SaveMeshEditor : Editor
         CheckFolders("Saved prefabs");
 
         //mesh and it's material need to be saved too
-        SaveMeshToFile(meshBase.C_MF.sharedMesh, meshBase.C_MR.sharedMaterial, name + "'mesh");
+        SaveMeshToFile(meshBase.C_MF.sharedMesh, name + "'mesh");
 
         try
         {
@@ -87,8 +88,10 @@ public class SaveMeshEditor : Editor
     //utility: check if folder exists in PSG directory
     private void CheckFolders(string targetFolder)
     {
+        const string savePath = "Assets/PSG";
+
         //check for PSG
-        if (!AssetDatabase.IsValidFolder("Assets/PSG"))
+        if (!AssetDatabase.IsValidFolder(savePath))
         {
             AssetDatabase.CreateFolder("Assets", "PSG");
         }
@@ -96,7 +99,7 @@ public class SaveMeshEditor : Editor
         //check for {targetFolder}
         if(!AssetDatabase.IsValidFolder("Assets/PSG/"+ targetFolder))
         {
-            AssetDatabase.CreateFolder("Assets/PSG", targetFolder);
+            AssetDatabase.CreateFolder(savePath, targetFolder);
         }
     }
 
