@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/PSG/Demo/MeshCreator demo.unity
+    guid: 36436cbc5461e594fa53c573f2e0c217
