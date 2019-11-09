@@ -26,7 +26,7 @@ namespace PSG
         }
 
         //if material is null, replace it with default
-        public static void CheckMaterial(ref Material meshMatt)
+        public static void SetupMaterial(ref Material meshMatt)
         {
             if (meshMatt == null)
             {

@@ -25,7 +25,7 @@ namespace PSG
 
         public static GearMesh AddGear(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
+            MeshHelper.SetupMaterial(ref meshMatt);
             GameObject gear = new GameObject();
             gear.transform.position = position;
 
@@ -50,7 +50,7 @@ namespace PSG
         //assign variables, get components and build mesh
         public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null)
         {
-            MeshHelper.CheckMaterial(ref meshMatt);
+            MeshHelper.SetupMaterial(ref meshMatt);
             name = "Gear";
             this.innerRadius = innerRadius;
             this.rootRadius = rootRadius;

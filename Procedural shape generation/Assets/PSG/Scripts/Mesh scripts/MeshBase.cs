@@ -64,7 +64,7 @@ namespace PSG
         {
             if (!Validate || ValidateMesh())
             {
-                MeshHelper.CheckMaterial(ref meshMatt);
+                MeshHelper.SetupMaterial(ref meshMatt);
 
                 _Mesh = new Mesh();
                 GetOrAddComponents();

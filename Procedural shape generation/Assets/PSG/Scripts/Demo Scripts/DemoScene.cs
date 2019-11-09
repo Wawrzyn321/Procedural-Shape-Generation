@@ -140,7 +140,7 @@ public class DemoScene : MonoBehaviour
             verts[i] = new Vector3(x, y);
         }
 
-        ConvexMesh convex = ConvexMesh.AddConvexMesh(pos, verts, Space.Self, material);
+        ConvexMesh convex = ConvexMesh.AddConvexMesh(pos, verts, material);
 
         convex.SetTexture(uvGridTexture);
 

@@ -20,7 +20,7 @@ public class ConvexMeshDemo : MonoBehaviour {
 
     void Awake()
     {
-        MeshHelper.CheckMaterial(ref convexMaterial);
+        MeshHelper.SetupMaterial(ref convexMaterial);
         convexMaterial.color = new Color(0.8f, 0.8f, 0.9f, 1f);
 
         C_JM2D = new JointMotor2D
@@ -50,17 +50,17 @@ public class ConvexMeshDemo : MonoBehaviour {
         }
         allVertices = new Vector3[verticesCount];
 
-        convexMesh = ConvexMesh.AddConvexMesh(Vector3.zero, UpdateVertices(), Space.World, convexMaterial, false);
+        convexMesh = ConvexMesh.AddConvexMesh(Vector3.zero, GetUpdatedVertices(), convexMaterial, false);
         //move body back a bit
         convexMesh.transform.Translate(Vector3.forward * 0.1f);
     }
 
     void FixedUpdate()
     {
-        convexMesh.Build(UpdateVertices(), convexMaterial);
+        convexMesh.Build(GetUpdatedVertices(), convexMaterial);
     }
 
-    private Vector3[] UpdateVertices()
+    private Vector3[] GetUpdatedVertices()
     {
         int index = 0;
         for (int i = 0; i < meshes.Length; i++)

@@ -243,7 +243,7 @@ public class MeshCreatorEditor : Editor
                     meshCreator.cakeSidesToFill, meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.Convex:
                 return ConvexMesh.AddConvexMesh(meshCreator.transform.position,
-                    MeshHelper.ConvertVec2ToVec3(meshCreator.convexPoints), Space.World,
+                    MeshHelper.ConvertVec2ToVec3(meshCreator.convexPoints),
                     meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.Star:
                 return StarMesh.AddStar(meshCreator.transform.position, meshCreator.starRadiusA, meshCreator.starRadiusB,

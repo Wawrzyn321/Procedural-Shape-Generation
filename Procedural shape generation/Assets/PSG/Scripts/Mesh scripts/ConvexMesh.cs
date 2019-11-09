@@ -22,23 +22,11 @@ namespace PSG
 
         #region Static Methods
 
-        public static ConvexMesh AddConvexMesh(Vector3 position, Vector3[] vertices, Space space, Material meshMatt = null, bool attachRigidbody = true)
+        public static ConvexMesh AddConvexMesh(Vector3 position, Vector3[] vertices, Material meshMatt = null, bool attachRigidbody = true)
         {
             GameObject convex = new GameObject();
 
-            if (space == Space.Self)
-            {
-                convex.transform.position = position;
-            }
-            else
-            {
-                Vector3 center = new Vector3();
-                for (int i = 0; i < vertices.Length; i++)
-                {
-                    center += vertices[i];
-                }
-                convex.transform.position = position + center / vertices.Length;
-            }
+            convex.transform.position = position;
 
             ConvexMesh convexComponent = convex.AddComponent<ConvexMesh>();
             convexComponent.Build(vertices, meshMatt);
@@ -49,9 +37,9 @@ namespace PSG
             return convexComponent;
         }
 
-        public static ConvexMesh AddConvexMesh(Vector3 position, List<Vector3> vertices, Space space, Material meshMatt = null, bool attachRigidbody = true)
+        public static ConvexMesh AddConvexMesh(Vector3 position, List<Vector3> vertices, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddConvexMesh(position, vertices.ToArray(), space, meshMatt, attachRigidbody);
+            return AddConvexMesh(position, vertices.ToArray(), meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -88,17 +76,6 @@ namespace PSG
             baseVertices = vertices;
 
             Vertices = QuickHull(new List<Vector3>(vertices)).ToArray();
-
-            Vector3 center = new Vector3();
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                center += vertices[i];
-            }
-            center /= vertices.Length;
-            for (int i = 0; i < Vertices.Length; i++)
-            {
-                Vertices[i] -= center;
-            }
 
             Triangles = new int[Vertices.Length * 3];
 
