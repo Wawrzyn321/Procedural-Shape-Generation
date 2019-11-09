@@ -24,7 +24,8 @@ public class MeshCreator : MonoBehaviour
         Convex,
         Star,
         Gear,
-        Line
+        Line,
+        TriangulatedMesh,
     }
     [HideInInspector]
     public MeshType meshType;
@@ -124,6 +125,13 @@ public class MeshCreator : MonoBehaviour
     public float lineWidth = 0.3f;
     [HideInInspector]
     public bool lineUseDoubleCollider;
+    
+    [HideInInspector]
+    public List<Vector2> triangulatedPoints = new List<Vector2> {
+        new Vector2(-2,-2), new Vector2(0, -3),
+        new Vector2(2, -1), new Vector2(3, 1),
+        new Vector2(2, 2)
+    };
 
     #endregion
 
@@ -282,6 +290,13 @@ public class MeshCreator : MonoBehaviour
                 for (int i = 0; i < points.Length - 1; i++)
                 {
                     Gizmos.DrawLine(p2 + points[i], p2 + points[i + 1]);
+                }
+                break;
+            case MeshType.TriangulatedMesh:
+                for (int i = 0; i < triangulatedPoints.Count; i++)
+                {
+                    Gizmos.DrawLine(p2 + triangulatedPoints[i],
+                        p2 + triangulatedPoints[(i + 1) % triangulatedPoints.Count]);
                 }
                 break;
         }

@@ -8,11 +8,13 @@ public class MeshCreatorEditor : Editor
 {
     private ReorderableList lineReorderableList;
     private ReorderableList convexReorderableList;
+    private ReorderableList triangulatedReorderableList;
 
     private void OnEnable()
     {
         lineReorderableList = CreateVector2List("linePoints", "Line Points");
         convexReorderableList = CreateVector2List("convexPoints", "Convex Shape Points");
+        triangulatedReorderableList = CreateVector2List("triangulatedPoints", "Triangulated Mesh Points");
     }
 
     //standard override
@@ -114,6 +116,12 @@ public class MeshCreatorEditor : Editor
                     mc.linePoints[i] = Handles.DoPositionHandle(p2 + mc.linePoints[i], Quaternion.identity) - p3;
                 }
                 break;
+            case MeshCreator.MeshType.TriangulatedMesh:
+                for (int i = 0; i < mc.triangulatedPoints.Count; i++)
+                {
+                    mc.triangulatedPoints[i] = Handles.DoPositionHandle(p2 + mc.triangulatedPoints[i], Quaternion.identity) - p3;
+                }
+                break;
         }
     }
 
@@ -181,6 +189,9 @@ public class MeshCreatorEditor : Editor
                 meshCreator.lineWidth = EditorGUILayout.Slider("Line width", meshCreator.lineWidth, 0.0001f, 1f, null);
                 meshCreator.lineUseDoubleCollider = EditorGUILayout.Toggle("Use double collider", meshCreator.lineUseDoubleCollider, emptyLayout);
                 DrawReorderableList(lineReorderableList);
+                break;
+            case MeshCreator.MeshType.TriangulatedMesh:
+                DrawReorderableList(triangulatedReorderableList);
                 break;
         }
 
@@ -254,6 +265,9 @@ public class MeshCreatorEditor : Editor
             case MeshCreator.MeshType.Line:
                 return LineMesh.AddLine(meshCreator.transform.position, meshCreator.linePoints.ToArray(), meshCreator.lineWidth,
                     meshCreator.lineUseDoubleCollider, Space.World, meshCreator.material, meshCreator.attachRigidbody);
+            case MeshCreator.MeshType.TriangulatedMesh:
+                return TriangulatedMesh.Add(meshCreator.transform.position, meshCreator.triangulatedPoints.ToArray(),
+                    meshCreator.material, meshCreator.attachRigidbody);
         }
         return null;
     }
