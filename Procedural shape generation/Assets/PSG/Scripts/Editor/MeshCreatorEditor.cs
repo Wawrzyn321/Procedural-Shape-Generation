@@ -69,10 +69,10 @@ public class MeshCreatorEditor : Editor
                 meshCreator.circleRadius = meshCreator.circleControlPoint.magnitude;
                 break;
             case MeshCreator.MeshType.Quadrangle:
-                meshCreator.quadrangleVertex1 = Handles.DoPositionHandle(p3 + meshCreator.quadrangleVertex1, Quaternion.identity) - p3;
-                meshCreator.quadrangleVertex2 = Handles.DoPositionHandle(p3 + meshCreator.quadrangleVertex2, Quaternion.identity) - p3;
-                meshCreator.quadrangleVertex3 = Handles.DoPositionHandle(p3 + meshCreator.quadrangleVertex3, Quaternion.identity) - p3;
-                meshCreator.quadrangleVertex4 = Handles.DoPositionHandle(p3 + meshCreator.quadrangleVertex4, Quaternion.identity) - p3;
+                meshCreator.quadrangleVertex1 = Handles.DoPositionHandle(p2 + meshCreator.quadrangleVertex1, Quaternion.identity) - p3;
+                meshCreator.quadrangleVertex2 = Handles.DoPositionHandle(p2 + meshCreator.quadrangleVertex2, Quaternion.identity) - p3;
+                meshCreator.quadrangleVertex3 = Handles.DoPositionHandle(p2 + meshCreator.quadrangleVertex3, Quaternion.identity) - p3;
+                meshCreator.quadrangleVertex4 = Handles.DoPositionHandle(p2 + meshCreator.quadrangleVertex4, Quaternion.identity) - p3;
                 break;
             case MeshCreator.MeshType.Ellipse:
                 meshCreator.ellipseControlPoint = new Vector2(meshCreator.ellipseHorizontalRadius, meshCreator.ellipseVerticalRadius);

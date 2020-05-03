@@ -57,13 +57,13 @@ public class MeshCreator : MonoBehaviour
     public bool circleUseCircleCollider = false;
 
     [HideInInspector]
-    public Vector3 quadrangleVertex1 = new Vector3(-2, 2);
+    public Vector2 quadrangleVertex1 = new Vector2(-2, 2);
     [HideInInspector]
-    public Vector3 quadrangleVertex2 = new Vector3(3, 1);
+    public Vector2 quadrangleVertex2 = new Vector2(3, 1);
     [HideInInspector]
-    public Vector3 quadrangleVertex3 = new Vector3(4, 0);
+    public Vector2 quadrangleVertex3 = new Vector2(4, 0);
     [HideInInspector]
-    public Vector3 quadrangleVertex4 = new Vector3(-1, -2);
+    public Vector2 quadrangleVertex4 = new Vector2(-1, -2);
 
     [HideInInspector]
     public float ellipseHorizontalRadius = 1.2f;
@@ -186,11 +186,10 @@ public class MeshCreator : MonoBehaviour
     {
         Gizmos.color = Color.white;
 
-        //cache position - 2 and 3 dimensional vectors to prevent type conversion
+        //cache position
         Vector2 p2 = transform.position;
-        Vector3 p3 = transform.position;
 
-        Vector3 lastPos;
+        Vector2 lastPos;
         float angleDelta;
         float angleShift;
 
@@ -208,38 +207,38 @@ public class MeshCreator : MonoBehaviour
                 Gizmos.DrawLine(p2 + new Vector2(-boxSize.x / 2, boxSize.y / 2), p2 + new Vector2(-boxSize.x / 2, -boxSize.y / 2));
                 break;
             case MeshType.Circle:
-                lastPos = Vector3.right * circleRadius;
+                lastPos = Vector2.right * circleRadius;
                 angleDelta = 360 * Mathf.Deg2Rad / circleSides;
                 for (int i = 1; i < circleSides + 1; i++)
                 {
-                    Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * circleRadius;
-                    Gizmos.DrawLine(p3 + lastPos, p3 + vertPos);
+                    var vertPos = new Vector2(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * circleRadius;
+                    Gizmos.DrawLine(p2 + lastPos, p2 + vertPos);
                     lastPos = vertPos;
                 }
                 break;
             case MeshType.Quadrangle:
-                Gizmos.DrawLine(p3 + quadrangleVertex1, p3 + quadrangleVertex2);
-                Gizmos.DrawLine(p3 + quadrangleVertex2, p3 + quadrangleVertex3);
-                Gizmos.DrawLine(p3 + quadrangleVertex3, p3 + quadrangleVertex4);
-                Gizmos.DrawLine(p3 + quadrangleVertex4, p3 + quadrangleVertex1);
+                Gizmos.DrawLine(p2 + quadrangleVertex1, p2 + quadrangleVertex2);
+                Gizmos.DrawLine(p2 + quadrangleVertex2, p2 + quadrangleVertex3);
+                Gizmos.DrawLine(p2 + quadrangleVertex3, p2 + quadrangleVertex4);
+                Gizmos.DrawLine(p2 + quadrangleVertex4, p2 + quadrangleVertex1);
                 break;
             case MeshType.Ellipse:
-                lastPos = Vector3.right * ellipseHorizontalRadius;
+                lastPos = Vector2.right * ellipseHorizontalRadius;
                 angleDelta = 360 * Mathf.Deg2Rad / ellipseSides;
                 for (int i = 1; i < ellipseSides + 1; i++)
                 {
-                    Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta) * ellipseHorizontalRadius, Mathf.Sin(i * angleDelta) * ellipseVerticalRadius);
-                    Gizmos.DrawLine(p3 + lastPos, p3 + vertPos);
+                    var vertPos = new Vector2(Mathf.Cos(i * angleDelta) * ellipseHorizontalRadius, Mathf.Sin(i * angleDelta) * ellipseVerticalRadius);
+                    Gizmos.DrawLine(p2 + lastPos, p2 + vertPos);
                     lastPos = vertPos;
                 }
                 break;
             case MeshType.PointedCircle:
-                lastPos = Vector3.right * pointedCircleRadius;
+                lastPos = Vector2.right * pointedCircleRadius;
                 angleDelta = 360 * Mathf.Deg2Rad / pointedCircleSides;
                 for (int i = 1; i < pointedCircleSides + 1; i++)
                 {
-                    Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * pointedCircleRadius;
-                    Gizmos.DrawLine(p3 + lastPos, p3 + vertPos);
+                    var vertPos = new Vector2(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * pointedCircleRadius;
+                    Gizmos.DrawLine(p2 + lastPos, p2 + vertPos);
                     lastPos = vertPos;
                 }
 
@@ -253,18 +252,18 @@ public class MeshCreator : MonoBehaviour
                 Gizmos.DrawLine(p2 + b, p2 + a);
                 break;
             case MeshType.Cake:
-                lastPos = Vector3.right * cakeRadius;
+                lastPos = Vector2.right * cakeRadius;
                 angleDelta = 360 * Mathf.Deg2Rad / cakeSides;
                 for (int i = 1; i < cakeSidesToFill + 1; i++)
                 {
-                    Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * cakeRadius;
-                    Gizmos.DrawLine(p3 + lastPos, p3 + vertPos);
+                    var vertPos = new Vector2(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * cakeRadius;
+                    Gizmos.DrawLine(p2 + lastPos, p2 + vertPos);
                     lastPos = vertPos;
                 }
                 if (cakeSidesToFill != cakeSides)
                 {
-                    Gizmos.DrawLine(p3, p3 + lastPos);
-                    Gizmos.DrawLine(p3, p3 + Vector3.right * cakeRadius);
+                    Gizmos.DrawLine(p2, p2 + lastPos);
+                    Gizmos.DrawLine(p2, p2 + Vector2.right * cakeRadius);
                 }
 
                 break;
@@ -282,10 +281,10 @@ public class MeshCreator : MonoBehaviour
                 lastPos = new Vector3(Mathf.Cos(angleShift), Mathf.Sin(angleShift)) * starRadiusA;
                 for (int i = 1; i < starSides * 2 + 1; i++)
                 {
-                    Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta + angleShift),
+                    var vertPos = new Vector2(Mathf.Cos(i * angleDelta + angleShift),
                         Mathf.Sin(i * angleDelta + angleShift));
                     vertPos *= (i % 2 == 0 ? starRadiusA : starRadiusB);
-                    Gizmos.DrawLine(p3 + lastPos, p3 + vertPos);
+                    Gizmos.DrawLine(p2 + lastPos, p2 + vertPos);
                     lastPos = vertPos;
                 }
                 break;
@@ -293,25 +292,25 @@ public class MeshCreator : MonoBehaviour
                 angleDelta = 360 * Mathf.Deg2Rad / gearSides / 2;
                 angleShift = angleDelta * 0.5f;
                 float outerAngleShift = angleDelta * 0.2f;
-                Vector3 lastInnerPos = new Vector3(Mathf.Cos(angleShift), Mathf.Sin(angleShift)) * gearInnerRadius;
-                Vector3 lastRootPos = new Vector3(Mathf.Cos(angleShift), Mathf.Sin(angleShift)) * gearRootRadius;
-                Vector3 lastOuterPos = new Vector3(Mathf.Cos(angleShift + outerAngleShift), Mathf.Sin(angleShift + outerAngleShift)) * gearOuterRadius;
+                Vector2 lastInnerPos = new Vector2(Mathf.Cos(angleShift), Mathf.Sin(angleShift)) * gearInnerRadius;
+                Vector2 lastRootPos = new Vector2(Mathf.Cos(angleShift), Mathf.Sin(angleShift)) * gearRootRadius;
+                Vector2 lastOuterPos = new Vector2(Mathf.Cos(angleShift + outerAngleShift), Mathf.Sin(angleShift + outerAngleShift)) * gearOuterRadius;
                 for (int i = 1; i < gearSides * 2 + 1; i++)
                 {
-                    Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift)) * gearInnerRadius;
-                    Gizmos.DrawLine(p3 + lastInnerPos, p3 + vertPos);
+                    var vertPos = new Vector2(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift)) * gearInnerRadius;
+                    Gizmos.DrawLine(p2 + lastInnerPos, p2 + vertPos);
                     lastInnerPos = vertPos;
 
                     vertPos = new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift)) * gearRootRadius;
-                    Gizmos.DrawLine(p3 + lastRootPos, p3 + vertPos);
+                    Gizmos.DrawLine(p2 + lastRootPos, p2 + vertPos);
                     lastRootPos = vertPos;
 
                     int sign = (i % 2) * 2 - 1;
                     vertPos = new Vector3(Mathf.Cos(i * angleDelta + angleShift - outerAngleShift * sign), Mathf.Sin(i * angleDelta + angleShift - outerAngleShift * sign)) * gearOuterRadius;
-                    Gizmos.DrawLine(p3 + lastRootPos, p3 + vertPos);
+                    Gizmos.DrawLine(p2 + lastRootPos, p2 + vertPos);
                     if (i % 2 == 1)
                     {
-                        Gizmos.DrawLine(p3 + lastOuterPos, p3 + vertPos);
+                        Gizmos.DrawLine(p2 + lastOuterPos, p2 + vertPos);
                     }
                     lastOuterPos = vertPos;
                 }
