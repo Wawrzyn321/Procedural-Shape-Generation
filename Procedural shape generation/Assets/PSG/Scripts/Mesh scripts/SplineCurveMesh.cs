@@ -166,8 +166,8 @@ namespace PSG
             {
                 int ii = i * 2;
                 Triangles[triangleIndex++] = ii;
-                Triangles[triangleIndex++] = ii + 3;
                 Triangles[triangleIndex++] = ii + 1;
+                Triangles[triangleIndex++] = ii + 3;
                 Triangles[triangleIndex++] = ii;
                 Triangles[triangleIndex++] = ii + 3;
                 Triangles[triangleIndex++] = ii + 2;
