@@ -26,6 +26,9 @@ public class MeshCreator : MonoBehaviour
         Gear,
         Line,
         TriangulatedMesh,
+        SplineShape,
+        SplineCurve,
+        SplineConvexShape,
     }
     [HideInInspector]
     public MeshType meshType;
@@ -132,7 +135,42 @@ public class MeshCreator : MonoBehaviour
         new Vector2(2, -1), new Vector2(3, 1),
         new Vector2(2, 2)
     };
+    #endregion
 
+    #region Spline Shape
+    [HideInInspector]
+    public float splineResolution = 0.2f;
+    [HideInInspector]
+    public List<Vector2> splinePoints = new List<Vector2> {
+        new Vector2(-3,-3), new Vector2(1,-3),
+        new Vector2(0,0), new Vector2(-2,2)
+    };
+    #endregion
+
+    #region Spline Curve
+    [HideInInspector]
+    public List<Vector2> splineCurvePoints = new List<Vector2> {
+        new Vector2(-2,-3), new Vector2(0, -3),
+        new Vector2(1, -1), new Vector2(3, 1),
+        new Vector2(2, 2)
+    };
+    [HideInInspector]
+    public float splineCurveResolution = 0.2f;
+    [HideInInspector]
+    public float splineCurveWidth = 0.2f;
+    [HideInInspector]
+    public bool splineCurveUseDoubleCollider = true;
+    #endregion
+
+    #region Convex Spline
+    [HideInInspector]
+    public List<Vector2> convexSplinePoints = new List<Vector2> {
+        new Vector2(-2,-3), new Vector2(0, -3),
+        new Vector2(1, -1), new Vector2(3, 1),
+        new Vector2(2, 2)
+    };
+    [HideInInspector]
+    public float convexSplineResolution = 0.2f;
     #endregion
 
     //common properties
@@ -232,10 +270,10 @@ public class MeshCreator : MonoBehaviour
                 break;
             case MeshType.Convex:
                 if (convexPoints != null && convexPoints.Count < 2) return;
-                List<Vector3> convexOutline = GetConvexPoints();
+                var convexOutline = GetConvexPoints();
                 for (int i = 0; i < convexOutline.Count; i++)
                 {
-                    Gizmos.DrawLine(p3 + convexOutline[i], p3 + convexOutline[(i + 1) % convexOutline.Count]);
+                    Gizmos.DrawLine(p2 + convexOutline[i], p2 + convexOutline[(i + 1) % convexOutline.Count]);
                 }
                 break;
             case MeshType.Star:
@@ -299,12 +337,79 @@ public class MeshCreator : MonoBehaviour
                         p2 + triangulatedPoints[(i + 1) % triangulatedPoints.Count]);
                 }
                 break;
+            case MeshType.SplineShape:
+                points = CatmullRomSpline.GetPoints(splinePoints.ToArray(), splineResolution).ToArray();
+                for (int i = 0; i < points.Length; i++)
+                {
+                    Gizmos.DrawLine(p2 + points[i], p2 + points[(i + 1) % points.Length]);
+                }
+                break;
+
+            case MeshType.SplineCurve:
+                List<Vector2> curvePoints = CatmullRomSpline.GetPoints(splineCurvePoints, splineCurveResolution, false);
+                int len = curvePoints.Count;
+                if (len <= 1) return;
+
+                for (int i = 0; i < len - 1; i++)
+                {
+                    Gizmos.DrawLine(p2 + curvePoints[i], p2 + curvePoints[i + 1]);
+                }
+
+                List<Vector2> leftCurvePoints = new List<Vector2>();
+                List<Vector2> rightCurvePoints = new List<Vector2>();
+                // first vertex
+                {
+                    Vector2 dir = (curvePoints[1] - curvePoints[0]).normalized;
+                    dir = new Vector2(-dir.y, dir.x) * splineCurveWidth;
+                    Gizmos.DrawLine(p2 + curvePoints[0] - dir, p2 + curvePoints[0] + dir);
+                    leftCurvePoints.Add(p2 + curvePoints[0] - dir);
+                    rightCurvePoints.Add(p2 + curvePoints[0] + dir);
+                }
+                // second to last - 1 vertices
+                for (int i = 1; i < len - 1; i++)
+                {
+                    float leftAngle = Mathf.Atan2(curvePoints[i].y - curvePoints[i - 1].y, curvePoints[i].x - curvePoints[i - 1].x) * Mathf.Rad2Deg + 90;
+                    float rightAngle = Mathf.Atan2(curvePoints[i + 1].y - curvePoints[i].y, curvePoints[i + 1].x - curvePoints[i].x) * Mathf.Rad2Deg + 90;
+                    float middleAngle = leftAngle + Mathf.DeltaAngle(leftAngle, rightAngle) * 0.5f;
+                    Vector2 dir = new Vector2(Mathf.Cos(middleAngle * Mathf.Deg2Rad), Mathf.Sin(middleAngle * Mathf.Deg2Rad)) * splineCurveWidth;
+                    //Gizmos.DrawLine(p2 + curvePoints[i] - dir, p2 + curvePoints[i] + dir);
+                    leftCurvePoints.Add(p2 + curvePoints[i] - dir);
+                    rightCurvePoints.Add(p2 + curvePoints[i] + dir);
+                }
+                // last vertex
+                {
+                    Vector2 dir = (curvePoints[len - 2] - curvePoints[len - 1]).normalized;
+                    dir = new Vector2(-dir.y, dir.x) * splineCurveWidth;
+                    Gizmos.DrawLine(p2 + curvePoints[len - 1] - dir, p2 + curvePoints[len - 1] + dir);
+                    leftCurvePoints.Add(p2 + curvePoints[len - 1] + dir);
+                    rightCurvePoints.Add(p2 + curvePoints[len - 1] - dir);
+                }
+
+                for (int i = 0; i < leftCurvePoints.Count - 1; i++)
+                {
+                    Gizmos.DrawLine(leftCurvePoints[i], leftCurvePoints[i + 1]);
+                }
+                for (int i = 0; i < rightCurvePoints.Count - 1; i++)
+                {
+                    Gizmos.DrawLine(rightCurvePoints[i], rightCurvePoints[i + 1]);
+                }
+                break;
+            case MeshType.SplineConvexShape:
+                List<Vector2> splineConvexP = ConvexHull.QuickHull(convexSplinePoints);
+                splineConvexP = CatmullRomSpline.GetPoints(splineConvexP, convexSplineResolution);
+                for (int i = 0; i < splineConvexP.Count; i++)
+                {
+                    Gizmos.DrawLine(p2 + splineConvexP[i], p2 + splineConvexP[(i + 1) % splineConvexP.Count]);
+                }
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException();
         }
     }
 
-    private List<Vector3> GetConvexPoints()
+    private List<Vector2> GetConvexPoints()
     {
-        return ConvexMesh.QuickHull(new List<Vector3>(MeshHelper.ConvertVec2ToVec3(convexPoints)));
+        return ConvexHull.QuickHull(convexPoints);
     }
 
     private Vector2[] GetLinePoints()

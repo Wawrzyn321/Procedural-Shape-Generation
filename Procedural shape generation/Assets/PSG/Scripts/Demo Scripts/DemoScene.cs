@@ -27,7 +27,11 @@ public class DemoScene : MonoBehaviour
         AddEllipse(new Vector3(4, -3, 0));
         AddStar(new Vector3(1, 1));
         AddGear(new Vector3(-1, 1));
-        AddConvex(Vector3.zero);
+        AddConvex();
+        AddTriangulated();
+        AddSplineShape();
+        AddSplineCurve();
+        AddConvexSpline();
         MeshBase.Join(GameObject.Find("Convex Mesh").GetComponent<MeshBase>(), GameObject.Find("Circle").GetComponent<MeshBase>());
         GameObject.Find("Convex Mesh").GetComponent<MeshBase>().JoinTo(GameObject.Find("Triangle").GetComponent<MeshBase>());
     }
@@ -130,7 +134,7 @@ public class DemoScene : MonoBehaviour
 
         star.SetTexture(otherTexture);
     }
-    private void AddConvex(Vector3 pos)
+    private void AddConvex()
     {
         Vector3[] verts = new Vector3[20];
         for (int i = 0; i < verts.Length; i++)
@@ -140,11 +144,12 @@ public class DemoScene : MonoBehaviour
             verts[i] = new Vector3(x, y);
         }
 
-        ConvexMesh convex = ConvexMesh.AddConvexMesh(pos, verts, material);
+        ConvexMesh convex = ConvexMesh.AddConvexMesh(Vector3.zero, verts, material);
 
         convex.SetTexture(uvGridTexture);
 
     }
+
     private void AddGear(Vector3 pos)
     {
         float innerRadius = Random.Range(0.3f, 0.5f);
@@ -159,4 +164,66 @@ public class DemoScene : MonoBehaviour
         gear.GetComponent<MeshRenderer>().material.color = Color.gray;
     }
 
+    private void AddTriangulated()
+    {
+        var points = new[]
+        {
+            new Vector2(-7,-1),
+            new Vector2(-6,-1),
+            new Vector2(-6,-2),
+            new Vector2(-6.8f,-3),
+            new Vector2(-6.4f,-1.5f),
+        };
+
+        TriangulatedMesh triangulated = TriangulatedMesh.Add(Vector3.zero, points);
+
+        triangulated.GetComponent<MeshRenderer>().material.color = Color.green;
+    }
+
+    private void AddSplineShape()
+    {
+        var points = new[]
+        {
+            new Vector2(9,-1),
+            new Vector2(8,-1),
+            new Vector2(8,-2),
+            new Vector2(8.8f,-3),
+            new Vector2(8.4f,-1.5f),
+        };
+
+        SplineShapeMesh splineShape = SplineShapeMesh.AddSplineShape(Vector3.zero, points);
+
+        splineShape.GetComponent<MeshRenderer>().material.color = Color.red;
+    }
+
+    private void AddSplineCurve()
+    {
+        var points = new[]
+        {
+            new Vector2(-7,1),
+            new Vector2(-6,1),
+            new Vector2(-6,2),
+            new Vector2(-6.8f,3),
+        };
+
+        SplineCurveMesh splineCurve = SplineCurveMesh.AddSplineCurve(Vector3.zero, points, 0.1f, 0.15f, true, Space.World);
+
+        splineCurve.GetComponent<MeshRenderer>().material.color = Color.cyan;
+    }
+
+    private void AddConvexSpline()
+    {
+        var points = new[]
+        {
+            new Vector2(7,-1),
+            new Vector2(6,-1),
+            new Vector2(6,-2),
+            new Vector2(6.8f,-3),
+            new Vector2(6.4f,-1.5f),
+        };
+
+        ConvexSplineMesh convexSpline = ConvexSplineMesh.AddConvexSpline(Vector3.zero, points);
+
+        convexSpline.GetComponent<MeshRenderer>().material.color = Color.red;
+    }
 }

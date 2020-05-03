@@ -339,9 +339,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshType: 0
-  triangleVertex1: {x: -1.5, y: -0.49999994}
-  triangleVertex2: {x: 1, y: 0.99999976}
-  triangleVertex3: {x: 2, y: -0.49999994}
+  triangleVertex1: {x: -1.5, y: -0.5}
+  triangleVertex2: {x: 1, y: 1}
+  triangleVertex3: {x: 2, y: -0.5}
   boxSize: {x: 4, y: 2}
   boxControlPoint: {x: 2, y: 1}
   circleRadius: 1
@@ -385,6 +385,34 @@ MonoBehaviour:
   - {x: 2, y: 2}
   lineWidth: 0.3
   lineUseDoubleCollider: 0
+  triangulatedPoints:
+  - {x: -2, y: -2}
+  - {x: 0, y: -3}
+  - {x: 2, y: -1}
+  - {x: 3, y: 1}
+  - {x: 2, y: 2}
+  splineResolution: 0.2
+  splinePoints:
+  - {x: -3, y: -3}
+  - {x: 1, y: -3}
+  - {x: 0, y: 0}
+  - {x: -2, y: 2}
+  splineCurvePoints:
+  - {x: -2, y: -3}
+  - {x: 0, y: -3}
+  - {x: 1, y: -1}
+  - {x: 3, y: 1}
+  - {x: 2, y: 2}
+  splineCurveResolution: 0.2
+  splineCurveWidth: 0.2
+  splineCurveUseDoubleCollider: 1
+  convexSplinePoints:
+  - {x: -2, y: -3}
+  - {x: 0, y: -3}
+  - {x: 1, y: -1}
+  - {x: 3, y: 1}
+  - {x: 2, y: 2}
+  convexSplineResolution: 0.2
   material: {fileID: 0}
   attachRigidbody: 0
   setRandomColor: 0
@@ -397,7 +425,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 237483175}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.36, y: 0.53, z: 0}
   m_LocalScale: {x: -1.3375016, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

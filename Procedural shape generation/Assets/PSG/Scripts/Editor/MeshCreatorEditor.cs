@@ -9,12 +9,18 @@ public class MeshCreatorEditor : Editor
     private ReorderableList lineReorderableList;
     private ReorderableList convexReorderableList;
     private ReorderableList triangulatedReorderableList;
+    private ReorderableList splineShapeReorderableList;
+    private ReorderableList splineCurveReorderableList;
+    private ReorderableList convexSplineReorderableList;
 
     private void OnEnable()
     {
         lineReorderableList = CreateVector2List("linePoints", "Line Points");
         convexReorderableList = CreateVector2List("convexPoints", "Convex Shape Points");
         triangulatedReorderableList = CreateVector2List("triangulatedPoints", "Triangulated Mesh Points");
+        splineShapeReorderableList = CreateVector2List("splinePoints", "Spline Shape Points");
+        splineCurveReorderableList = CreateVector2List("splineCurvePoints", "Spline Curve Points");
+        convexSplineReorderableList = CreateVector2List("convexSplinePoints", "Convex Spline Points");
     }
 
     //standard override
@@ -34,94 +40,115 @@ public class MeshCreatorEditor : Editor
 
     private void OnSceneGUI()
     {
-        MeshCreator mc = (MeshCreator) target;
-        DrawHandles(mc);
+        MeshCreator meshCreator = (MeshCreator) target;
+        DrawHandles(meshCreator);
     }
 
-    private void DrawHandles(MeshCreator mc)
+    private void DrawHandles(MeshCreator meshCreator)
     {
         //cache casted position
-        Vector2 p2 = mc.transform.position;
+        Vector2 p2 = meshCreator.transform.position;
         //and this one too, for brevity
-        Vector3 p3 = mc.transform.position;
+        Vector3 p3 = meshCreator.transform.position;
 
-        switch (mc.meshType)
+        switch (meshCreator.meshType)
         {
             case MeshCreator.MeshType.Triangle:
-                mc.triangleVertex1 = Handles.DoPositionHandle(p2 + mc.triangleVertex1, Quaternion.identity) - p3;
-                mc.triangleVertex2 = Handles.DoPositionHandle(p2 + mc.triangleVertex2, Quaternion.identity) - p3;
-                mc.triangleVertex3 = Handles.DoPositionHandle(p2 + mc.triangleVertex3, Quaternion.identity) - p3;
+                meshCreator.triangleVertex1 = Handles.DoPositionHandle(p2 + meshCreator.triangleVertex1, Quaternion.identity) - p3;
+                meshCreator.triangleVertex2 = Handles.DoPositionHandle(p2 + meshCreator.triangleVertex2, Quaternion.identity) - p3;
+                meshCreator.triangleVertex3 = Handles.DoPositionHandle(p2 + meshCreator.triangleVertex3, Quaternion.identity) - p3;
                 break;
             case MeshCreator.MeshType.Rectangle:
-                mc.boxControlPoint = mc.boxSize / 2;
-                mc.boxControlPoint = Handles.DoPositionHandle(p2 + mc.boxControlPoint, Quaternion.identity) - p3;
-                mc.boxSize = mc.boxControlPoint * 2;
+                meshCreator.boxControlPoint = meshCreator.boxSize / 2;
+                meshCreator.boxControlPoint = Handles.DoPositionHandle(p2 + meshCreator.boxControlPoint, Quaternion.identity) - p3;
+                meshCreator.boxSize = meshCreator.boxControlPoint * 2;
                 break;
             case MeshCreator.MeshType.Circle:
-                mc.circleControlPoint = SetVectorLength(mc.circleControlPoint, mc.circleRadius);
-                mc.circleControlPoint = Handles.DoPositionHandle(p2 + mc.circleControlPoint, Quaternion.identity) - p3;
-                mc.circleRadius = mc.circleControlPoint.magnitude;
+                meshCreator.circleControlPoint = SetVectorLength(meshCreator.circleControlPoint, meshCreator.circleRadius);
+                meshCreator.circleControlPoint = Handles.DoPositionHandle(p2 + meshCreator.circleControlPoint, Quaternion.identity) - p3;
+                meshCreator.circleRadius = meshCreator.circleControlPoint.magnitude;
                 break;
             case MeshCreator.MeshType.Quadrangle:
-                mc.quadrangleVertex1 = Handles.DoPositionHandle(p3 + mc.quadrangleVertex1, Quaternion.identity) - p3;
-                mc.quadrangleVertex2 = Handles.DoPositionHandle(p3 + mc.quadrangleVertex2, Quaternion.identity) - p3;
-                mc.quadrangleVertex3 = Handles.DoPositionHandle(p3 + mc.quadrangleVertex3, Quaternion.identity) - p3;
-                mc.quadrangleVertex4 = Handles.DoPositionHandle(p3 + mc.quadrangleVertex4, Quaternion.identity) - p3;
+                meshCreator.quadrangleVertex1 = Handles.DoPositionHandle(p3 + meshCreator.quadrangleVertex1, Quaternion.identity) - p3;
+                meshCreator.quadrangleVertex2 = Handles.DoPositionHandle(p3 + meshCreator.quadrangleVertex2, Quaternion.identity) - p3;
+                meshCreator.quadrangleVertex3 = Handles.DoPositionHandle(p3 + meshCreator.quadrangleVertex3, Quaternion.identity) - p3;
+                meshCreator.quadrangleVertex4 = Handles.DoPositionHandle(p3 + meshCreator.quadrangleVertex4, Quaternion.identity) - p3;
                 break;
             case MeshCreator.MeshType.Ellipse:
-                mc.ellipseControlPoint = new Vector2(mc.ellipseHorizontalRadius, mc.ellipseVerticalRadius);
-                mc.ellipseControlPoint = Handles.DoPositionHandle(p2 + mc.ellipseControlPoint, Quaternion.identity) - p3;
-                mc.ellipseHorizontalRadius = mc.ellipseControlPoint.x;
-                mc.ellipseVerticalRadius = mc.ellipseControlPoint.y;
+                meshCreator.ellipseControlPoint = new Vector2(meshCreator.ellipseHorizontalRadius, meshCreator.ellipseVerticalRadius);
+                meshCreator.ellipseControlPoint = Handles.DoPositionHandle(p2 + meshCreator.ellipseControlPoint, Quaternion.identity) - p3;
+                meshCreator.ellipseHorizontalRadius = meshCreator.ellipseControlPoint.x;
+                meshCreator.ellipseVerticalRadius = meshCreator.ellipseControlPoint.y;
                 break;
             case MeshCreator.MeshType.PointedCircle:
-                mc.pointedCircleControlPoint = SetVectorLength(mc.pointedCircleControlPoint, mc.pointedCircleRadius);
-                mc.pointedCircleControlPoint = Handles.DoPositionHandle(p2 + mc.pointedCircleControlPoint, Quaternion.identity) - p3;
-                mc.pointedCircleRadius = mc.pointedCircleControlPoint.magnitude;
-                mc.pointedCircleShift = Handles.DoPositionHandle(p2 + mc.pointedCircleShift, Quaternion.identity) - p3;
+                meshCreator.pointedCircleControlPoint = SetVectorLength(meshCreator.pointedCircleControlPoint, meshCreator.pointedCircleRadius);
+                meshCreator.pointedCircleControlPoint = Handles.DoPositionHandle(p2 + meshCreator.pointedCircleControlPoint, Quaternion.identity) - p3;
+                meshCreator.pointedCircleRadius = meshCreator.pointedCircleControlPoint.magnitude;
+                meshCreator.pointedCircleShift = Handles.DoPositionHandle(p2 + meshCreator.pointedCircleShift, Quaternion.identity) - p3;
                 break;
             case MeshCreator.MeshType.Cake:
-                mc.cakeControlPoint = SetVectorLength(mc.cakeControlPoint, mc.cakeRadius);
-                mc.cakeControlPoint = Handles.DoPositionHandle(p2 + mc.cakeControlPoint, Quaternion.identity) - p3;
-                mc.cakeRadius = mc.cakeControlPoint.magnitude;
+                meshCreator.cakeControlPoint = SetVectorLength(meshCreator.cakeControlPoint, meshCreator.cakeRadius);
+                meshCreator.cakeControlPoint = Handles.DoPositionHandle(p2 + meshCreator.cakeControlPoint, Quaternion.identity) - p3;
+                meshCreator.cakeRadius = meshCreator.cakeControlPoint.magnitude;
                 break;
             case MeshCreator.MeshType.Convex:
-                for (int i = 0; i < mc.convexPoints.Count; i++)
+                for (int i = 0; i < meshCreator.convexPoints.Count; i++)
                 {
-                    mc.convexPoints[i] = Handles.DoPositionHandle(p2 + mc.convexPoints[i], Quaternion.identity) - p3;
+                    meshCreator.convexPoints[i] = Handles.DoPositionHandle(p2 + meshCreator.convexPoints[i], Quaternion.identity) - p3;
                 }
                 break;
             case MeshCreator.MeshType.Star:
-                mc.starControlPointA = SetVectorLength(mc.starControlPointA, mc.starRadiusA);
-                mc.starControlPointB = SetVectorLength(mc.starControlPointB, mc.starRadiusB);
-                mc.starControlPointA = Handles.DoPositionHandle(p2 + mc.starControlPointA, Quaternion.identity) - p3;
-                mc.starControlPointB = Handles.DoPositionHandle(p2 + mc.starControlPointB, Quaternion.identity) - p3;
-                mc.starRadiusA = mc.starControlPointA.magnitude;
-                mc.starRadiusB = mc.starControlPointB.magnitude;
+                meshCreator.starControlPointA = SetVectorLength(meshCreator.starControlPointA, meshCreator.starRadiusA);
+                meshCreator.starControlPointB = SetVectorLength(meshCreator.starControlPointB, meshCreator.starRadiusB);
+                meshCreator.starControlPointA = Handles.DoPositionHandle(p2 + meshCreator.starControlPointA, Quaternion.identity) - p3;
+                meshCreator.starControlPointB = Handles.DoPositionHandle(p2 + meshCreator.starControlPointB, Quaternion.identity) - p3;
+                meshCreator.starRadiusA = meshCreator.starControlPointA.magnitude;
+                meshCreator.starRadiusB = meshCreator.starControlPointB.magnitude;
                 break;
             case MeshCreator.MeshType.Gear:
-                mc.gearInnerControlPoint = SetVectorLength(mc.gearInnerControlPoint, mc.gearInnerRadius);
-                mc.gearRootControlPoint = SetVectorLength(mc.gearRootControlPoint, mc.gearRootRadius);
-                mc.gearOuterControlPoint = SetVectorLength(mc.gearOuterControlPoint, mc.gearOuterRadius);
-                mc.gearInnerControlPoint = Handles.DoPositionHandle(p2 + mc.gearInnerControlPoint, Quaternion.identity) - p3;
-                mc.gearRootControlPoint = Handles.DoPositionHandle(p2 + mc.gearRootControlPoint, Quaternion.identity) - p3;
-                mc.gearOuterControlPoint = Handles.DoPositionHandle(p2 + mc.gearOuterControlPoint, Quaternion.identity) - p3;
-                mc.gearInnerRadius = mc.gearInnerControlPoint.magnitude;
-                mc.gearRootRadius = mc.gearRootControlPoint.magnitude;
-                mc.gearOuterRadius = mc.gearOuterControlPoint.magnitude;
+                meshCreator.gearInnerControlPoint = SetVectorLength(meshCreator.gearInnerControlPoint, meshCreator.gearInnerRadius);
+                meshCreator.gearRootControlPoint = SetVectorLength(meshCreator.gearRootControlPoint, meshCreator.gearRootRadius);
+                meshCreator.gearOuterControlPoint = SetVectorLength(meshCreator.gearOuterControlPoint, meshCreator.gearOuterRadius);
+                meshCreator.gearInnerControlPoint = Handles.DoPositionHandle(p2 + meshCreator.gearInnerControlPoint, Quaternion.identity) - p3;
+                meshCreator.gearRootControlPoint = Handles.DoPositionHandle(p2 + meshCreator.gearRootControlPoint, Quaternion.identity) - p3;
+                meshCreator.gearOuterControlPoint = Handles.DoPositionHandle(p2 + meshCreator.gearOuterControlPoint, Quaternion.identity) - p3;
+                meshCreator.gearInnerRadius = meshCreator.gearInnerControlPoint.magnitude;
+                meshCreator.gearRootRadius = meshCreator.gearRootControlPoint.magnitude;
+                meshCreator.gearOuterRadius = meshCreator.gearOuterControlPoint.magnitude;
                 break;
             case MeshCreator.MeshType.Line:
-                for (int i = 0; i < mc.linePoints.Count; i++)
+                for (int i = 0; i < meshCreator.linePoints.Count; i++)
                 {
-                    mc.linePoints[i] = Handles.DoPositionHandle(p2 + mc.linePoints[i], Quaternion.identity) - p3;
+                    meshCreator.linePoints[i] = Handles.DoPositionHandle(p2 + meshCreator.linePoints[i], Quaternion.identity) - p3;
                 }
                 break;
             case MeshCreator.MeshType.TriangulatedMesh:
-                for (int i = 0; i < mc.triangulatedPoints.Count; i++)
+                for (int i = 0; i < meshCreator.triangulatedPoints.Count; i++)
                 {
-                    mc.triangulatedPoints[i] = Handles.DoPositionHandle(p2 + mc.triangulatedPoints[i], Quaternion.identity) - p3;
+                    meshCreator.triangulatedPoints[i] = Handles.DoPositionHandle(p2 + meshCreator.triangulatedPoints[i], Quaternion.identity) - p3;
                 }
                 break;
+            case MeshCreator.MeshType.SplineShape:
+                for (int i = 0; i < meshCreator.splinePoints.Count; i++)
+                {
+                    meshCreator.splinePoints[i] = Handles.DoPositionHandle(p2 + meshCreator.splinePoints[i], Quaternion.identity) - p3;
+                }
+                break;
+            case MeshCreator.MeshType.SplineCurve:
+                for (int i = 0; i < meshCreator.splineCurvePoints.Count; i++)
+                {
+                    meshCreator.splineCurvePoints[i] = Handles.DoPositionHandle(p2 + meshCreator.splineCurvePoints[i], Quaternion.identity) - p3;
+                }
+                //Handles.Button(Vector3.zero, Quaternion.identity, 10, 6, (id, position, rotation, size, type) => { });
+                break;
+            case MeshCreator.MeshType.SplineConvexShape:
+                for (int i = 0; i < meshCreator.convexSplinePoints.Count; i++)
+                {
+                    meshCreator.convexSplinePoints[i] = Handles.DoPositionHandle(p2 + meshCreator.convexSplinePoints[i], Quaternion.identity) - p3;
+                }
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException();
         }
     }
 
@@ -193,6 +220,24 @@ public class MeshCreatorEditor : Editor
             case MeshCreator.MeshType.TriangulatedMesh:
                 DrawReorderableList(triangulatedReorderableList);
                 break;
+            case MeshCreator.MeshType.SplineShape:
+                meshCreator.splineResolution = EditorGUILayout.Slider("Spline resolution", meshCreator.splineResolution,
+                    0.05f, 0.5f);
+                DrawReorderableList(splineShapeReorderableList);
+                break;
+            case MeshCreator.MeshType.SplineCurve:
+                DrawReorderableList(splineCurveReorderableList);
+                meshCreator.splineCurveResolution = EditorGUILayout.Slider("Resolution", meshCreator.splineCurveResolution, 0.01f, 0.25f);
+                meshCreator.splineCurveWidth = EditorGUILayout.Slider("Width", meshCreator.splineCurveWidth, 0.0001f, 5f);
+                meshCreator.splineCurveUseDoubleCollider = EditorGUILayout.Toggle("Use double collider",
+                    meshCreator.splineCurveUseDoubleCollider);
+                break;
+            case MeshCreator.MeshType.SplineConvexShape:
+                DrawReorderableList(convexSplineReorderableList);
+                meshCreator.convexSplineResolution = EditorGUILayout.Slider("Resolution", meshCreator.convexSplineResolution, 0.01f, 0.25f);
+                break;
+            default:
+                throw new System.ArgumentOutOfRangeException();
         }
 
         SceneView.RepaintAll();
@@ -268,8 +313,19 @@ public class MeshCreatorEditor : Editor
             case MeshCreator.MeshType.TriangulatedMesh:
                 return TriangulatedMesh.Add(meshCreator.transform.position, meshCreator.triangulatedPoints.ToArray(),
                     meshCreator.material, meshCreator.attachRigidbody);
+            case MeshCreator.MeshType.SplineShape:
+                return SplineShapeMesh.AddSplineShape(meshCreator.transform.position, meshCreator.splinePoints.ToArray(), meshCreator.splineResolution,
+                   Space.World, meshCreator.material, meshCreator.attachRigidbody);
+            case MeshCreator.MeshType.SplineCurve:
+                return SplineCurveMesh.AddSplineCurve(meshCreator.transform.position, meshCreator.splineCurvePoints.ToArray(),
+                    meshCreator.splineCurveResolution, meshCreator.splineCurveWidth, meshCreator.splineCurveUseDoubleCollider, Space.World,
+                    meshCreator.material, meshCreator.attachRigidbody);
+            case MeshCreator.MeshType.SplineConvexShape:
+                return ConvexSplineMesh.AddConvexSpline(meshCreator.transform.position, meshCreator.convexSplinePoints.ToArray(),
+                    meshCreator.convexSplineResolution, Space.World, meshCreator.material, meshCreator.attachRigidbody);
+            default:
+                throw new System.ArgumentOutOfRangeException();
         }
-        return null;
     }
 
     #endregion
