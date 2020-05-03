@@ -13,13 +13,13 @@ namespace PSG
     {
 
         //gear data
-        private int sides;
-        private float outerRadius;
-        private float rootRadius;
-        private float innerRadius;
+        public int Sides { get; protected set; }
+        public float OuterRadius { get; protected set; }
+        public float RootRadius { get; protected set; }
+        public float InnerRadius { get; protected set; }
 
         //colliders
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Methods - building from values and from structure
 
@@ -40,7 +40,7 @@ namespace PSG
 
         public static GearMesh AddGear(Vector3 position, GearStructure gearStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddGear(position, gearStructure.innerRadius, gearStructure.rootRadius, gearStructure.outerRadius, gearStructure.sides, meshMatt, attachRigidbody);
+            return AddGear(position, gearStructure.InnerRadius, gearStructure.RootRadius, gearStructure.OuterRadius, gearStructure.Sides, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -52,10 +52,10 @@ namespace PSG
         {
             MeshHelper.SetupMaterial(ref meshMatt);
             name = "Gear";
-            this.innerRadius = innerRadius;
-            this.rootRadius = rootRadius;
-            this.outerRadius = outerRadius;
-            this.sides = sides;
+            InnerRadius = innerRadius;
+            RootRadius = rootRadius;
+            OuterRadius = outerRadius;
+            Sides = sides;
 
             _Mesh = new Mesh();
             GetOrAddComponents();
@@ -72,7 +72,7 @@ namespace PSG
 
         public void Build(GearStructure gearStructure, Material meshMatt = null)
         {
-            Build(gearStructure.innerRadius, gearStructure.rootRadius, gearStructure.outerRadius, gearStructure.sides, meshMatt);
+            Build(gearStructure.InnerRadius, gearStructure.RootRadius, gearStructure.OuterRadius, gearStructure.Sides, meshMatt);
         }
 
         #endregion
@@ -81,10 +81,10 @@ namespace PSG
         {
             return new GearStructure
             {
-                innerRadius = innerRadius,
-                rootRadius = rootRadius,
-                outerRadius = outerRadius,
-                sides = sides
+                InnerRadius = InnerRadius,
+                RootRadius = RootRadius,
+                OuterRadius = OuterRadius,
+                Sides = Sides
             };
         }
 
@@ -92,42 +92,42 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (sides < 2)
+            if (Sides < 2)
             {
                 Debug.LogWarning("GearMesh::ValidateMesh: sides count can't be less than two!");
                 return false;
             }
-            if (rootRadius == 0)
+            if (RootRadius == 0)
             {
                 Debug.LogWarning("GearMesh::ValidateMesh: rootRadius can't be equal to zero!");
                 return false;
             }
-            if (outerRadius == 0)
+            if (OuterRadius == 0)
             {
                 Debug.LogWarning("GearMesh::ValidateMesh: outerRadius can't be equal to zero!");
                 return false;
             }
-            if (innerRadius < 0)
+            if (InnerRadius < 0)
             {
-                innerRadius = -innerRadius;
+                InnerRadius = -InnerRadius;
             }
-            if (rootRadius < 0)
+            if (RootRadius < 0)
             {
-                rootRadius = -rootRadius;
+                RootRadius = -RootRadius;
             }
-            if (innerRadius < 0)
+            if (InnerRadius < 0)
             {
-                outerRadius = -outerRadius;
+                OuterRadius = -OuterRadius;
             }
             return true;
         }
 
         protected override void BuildMeshComponents()
         {
-            int doubleSides = 2 * sides;
+            int doubleSides = 2 * Sides;
 
-            Vertices = new Vector3[6 * sides];
-            Triangles = new int[6 * 3 * sides];
+            Vertices = new Vector3[6 * Sides];
+            Triangles = new int[6 * 3 * Sides];
 
             float angleDelta = deg360 / doubleSides;
             float angleShift = angleDelta * 0.5f;
@@ -138,19 +138,19 @@ namespace PSG
             for (int i = 0; i < doubleSides; i++)
             {
                 Vector3 innerVertPos =
-                    new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift)) * innerRadius;
+                    new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift)) * InnerRadius;
                 Vector3 rootVertPos =
-                    new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift)) * rootRadius;
+                    new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift)) * RootRadius;
                 Vector3 outerVertPos;
                 if (i % 2 == 0)
                 {
                     outerVertPos =
-                        new Vector3(Mathf.Cos(i * angleDelta + angleShift + outerAngleShift), Mathf.Sin(i * angleDelta + angleShift + outerAngleShift)) * outerRadius;
+                        new Vector3(Mathf.Cos(i * angleDelta + angleShift + outerAngleShift), Mathf.Sin(i * angleDelta + angleShift + outerAngleShift)) * OuterRadius;
                 }
                 else
                 {
                     outerVertPos =
-                        new Vector3(Mathf.Cos(i * angleDelta + angleShift - outerAngleShift), Mathf.Sin(i * angleDelta + angleShift - outerAngleShift)) * outerRadius;
+                        new Vector3(Mathf.Cos(i * angleDelta + angleShift - outerAngleShift), Mathf.Sin(i * angleDelta + angleShift - outerAngleShift)) * OuterRadius;
                 }
                 Vertices[i * 3 + 0] = innerVertPos;
                 Vertices[i * 3 + 1] = rootVertPos;
@@ -187,10 +187,10 @@ namespace PSG
 
         public override void UpdateCollider()
         {
-            bool isHollow = innerRadius > 0;
-            int numberOfPoints = isHollow ? sides * 6+2 : sides * 4;
+            bool isHollow = InnerRadius > 0;
+            int numberOfPoints = isHollow ? Sides * 6+2 : Sides * 4;
             Vector2[] colliderPoints = new Vector2[numberOfPoints];
-            for (int i = 0; i < sides; i++)
+            for (int i = 0; i < Sides; i++)
             {
                 colliderPoints[4 * i + 0] = Vertices[i * 6 + 1];
                 colliderPoints[4 * i + 1] = Vertices[i * 6 + 2];
@@ -199,10 +199,10 @@ namespace PSG
             }
             if (isHollow)
             {
-                colliderPoints[4 * sides] = colliderPoints[0];
-                for (int i = 0; i < sides * 2; i++)
+                colliderPoints[4 * Sides] = colliderPoints[0];
+                for (int i = 0; i < Sides * 2; i++)
                 {
-                    colliderPoints[sides * 4 + i+1] = Vertices[i * 3];
+                    colliderPoints[Sides * 4 + i+1] = Vertices[i * 3];
                 }
                 colliderPoints[numberOfPoints-1] = Vertices[0];
             }
@@ -221,9 +221,9 @@ namespace PSG
     [System.Serializable]
     public struct GearStructure
     {
-        public float innerRadius;
-        public float rootRadius;
-        public float outerRadius;
-        public int sides;
+        public float InnerRadius;
+        public float RootRadius;
+        public float OuterRadius;
+        public int Sides;
     }
 }

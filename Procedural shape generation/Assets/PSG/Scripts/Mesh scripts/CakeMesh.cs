@@ -12,14 +12,13 @@ namespace PSG
     /// </summary>
     public class CakeMesh : MeshBase
     {
-
         //cake data
-        private float radius;
-        private int sides;
-        private int sidesToFill;
+        public float Radius { get; protected set; }
+        public int Sides { get; protected set; }
+        public int SidesToFill { get; protected set; }
 
         //colliders
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Methods - building from values and from structure
 
@@ -38,7 +37,7 @@ namespace PSG
 
         public static CakeMesh AddCakeMesh(Vector3 position, CakeStructure cakeStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddCakeMesh(position, cakeStructure.radius, cakeStructure.sides, cakeStructure.sides, meshMatt, attachRigidbody);
+            return AddCakeMesh(position, cakeStructure.Radius, cakeStructure.Sides, cakeStructure.Sides, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -49,16 +48,16 @@ namespace PSG
         public void Build(float radius, int sides, int sidesToFill, Material meshMatt = null)
         {
             name = "Cake";
-            this.radius = radius;
-            this.sides = sides;
-            this.sidesToFill = sidesToFill;
+            Radius = radius;
+            Sides = sides;
+            SidesToFill = sidesToFill;
 
             BuildMesh(ref meshMatt);
         }
 
         public void Build(CakeStructure cakeStructure, Material meshMatt = null)
         {
-            Build(cakeStructure.radius, cakeStructure.sides, cakeStructure.sidesToFill, meshMatt);
+            Build(cakeStructure.Radius, cakeStructure.Sides, cakeStructure.SidesToFill, meshMatt);
         }
 
         #endregion
@@ -67,9 +66,9 @@ namespace PSG
         {
             return new CakeStructure
             {
-                radius = radius,
-                sides = sides,
-                sidesToFill = sidesToFill
+                Radius = Radius,
+                Sides = Sides,
+                SidesToFill = SidesToFill
             };
         }
 
@@ -77,49 +76,49 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (sides < 2)
+            if (Sides < 2)
             {
                 Debug.LogWarning("CakeMesh::ValidateMesh: sides count can't be less than two!");
                 return false;
             }
-            if (sides < sidesToFill)
+            if (Sides < SidesToFill)
             {
                 Debug.LogWarning("CakeMesh::ValidateMesh: sidesToFill can't be biger than sides!");
                 return false;
             }
-            if (sidesToFill < 1)
+            if (SidesToFill < 1)
             {
                 Debug.LogWarning("CakeMesh::ValidateMesh: sidesToFill can't be less than one!");
                 return false;
             }
-            if (radius == 0)
+            if (Radius == 0)
             {
                 Debug.LogWarning("CakeMesh::ValidateMesh: radius can't be equal to zero!");
                 return false;
             }
-            if (radius < 0)
+            if (Radius < 0)
             {
-                radius = -radius;
+                Radius = -Radius;
             }
             return true;
         }
 
         protected override void BuildMeshComponents()
         {
-            Vertices = new Vector3[sidesToFill + 4];
-            Triangles = new int[sidesToFill * 3];
-            UVs = new Vector2[sidesToFill + 4];
+            Vertices = new Vector3[SidesToFill + 4];
+            Triangles = new int[SidesToFill * 3];
+            UVs = new Vector2[SidesToFill + 4];
 
             Vertices[0] = Vector3.zero;
             UVs[0] = Vector3.one * 0.5f;
-            float angleDelta = deg360 / sides;
-            for (int i = 0; i < sidesToFill + 2; i++)
+            float angleDelta = deg360 / Sides;
+            for (int i = 0; i < SidesToFill + 2; i++)
             {
-                Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
+                Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * Radius;
                 Vertices[i + 1] = vertPos;
-                UVs[i + 1] = vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0);
+                UVs[i + 1] = vertPos / 2 / Radius + new Vector3(0.5f, 0.5f, 0);
             }
-            for (int i = 0; i < sidesToFill; i++)
+            for (int i = 0; i < SidesToFill; i++)
             {
                 Triangles[i * 3 + 0] = 1 + i + 1;
                 Triangles[i * 3 + 1] = 1 + i;
@@ -129,7 +128,7 @@ namespace PSG
 
         public override void UpdateCollider()
         {
-            Vector2[] points = new Vector2[sidesToFill + 2];
+            Vector2[] points = new Vector2[SidesToFill + 2];
             for (int i = 0; i < points.Length; i++)
             {
                 points[i] = Vertices[i];
@@ -150,9 +149,9 @@ namespace PSG
 
     public struct CakeStructure
     {
-        public float radius;
-        public int sides;
-        public int sidesToFill;
-        public Vector2 centerShift;
+        public float Radius;
+        public int Sides;
+        public int SidesToFill;
+        public Vector2 CenterShift;
     }
 }

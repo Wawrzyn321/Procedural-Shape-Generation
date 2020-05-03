@@ -18,13 +18,24 @@ namespace PSG
     {
 
         //line data
-        private bool useDoubleCollider;
-        private Vector2[] lineVerts;
-        private float lineWidth;
+        public bool UseDoubleCollider { get; protected set; }
+        public Vector2[] LineVerts { get; protected set; }
+        public float LineWidth { get; protected set; }
 
         //colliders
-        private PolygonCollider2D C_PC2D;
-        private EdgeCollider2D C_EC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
+        public EdgeCollider2D C_EC2D { get; protected set; }
+        public Collider2D Collider
+        {
+            get
+            {
+                if (C_PC2D)
+                {
+                    return C_PC2D;
+                }
+                return C_EC2D;
+            }
+        }
 
         //list of cached collider points
         private List<Vector2> cachedVertsLeft;
@@ -61,7 +72,7 @@ namespace PSG
 
         public static LineMesh AddLine(Vector3 position, LineStructure structure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddLine(position, structure.lineVerts, structure.lineWidth, structure.useDoubleCollider, Space.Self, meshMatt, attachRigidbody);
+            return AddLine(position, structure.LineVerts, structure.LineWidth, structure.UseDoubleCollider, Space.Self, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -72,16 +83,16 @@ namespace PSG
         public void Build(IList<Vector2> lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null)
         {
             name = "Line mesh";
-            this.useDoubleCollider = useDoubleCollider;
-            this.lineVerts = (Vector2[])lineVerts;
-            this.lineWidth = lineWidth;
+            UseDoubleCollider = useDoubleCollider;
+            LineVerts = (Vector2[])lineVerts;
+            LineWidth = lineWidth;
 
             BuildMesh(ref meshMatt);
         }
 
         public void Build(LineStructure structure, Material meshMatt = null)
         {
-            Build(structure.lineVerts, structure.lineWidth, structure.useDoubleCollider, meshMatt);
+            Build(structure.LineVerts, structure.LineWidth, structure.UseDoubleCollider, meshMatt);
         }
 
         #endregion
@@ -90,9 +101,9 @@ namespace PSG
         {
             return new LineStructure
             {
-                useDoubleCollider = useDoubleCollider,
-                lineVerts = lineVerts,
-                lineWidth = lineWidth
+                UseDoubleCollider = UseDoubleCollider,
+                LineVerts = LineVerts,
+                LineWidth = LineWidth
             };
         }
 
@@ -100,27 +111,27 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (lineWidth == 0)
+            if (LineWidth == 0)
             {
                 Debug.LogWarning("LineMesh::ValidateMesh: Line width can't be equal to zero!");
                 return false;
             }
 
-            if (lineVerts.Length < 1)
+            if (LineVerts.Length < 1)
             {
                 Debug.LogWarning("LineMesh::ValidateMesh: Parameter size must be bigger than one!");
                 return false;
             }
 
-            if (MeshHelper.HasDuplicates(lineVerts))
+            if (MeshHelper.HasDuplicates(LineVerts))
             {
                 Debug.LogWarning("LineMesh::ValidateMesh: Duplicate points detected!");
                 return false;
             }
 
-            if (lineWidth < 0)
+            if (LineWidth < 0)
             {
-                lineWidth = -lineWidth;
+                LineWidth = -LineWidth;
             }
             return true;
         }
@@ -129,7 +140,7 @@ namespace PSG
         {
 
             #region DoubleCollider
-            if (useDoubleCollider)
+            if (UseDoubleCollider)
             {
                 cachedVertsLeft = new List<Vector2>();
                 cachedVertsRight = new List<Vector2>();
@@ -140,29 +151,29 @@ namespace PSG
             List<int> trianglesList = new List<int>();
 
             Vector2 center = new Vector2();
-            for (int i = 0; i < lineVerts.Length; i++)
+            for (int i = 0; i < LineVerts.Length; i++)
             {
-                center += lineVerts[i];
+                center += LineVerts[i];
             }
-            center /= lineVerts.Length;
-            for (int i = 0; i < lineVerts.Length; i++)
+            center /= LineVerts.Length;
+            for (int i = 0; i < LineVerts.Length; i++)
             {
-                lineVerts[i] -= center;
+                LineVerts[i] -= center;
             }
 
             int currentVertIndex = 0;
             int currentTriIndex = 0;
             //add first two vertices
-            float angle = Mathf.Atan2(lineVerts[1].y - lineVerts[0].y, lineVerts[1].x - lineVerts[0].x);
+            float angle = Mathf.Atan2(LineVerts[1].y - LineVerts[0].y, LineVerts[1].x - LineVerts[0].x);
             float oldAngle, angleDiff;
-            Vector2 p1 = new Vector2(Mathf.Cos(angle + deg90), Mathf.Sin(angle + deg90)) * lineWidth;
-            Vector2 p2 = new Vector2(Mathf.Cos(angle - deg90), Mathf.Sin(angle - deg90)) * lineWidth;
+            Vector2 p1 = new Vector2(Mathf.Cos(angle + deg90), Mathf.Sin(angle + deg90)) * LineWidth;
+            Vector2 p2 = new Vector2(Mathf.Cos(angle - deg90), Mathf.Sin(angle - deg90)) * LineWidth;
             if (p1 != p2)
             {
-                verticesList.Add(lineVerts[currentVertIndex] + p1);
-                verticesList.Add(lineVerts[currentVertIndex] + p2);
+                verticesList.Add(LineVerts[currentVertIndex] + p1);
+                verticesList.Add(LineVerts[currentVertIndex] + p2);
                 #region DoubleCollider
-                if (useDoubleCollider)
+                if (UseDoubleCollider)
                 {
                     cachedVertsLeft.Add(verticesList[verticesList.Count - 2]);
                     cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
@@ -171,9 +182,9 @@ namespace PSG
             }
             else
             {
-                verticesList.Add(lineVerts[currentVertIndex]);
+                verticesList.Add(LineVerts[currentVertIndex]);
                 #region DoubleCollider
-                if (useDoubleCollider)
+                if (UseDoubleCollider)
                 {
                     cachedVertsLeft.Add(verticesList[verticesList.Count - 1]);
                     cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
@@ -183,16 +194,16 @@ namespace PSG
             oldAngle = angle;
             currentVertIndex++;
             // add middle vertices
-            for (int i = 0; i < lineVerts.Length - 2; i++, currentVertIndex++)
+            for (int i = 0; i < LineVerts.Length - 2; i++, currentVertIndex++)
             {
-                angle = Mathf.Atan2(lineVerts[currentVertIndex + 1].y - lineVerts[currentVertIndex].y, lineVerts[currentVertIndex + 1].x - lineVerts[currentVertIndex].x);
+                angle = Mathf.Atan2(LineVerts[currentVertIndex + 1].y - LineVerts[currentVertIndex].y, LineVerts[currentVertIndex + 1].x - LineVerts[currentVertIndex].x);
                 angleDiff = oldAngle + MeshHelper.AngleDifference(oldAngle, angle) * 0.5f;
-                p1 = new Vector2(Mathf.Cos(angleDiff + deg90), Mathf.Sin(angleDiff + deg90)) * lineWidth;
-                p2 = new Vector2(Mathf.Cos(angleDiff - deg90), Mathf.Sin(angleDiff - deg90)) * lineWidth;
+                p1 = new Vector2(Mathf.Cos(angleDiff + deg90), Mathf.Sin(angleDiff + deg90)) * LineWidth;
+                p2 = new Vector2(Mathf.Cos(angleDiff - deg90), Mathf.Sin(angleDiff - deg90)) * LineWidth;
                 if (p1 != p2)
                 {
-                    verticesList.Add(lineVerts[currentVertIndex] + p1);
-                    verticesList.Add(lineVerts[currentVertIndex] + p2);
+                    verticesList.Add(LineVerts[currentVertIndex] + p1);
+                    verticesList.Add(LineVerts[currentVertIndex] + p2);
                     trianglesList.Add(currentTriIndex + 0);
                     trianglesList.Add(currentTriIndex + 3);
                     trianglesList.Add(currentTriIndex + 1);
@@ -203,7 +214,7 @@ namespace PSG
                 }
                 else
                 {
-                    verticesList.Add(lineVerts[currentTriIndex] + p1);
+                    verticesList.Add(LineVerts[currentTriIndex] + p1);
                     if (verticesList[verticesList.Count - 1] != verticesList[verticesList.Count - 2])
                     {
                         trianglesList.Add(currentTriIndex + 0);
@@ -213,7 +224,7 @@ namespace PSG
                     }
                 }
                 #region DoubleCollider
-                if (useDoubleCollider)
+                if (UseDoubleCollider)
                 {
                     cachedVertsLeft.Add(verticesList[verticesList.Count - 2]);
                     cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
@@ -223,15 +234,15 @@ namespace PSG
             }
 
             //add last two vertices
-            if (lineVerts[0] != lineVerts[currentVertIndex])
+            if (LineVerts[0] != LineVerts[currentVertIndex])
             {
-                angle = Mathf.Atan2(lineVerts[currentVertIndex].y - lineVerts[currentVertIndex - 1].y, lineVerts[currentVertIndex].x - lineVerts[currentVertIndex - 1].x);
-                p1 = new Vector2(Mathf.Cos(angle + deg90), Mathf.Sin(angle + deg90)) * lineWidth;
-                p2 = new Vector2(Mathf.Cos(angle - deg90), Mathf.Sin(angle - deg90)) * lineWidth;
+                angle = Mathf.Atan2(LineVerts[currentVertIndex].y - LineVerts[currentVertIndex - 1].y, LineVerts[currentVertIndex].x - LineVerts[currentVertIndex - 1].x);
+                p1 = new Vector2(Mathf.Cos(angle + deg90), Mathf.Sin(angle + deg90)) * LineWidth;
+                p2 = new Vector2(Mathf.Cos(angle - deg90), Mathf.Sin(angle - deg90)) * LineWidth;
                 if (p1 != p2)
                 {
-                    verticesList.Add(lineVerts[currentVertIndex] + p1);
-                    verticesList.Add(lineVerts[currentVertIndex] + p2);
+                    verticesList.Add(LineVerts[currentVertIndex] + p1);
+                    verticesList.Add(LineVerts[currentVertIndex] + p2);
                     trianglesList.Add(currentTriIndex + 0);
                     trianglesList.Add(currentTriIndex + 3);
                     trianglesList.Add(currentTriIndex + 1);
@@ -244,14 +255,14 @@ namespace PSG
                     //make LineMesh loop
                     if (verticesList[verticesList.Count - 1] != verticesList[verticesList.Count - 2])
                     {
-                        verticesList.Add(lineVerts[currentTriIndex] + p1);
+                        verticesList.Add(LineVerts[currentTriIndex] + p1);
                         trianglesList.Add(currentTriIndex + 0);
                         trianglesList.Add(currentTriIndex + 3);
                         trianglesList.Add(currentTriIndex + 1);
                     }
                 }
                 #region DoubleCollider
-                if (useDoubleCollider)
+                if (UseDoubleCollider)
                 {
                     cachedVertsLeft.Add(verticesList[verticesList.Count - 2]);
                     cachedVertsRight.Add(verticesList[verticesList.Count - 1]);
@@ -261,18 +272,18 @@ namespace PSG
             else
             {
                 oldAngle = Mathf.Atan2(
-                    lineVerts[0].y - lineVerts[currentVertIndex].y,
-                    lineVerts[0].x - lineVerts[currentVertIndex].x);
+                    LineVerts[0].y - LineVerts[currentVertIndex].y,
+                    LineVerts[0].x - LineVerts[currentVertIndex].x);
                 angle = Mathf.Atan2(
-                    lineVerts[1].y - lineVerts[0].y,
-                    lineVerts[1].x - lineVerts[0].x);
+                    LineVerts[1].y - LineVerts[0].y,
+                    LineVerts[1].x - LineVerts[0].x);
                 angleDiff = oldAngle + MeshHelper.AngleDifference(oldAngle, angle) * 0.5f - deg90;
-                p1 = new Vector2(Mathf.Cos(angleDiff - deg90), Mathf.Sin(angleDiff - deg90)) * lineWidth;
-                p2 = new Vector2(Mathf.Cos(angleDiff + deg90), Mathf.Sin(angleDiff + deg90)) * lineWidth;
-                verticesList[0] = lineVerts[currentVertIndex] + p1;
-                verticesList[1] = lineVerts[currentVertIndex] + p2;
+                p1 = new Vector2(Mathf.Cos(angleDiff - deg90), Mathf.Sin(angleDiff - deg90)) * LineWidth;
+                p2 = new Vector2(Mathf.Cos(angleDiff + deg90), Mathf.Sin(angleDiff + deg90)) * LineWidth;
+                verticesList[0] = LineVerts[currentVertIndex] + p1;
+                verticesList[1] = LineVerts[currentVertIndex] + p2;
                 #region DoubleCollider
-                if (useDoubleCollider)
+                if (UseDoubleCollider)
                 {
                     cachedVertsLeft[0] = verticesList[0];
                     cachedVertsRight[0] = verticesList[1];
@@ -296,7 +307,7 @@ namespace PSG
 
         public override void UpdateCollider()
         {
-            if (useDoubleCollider)
+            if (UseDoubleCollider)
             {
                 Vector2[] points = new Vector2[cachedVertsRight.Count + cachedVertsLeft.Count];
                 for (int i = 0; i < cachedVertsLeft.Count; i++)
@@ -312,12 +323,12 @@ namespace PSG
             }
             else
             {
-                C_EC2D.points = lineVerts;
+                C_EC2D.points = LineVerts;
             }
         }
         public override void GetOrAddComponents()
         {
-            if (useDoubleCollider)
+            if (UseDoubleCollider)
             {
                 C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             }
@@ -335,8 +346,8 @@ namespace PSG
 
     public struct LineStructure
     {
-        public bool useDoubleCollider;
-        public Vector2[] lineVerts;
-        public float lineWidth;
+        public bool UseDoubleCollider;
+        public Vector2[] LineVerts;
+        public float LineWidth;
     }
 }

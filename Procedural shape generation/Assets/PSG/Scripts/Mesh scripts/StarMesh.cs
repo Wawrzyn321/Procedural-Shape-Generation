@@ -12,12 +12,12 @@ namespace PSG
     public class StarMesh : MeshBase
     {
         //star data
-        private float radiusA; //horizontal radius
-        private float radiusB; //vertical radius
-        private int sides;
+        public float RadiusA { get; protected set; } //horizontal radius
+        public float RadiusB { get; protected set; } //vertical radius
+        public int Sides { get; protected set; }
 
         //collider
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Methods - building from values and from structure
 
@@ -37,7 +37,7 @@ namespace PSG
 
         public static StarMesh AddStar(Vector3 position, StarStructure starStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddStar(position, starStructure.radiusA, starStructure.radiusB, starStructure.sides, meshMatt, attachRigidbody);
+            return AddStar(position, starStructure.RadiusA, starStructure.RadiusB, starStructure.Sides, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -49,9 +49,9 @@ namespace PSG
         {
             name = "Star";
 
-            this.sides = sides;
-            this.radiusA = radiusA;
-            this.radiusB = radiusB;
+            Sides = sides;
+            RadiusA = radiusA;
+            RadiusB = radiusB;
             _Mesh = new Mesh();
             
             GetOrAddComponents();
@@ -68,7 +68,7 @@ namespace PSG
 
         public void Build(StarStructure starStructure, Material meshMatt = null)
         {
-            Build(starStructure.radiusA, starStructure.radiusB, starStructure.sides, meshMatt);
+            Build(starStructure.RadiusA, starStructure.RadiusB, starStructure.Sides, meshMatt);
         }
 
         #endregion
@@ -77,9 +77,9 @@ namespace PSG
         {
             return new StarStructure
             {
-                radiusA = radiusA,
-                radiusB = radiusB,
-                sides = sides
+                RadiusA = RadiusA,
+                RadiusB = RadiusB,
+                Sides = Sides
             };
         }
 
@@ -87,43 +87,43 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (sides < 2)
+            if (Sides < 2)
             {
                 Debug.LogWarning("StarMesh::ValidateMesh: sides count can't be less than two!");
                 return false;
             }
-            if (radiusA == 0 || radiusB == 0)
+            if (RadiusA == 0 || RadiusB == 0)
             {
                 Debug.LogWarning("StarMesh::ValidateMesh: any of radiuses can't be equal to zero!");
                 return false;
             }
-            if (radiusA < 0)
+            if (RadiusA < 0)
             {
-                radiusA = -radiusA;
+                RadiusA = -RadiusA;
             }
-            if (radiusB < 0)
+            if (RadiusB < 0)
             {
-                radiusB = -radiusB;
+                RadiusB = -RadiusB;
             }
             return true;
         }
 
         protected override void BuildMeshComponents()
         {
-            Vertices = new Vector3[1 + sides * 2];
-            Triangles = new int[2 * sides * 3];
-            UVs = new Vector2[1 + sides * 2];
+            Vertices = new Vector3[1 + Sides * 2];
+            Triangles = new int[2 * Sides * 3];
+            UVs = new Vector2[1 + Sides * 2];
 
             Vertices[0] = new Vector3(0, 0);
-            float angleDelta = 360 / (float)sides / 2 * Mathf.Deg2Rad;
-            float angleShift = -360f / (sides * 4) * Mathf.Deg2Rad;
-            for (int i = 0; i < sides * 2; i++)
+            float angleDelta = 360 / (float)Sides / 2 * Mathf.Deg2Rad;
+            float angleShift = -360f / (Sides * 4) * Mathf.Deg2Rad;
+            for (int i = 0; i < Sides * 2; i++)
             {
                 Vector3 vertVec = new Vector3(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift));
-                Vertices[1 + i] = vertVec * (i % 2 == 0 ? radiusA : radiusB);
+                Vertices[1 + i] = vertVec * (i % 2 == 0 ? RadiusA : RadiusB);
                 Triangles[(i * 3 + 2) % Triangles.Length] = 0;
-                Triangles[(i * 3 + 1) % Triangles.Length] = 1 + i % (sides * 2);
-                Triangles[i * 3] = 1 + (i + 1) % (sides * 2);
+                Triangles[(i * 3 + 1) % Triangles.Length] = 1 + i % (Sides * 2);
+                Triangles[i * 3] = 1 + (i + 1) % (Sides * 2);
             }
 
             UVs = MeshHelper.UVUnwrap(Vertices);
@@ -131,13 +131,13 @@ namespace PSG
 
         public override void UpdateCollider()
         {
-            Vector2[] points = new Vector2[sides * 2];
+            Vector2[] points = new Vector2[Sides * 2];
             float angleDelta = 360 / (float)points.Length * Mathf.Deg2Rad;
-            float angleShift = -360f / (sides * 4) * Mathf.Deg2Rad;
+            float angleShift = -360f / (Sides * 4) * Mathf.Deg2Rad;
             for (int i = 0; i < points.Length; i++)
             {
                 Vector2 vertPos = new Vector2(Mathf.Cos(i * angleDelta + angleShift), Mathf.Sin(i * angleDelta + angleShift));
-                points[i] = vertPos * (i % 2 == 0 ? radiusA : radiusB);
+                points[i] = vertPos * (i % 2 == 0 ? RadiusA : RadiusB);
             }
             C_PC2D.SetPath(0, points);
         }
@@ -155,8 +155,8 @@ namespace PSG
     [System.Serializable]
     public struct StarStructure
     {
-        public float radiusA;
-        public float radiusB;
-        public int sides;
+        public float RadiusA;
+        public float RadiusB;
+        public int Sides;
     }
 }

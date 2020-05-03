@@ -14,14 +14,14 @@ namespace PSG
     {
         //mesh data
         [SerializeField, HideInInspector]
-        private Vector3 p1;
+        public Vector3 P1 { get; protected set; }
         [SerializeField, HideInInspector]
-        private Vector3 p2;
+        public Vector3 P2 { get; protected set; }
         [SerializeField, HideInInspector]
-        private Vector3 p3;
+        public Vector3 P3 { get; protected set; }
 
         //collider
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Methods
 
@@ -51,9 +51,9 @@ namespace PSG
         {
             name = "Triangle";
             Vector2 center = (p1 + p2 + p3) / 3f;
-            this.p1 = p1 - center;
-            this.p2 = p2 - center;
-            this.p3 = p3 - center;
+            P1 = p1 - center;
+            P2 = p2 - center;
+            P3 = p3 - center;
 
             BuildMesh(ref meshMatt);
         }
@@ -62,9 +62,9 @@ namespace PSG
         public void Build(IList<Vector2> vertices, Material meshMatt = null)
         {
             Vector2 center = (vertices[0] + vertices[1] + vertices[2]) / 3f;
-            p1 = vertices[0] - center;
-            p2 = vertices[1] - center;
-            p3 = vertices[2] - center;
+            P1 = vertices[0] - center;
+            P2 = vertices[1] - center;
+            P3 = vertices[2] - center;
 
             BuildMeshComponents();
         }
@@ -73,13 +73,13 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (p1 == p2 || p2 == p3 || p3 == p1)
+            if (P1 == P2 || P2 == P3 || P3 == P1)
             {
                 Debug.LogWarning("TriangleMesh::ValidateMesh: some of the points are identity!");
                 return false;
             }
 
-            int sign = MeshHelper.GetSide(p2, p1, p3);
+            int sign = MeshHelper.GetSide(P2, P1, P3);
             if (sign == 0)
             {
                 Debug.LogWarning("TriangleMesh::ValidateMesh: Given points are colinear!");
@@ -104,18 +104,18 @@ namespace PSG
                 Triangles[2] = 1;
             }
 
-            Vertices[0] = p1;
+            Vertices[0] = P1;
 
-            int sign = MeshHelper.GetSide(p2, p1, p3);
+            int sign = MeshHelper.GetSide(P2, P1, P3);
             if (sign == -1)
             {
-                Vertices[1] = p2;
-                Vertices[2] = p3;
+                Vertices[1] = P2;
+                Vertices[2] = P3;
             }
             else
             {
-                Vertices[1] = p3;
-                Vertices[2] = p2;
+                Vertices[1] = P3;
+                Vertices[2] = P2;
             }
 
             UVs = MeshHelper.UVUnwrap(Vertices);

@@ -7,22 +7,31 @@ namespace PSG
     /// 
     /// Colliders:
     ///     - Circle or Polygon
-    /// 
-    /// Use CircleCollider to improve performance:
-    /// PolygonCollider is advised when sides are
-    /// less than 8.
+    /// Use CircleCollider to improve performance.
     /// 
     /// </summary>
 
     public class CircleMesh : MeshBase
     {
         //circle data
-        private float radius;
-        private int sides;
+        public float Radius { get; protected set; }
+        public int Sides { get; protected set; }
 
         //collider
-        private bool useCircleCollider;
-        private Collider2D C_C2D;
+        public bool UseCircleCollider { get; protected set; }
+        public CircleCollider2D C_CC2D { get; protected set; }
+        public PolygonCollider2D C_PC2D { get; protected set; }
+        public Collider2D Collider
+        {
+            get
+            {
+                if (C_CC2D != null)
+                {
+                    return C_CC2D;
+                }
+                return C_PC2D;
+            }
+        }
 
         #region Static Methods - building from values and from structure
 
@@ -41,7 +50,7 @@ namespace PSG
 
         public static CircleMesh AddCircle(Vector3 position, CircleStructure circleStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddCircle(position, circleStructure.radius, circleStructure.sides, circleStructure.useCircleCollider, meshMatt, attachRigidbody);
+            return AddCircle(position, circleStructure.Radius, circleStructure.Sides, circleStructure.UseCircleCollider, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -52,16 +61,16 @@ namespace PSG
         public void Build(float radius, int sides, bool useCircleCollider, Material meshMatt = null)
         {
             name = "Circle";
-            this.radius = radius;
-            this.sides = sides;
-            this.useCircleCollider = useCircleCollider;
+            Radius = radius;
+            Sides = sides;
+            UseCircleCollider = useCircleCollider;
 
             BuildMesh(ref meshMatt);
         }
 
         public void Build(CircleStructure circleStructure, Material meshMatt = null)
         {
-            Build(circleStructure.radius, circleStructure.sides, circleStructure.useCircleCollider, meshMatt);
+            Build(circleStructure.Radius, circleStructure.Sides, circleStructure.UseCircleCollider, meshMatt);
         }
 
         #endregion
@@ -70,9 +79,9 @@ namespace PSG
         {
             return new CircleStructure
             {
-                radius = radius,
-                sides = sides,
-                useCircleCollider = useCircleCollider
+                Radius = Radius,
+                Sides = Sides,
+                UseCircleCollider = UseCircleCollider
             };
         }
 
@@ -80,66 +89,66 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (sides < 2)
+            if (Sides < 2)
             {
                 Debug.LogWarning("CircleMesh::ValidateMesh: sides count can't be less than two!");
                 return false;
             }
-            if (radius == 0)
+            if (Radius == 0)
             {
                 Debug.LogWarning("CircleMesh::ValidateMesh: radius can't be equal to zero!");
                 return false;
             }
-            if (radius < 0)
+            if (Radius < 0)
             {
-                radius = -radius;
+                Radius = -Radius;
             }
             return true;
         }
 
         protected override void BuildMeshComponents()
         {
-            Vertices = new Vector3[sides + 1];
-            Triangles = new int[3 * sides];
-            UVs = new Vector2[sides + 1];
+            Vertices = new Vector3[Sides + 1];
+            Triangles = new int[3 * Sides];
+            UVs = new Vector2[Sides + 1];
 
             Vertices[0] = Vector3.zero;
             //uvs are manually unwrapped here
             UVs[0] = new Vector2(0.5f, 0.5f);
-            float angleDelta = deg360 / sides;
-            for (int i = 1; i < sides + 1; i++)
+            float angleDelta = deg360 / Sides;
+            for (int i = 1; i < Sides + 1; i++)
             {
-                Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
+                Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * Radius;
                 Vertices[i] = vertPos;
-                UVs[i] = vertPos / 2 / radius + new Vector3(0.5f, 0.5f, 0);
-                Triangles[(i - 1) * 3 + 0] = (1 + i % sides);
-                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                UVs[i] = vertPos / 2 / Radius + new Vector3(0.5f, 0.5f, 0);
+                Triangles[(i - 1) * 3 + 0] = (1 + i % Sides);
+                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % Sides;
                 Triangles[(i - 1) * 3 + 2] = 0;
             }
         }
 
         public override void UpdateCollider()
         {
-            if (useCircleCollider)
+            if (UseCircleCollider)
             {
-                ((CircleCollider2D)C_C2D).radius = radius;
+                C_CC2D.radius = Radius;
             }
 
             else
             {
-                ((PolygonCollider2D)C_C2D).SetPath(0, MeshHelper.ConvertVec3ToVec2(Vertices));
+                C_PC2D.SetPath(0, MeshHelper.ConvertVec3ToVec2(Vertices));
             }
         }
 
         public override void GetOrAddComponents()
         {
-            if (useCircleCollider)
+            if (UseCircleCollider)
             {
-                C_C2D = gameObject.GetOrAddComponent<CircleCollider2D>();
+                C_CC2D = gameObject.GetOrAddComponent<CircleCollider2D>();
             }
             else
             {
-                C_C2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
+                C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             }
             C_MR = gameObject.GetOrAddComponent<MeshRenderer>();
             C_MF = gameObject.GetOrAddComponent<MeshFilter>();
@@ -149,9 +158,10 @@ namespace PSG
 
     }
 
-    public struct CircleStructure{
-        public float radius;
-        public int sides;
-        public bool useCircleCollider;
+    public struct CircleStructure
+    {
+        public float Radius;
+        public int Sides;
+        public bool UseCircleCollider;
     }
 }

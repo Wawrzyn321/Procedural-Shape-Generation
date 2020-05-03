@@ -10,12 +10,11 @@ namespace PSG
     /// </summary>
     public class RectangleMesh : MeshBase
     {
-
         //mesh parameter
-        private Vector2 size;
+        public Vector2 Size { get; protected set; }
 
         //colliders
-        private BoxCollider2D C_BC2D;
+        public BoxCollider2D C_BC2D { get; protected set; }
 
         #region Static Methods
         
@@ -67,7 +66,7 @@ namespace PSG
         public void Build(Vector2 size, Material meshMatt = null)
         {
             name = "Rectangle";
-            this.size = size;
+            Size = size;
 
             BuildMesh(ref meshMatt);
         }
@@ -81,25 +80,25 @@ namespace PSG
         //get dimensions of box - equivalent to GetStructure
         public Vector2 GetSize()
         {
-            return size;
+            return Size;
         }
 
         #region Abstract Implementation
 
         protected override bool ValidateMesh()
         {
-            if (size.x == 0 || size.y == 0)
+            if (Size.x == 0 || Size.y == 0)
             {
                 Debug.LogWarning("RectangleMesh::ValidateMesh: Size of box can't be zero!");
                 return false;
             }
-            if (size.x < 0)
+            if (Size.x < 0)
             {
-                size.x = -size.x;
+                Size = new Vector2(-Size.x, Size.y);
             }
-            if (size.y < 0)
+            if (Size.y < 0)
             {
-                size.y = -size.y;
+                Size = new Vector2(Size.x, -Size.y);
             }
             return true;
         }
@@ -109,10 +108,10 @@ namespace PSG
 
             Vertices = new Vector3[]
             {
-            new Vector3(-size.x*0.5f, -size.y*0.5f, 0), //topleft
-            new Vector3(size.x*0.5f, -size.y*0.5f, 0), //topright
-            new Vector3(size.x*0.5f, size.y*0.5f, 0), //downleft
-            new Vector3(-size.x*0.5f, size.y*0.5f, 0), //downright
+            new Vector3(-Size.x*0.5f, -Size.y*0.5f, 0), //topleft
+            new Vector3(Size.x*0.5f, -Size.y*0.5f, 0), //topright
+            new Vector3(Size.x*0.5f, Size.y*0.5f, 0), //downleft
+            new Vector3(-Size.x*0.5f, Size.y*0.5f, 0), //downright
             };
 
             Triangles = new int[] { 1, 0, 2, 2, 0, 3 };
@@ -128,7 +127,7 @@ namespace PSG
 
         public override void UpdateCollider()
         {
-            C_BC2D.size = size;
+            C_BC2D.size = Size;
         }
 
         public override void GetOrAddComponents()

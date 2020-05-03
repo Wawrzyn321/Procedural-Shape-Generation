@@ -11,15 +11,15 @@ namespace PSG
     /// </summary>
     public class ConvexSplineMesh : TriangulableMesh
     {
-        //collider
-        private PolygonCollider2D C_PC2D;
-
         //spline data
-        private Vector2[] basePoints;
-        private Vector2[] splinePoints;
-        private float resolution;
+        public Vector2[] BasePoints { get; protected set; }
+        public Vector2[] SplinePoints { get; protected set; }
+        public float Resolution { get; protected set; }
 
-        public Vector3 CenterShift { get; set; }
+        //collider
+        public PolygonCollider2D C_PC2D { get; protected set; }
+
+        public Vector3 CenterShift { get; protected set; }
 
         #region Static Building
 
@@ -51,9 +51,9 @@ namespace PSG
         public void Build(Vector2[] basePoints, float resolution, Material meshMatt)
         {
             name = "Convex spline mesh";
-            this.basePoints = basePoints;
-            this.resolution = resolution;
-            splinePoints = ConvexHull.QuickHull(basePoints).ToArray(); // oh no
+            BasePoints = basePoints;
+            Resolution = resolution;
+            SplinePoints = ConvexHull.QuickHull(basePoints).ToArray(); // oh no
 
             BuildMesh(ref meshMatt);
         }
@@ -62,9 +62,9 @@ namespace PSG
         {
             return new ConvexSplineStructure
             {
-                splinePoints = splinePoints,
-                resolution = resolution,
-                vertices = Vertices
+                SplinePoints = SplinePoints,
+                Resolution = Resolution,
+                Vertices = Vertices
             };
         }
 
@@ -72,8 +72,8 @@ namespace PSG
         {
             return new RawConvexSplineStructure()
             {
-                splinePoints = splinePoints,
-                resolution = resolution
+                SplinePoints = SplinePoints,
+                Resolution = Resolution
             };
         }
 
@@ -81,7 +81,7 @@ namespace PSG
 
         protected override void BuildMeshComponents()
         {
-            Vertices = MeshHelper.ConvertVec2ToVec3(CatmullRomSpline.GetPoints(splinePoints, resolution).ToArray());
+            Vertices = MeshHelper.ConvertVec2ToVec3(CatmullRomSpline.GetPoints(SplinePoints, Resolution).ToArray());
 
             CenterShift = new Vector3();
             for (int i = 0; i < Vertices.Length; i++)
@@ -107,14 +107,14 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (MeshHelper.HasDuplicates(basePoints))
+            if (MeshHelper.HasDuplicates(BasePoints))
             {
                 Debug.LogWarning("SplineConvexShapeMesh::ValidateMesh: Duplicate points detected!");
                 return false;
             }
-            if (resolution < CatmullRomSpline.MIN_RESOLUTION)
+            if (Resolution < CatmullRomSpline.MIN_RESOLUTION)
             {
-                resolution = CatmullRomSpline.MIN_RESOLUTION;
+                Resolution = CatmullRomSpline.MIN_RESOLUTION;
             }
             return true;
         }
@@ -137,15 +137,15 @@ namespace PSG
     [System.Serializable]
     public struct RawConvexSplineStructure
     {
-        public Vector2[] splinePoints;
-        public float resolution;
+        public Vector2[] SplinePoints;
+        public float Resolution;
     }
 
     [System.Serializable]
     public struct ConvexSplineStructure
     {
-        public Vector2[] splinePoints;
-        public float resolution;
-        public Vector3[] vertices;
+        public Vector2[] SplinePoints;
+        public float Resolution;
+        public Vector3[] Vertices;
     }
 }

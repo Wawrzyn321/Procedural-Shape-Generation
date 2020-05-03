@@ -14,13 +14,13 @@ namespace PSG
     public class PointedCircleMesh : MeshBase
     {
         //p-circle data
-        private float radius;
-        private Vector2 shift;
-        private int sides;
+        public float Radius { get; protected set; }
+        public Vector2 Shift { get; protected set; }
+        public int Sides { get; protected set; }
 
         //colliders
-        private CircleCollider2D C_CC2D;
-        private PolygonCollider2D C_PC2D;
+        public CircleCollider2D C_CC2D { get; protected set; }
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Methods - building from values and from structure
 
@@ -39,7 +39,7 @@ namespace PSG
 
         public static PointedCircleMesh AddPointedCircle(Vector3 position, PointedCircleStructure pointedCircleStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddPointedCircle(position, pointedCircleStructure.radius, pointedCircleStructure.sides, pointedCircleStructure.shift, meshMatt, attachRigidbody);
+            return AddPointedCircle(position, pointedCircleStructure.Radius, pointedCircleStructure.Sides, pointedCircleStructure.Shift, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -50,16 +50,16 @@ namespace PSG
         public void Build(float radius, int sides, Vector2 shift, Material meshMatt = null)
         {
             name = "PointedCircle";
-            this.radius = radius;
-            this.sides = sides;
-            this.shift = shift;
+            Radius = radius;
+            Sides = sides;
+            Shift = shift;
 
             BuildMesh(ref meshMatt);
         }
 
         void Build(PointedCircleStructure pointedCircleStructure, Material meshMatt = null)
         {
-            Build(pointedCircleStructure.radius, pointedCircleStructure.sides, pointedCircleStructure.shift, meshMatt);
+            Build(pointedCircleStructure.Radius, pointedCircleStructure.Sides, pointedCircleStructure.Shift, meshMatt);
         }
 
         #endregion
@@ -68,9 +68,9 @@ namespace PSG
         {
             return new PointedCircleStructure
             {
-                radius = radius,
-                shift = shift,
-                sides = sides
+                Radius = Radius,
+                Shift = Shift,
+                Sides = Sides
             };
         }
 
@@ -78,36 +78,36 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (sides < 2)
+            if (Sides < 2)
             {
                 Debug.LogWarning("PointedCircleMesh::ValidateMesh: radius can't be equal to zero!");
                 return false;
             }
-            if (radius == 0)
+            if (Radius == 0)
             {
                 Debug.LogWarning("PointedCircleMesh::ValidateMesh: radius can't be equal to zero!");
                 return false;
             }
-            if (radius < 0)
+            if (Radius < 0)
             {
-                radius = -radius;
+                Radius = -Radius;
             }
             return true;
         }
 
         protected override void BuildMeshComponents()
         {
-            Vertices = new Vector3[sides + 1];
-            Triangles = new int[3 * sides];
+            Vertices = new Vector3[Sides + 1];
+            Triangles = new int[3 * Sides];
 
-            float angleDelta = deg360 / sides;
-            Vertices[0] = shift;
-            for (int i = 1; i < sides + 1; i++)
+            float angleDelta = deg360 / Sides;
+            Vertices[0] = Shift;
+            for (int i = 1; i < Sides + 1; i++)
             {
-                Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * radius;
+                Vector3 vertPos = new Vector3(Mathf.Cos(i * angleDelta), Mathf.Sin(i * angleDelta)) * Radius;
                 Vertices[i] = vertPos;
-                Triangles[(i - 1) * 3 + 0] = (1 + i % sides);
-                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                Triangles[(i - 1) * 3 + 0] = (1 + i % Sides);
+                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % Sides;
                 Triangles[(i - 1) * 3 + 2] = 0;
             }
             UVs = MeshHelper.UVUnwrap(Vertices);
@@ -115,9 +115,9 @@ namespace PSG
 
         public override void UpdateCollider()
         {
-            C_CC2D.radius = radius;
+            C_CC2D.radius = Radius;
 
-            if (radius < Vertices[0].sqrMagnitude)
+            if (Radius < Vertices[0].sqrMagnitude)
             {
                 //not added in AddOrGetComponents
                 C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
@@ -127,8 +127,8 @@ namespace PSG
                 float shiftedVertexAngle = Mathf.Atan2(Vertices[0].y, Vertices[0].x);
 
                 C_CC2D_vertices[0] = Vertices[0];
-                C_CC2D_vertices[1] = new Vector2(Mathf.Cos(shiftedVertexAngle - Mathf.PI * 0.5f), Mathf.Sin(shiftedVertexAngle - Mathf.PI * 0.5f)) * radius;
-                C_CC2D_vertices[2] = new Vector2(Mathf.Cos(shiftedVertexAngle + Mathf.PI * 0.5f), Mathf.Sin(shiftedVertexAngle + Mathf.PI * 0.5f)) * radius;
+                C_CC2D_vertices[1] = new Vector2(Mathf.Cos(shiftedVertexAngle - Mathf.PI * 0.5f), Mathf.Sin(shiftedVertexAngle - Mathf.PI * 0.5f)) * Radius;
+                C_CC2D_vertices[2] = new Vector2(Mathf.Cos(shiftedVertexAngle + Mathf.PI * 0.5f), Mathf.Sin(shiftedVertexAngle + Mathf.PI * 0.5f)) * Radius;
 
                 C_PC2D.SetPath(0, C_CC2D_vertices);
             }
@@ -156,8 +156,8 @@ namespace PSG
 
     public struct PointedCircleStructure
     {
-        public float radius;
-        public Vector2 shift;
-        public int sides;
+        public float Radius;
+        public Vector2 Shift;
+        public int Sides;
     }
 }

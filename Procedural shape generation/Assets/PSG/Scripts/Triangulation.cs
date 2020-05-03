@@ -7,22 +7,22 @@ namespace PSG
     {
         public struct Vector2Triple
         {
-            public Vector2 a, b, c;
+            public Vector2 A, B, C;
             public Vector2Triple(Vector2 a, Vector2 b, Vector2 c)
             {
-                this.a = a;
-                this.b = b;
-                this.c = c;
+                A = a;
+                B = b;
+                C = c;
             }
         }
         public struct IntTriple
         {
-            public int a, b, c;
+            public int A, B, C;
             public IntTriple(int a, int b, int c)
             {
-                this.a = a;
-                this.b = b;
-                this.c = c;
+                A = a;
+                B = b;
+                C = c;
             }
         }
         

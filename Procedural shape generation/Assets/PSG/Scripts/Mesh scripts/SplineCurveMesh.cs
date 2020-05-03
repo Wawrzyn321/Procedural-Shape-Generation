@@ -16,14 +16,25 @@ namespace PSG
     public class SplineCurveMesh : TriangulableMesh
     {
         //spline data
-        private Vector2[] splinePoints;
-        private float resolution;
-        private float width;
-        private bool useDoubleCollider;
+        public Vector2[] SplinePoints { get; protected set; }
+        public float Resolution { get; protected set; }
+        public float Width { get; protected set; }
+        public bool UseDoubleCollider { get; protected set; }
 
         //colliders
-        private PolygonCollider2D C_PC2D;
-        private EdgeCollider2D C_EC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
+        public EdgeCollider2D C_EC2D { get; protected set; }
+        public Collider2D Collider
+        {
+            get
+            {
+                if (C_PC2D != null)
+                {
+                    return C_PC2D;
+                }
+                return C_EC2D;
+            }
+        }
 
         #region Static Methods - building from values and from structure
 
@@ -57,7 +68,7 @@ namespace PSG
 
         public static SplineCurveMesh AddSplineCurve(Vector3 position, RawSplineCurveStructure structure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddSplineCurve(position, structure.splinePoints, structure.resolution, structure.width, structure.useDoubleCollider, Space.Self, meshMatt, attachRigidbody);
+            return AddSplineCurve(position, structure.SplinePoints, structure.Resolution, structure.Width, structure.UseDoubleCollider, Space.Self, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -68,17 +79,17 @@ namespace PSG
         public void Build(Vector2[] splinePoints, float resolution, float width, bool useDoubleCollider, Material meshMatt = null)
         {
             name = "Spline curve mesh";
-            this.splinePoints = splinePoints;
-            this.resolution = resolution;
-            this.width = width;
-            this.useDoubleCollider = useDoubleCollider;
+            SplinePoints = splinePoints;
+            Resolution = resolution;
+            Width = width;
+            UseDoubleCollider = useDoubleCollider;
 
             BuildMesh(ref meshMatt);
         }
 
         public void Build(RawSplineCurveStructure structure, Material meshMatt = null)
         {
-            Build(structure.splinePoints, structure.resolution, structure.width, structure.useDoubleCollider, meshMatt);
+            Build(structure.SplinePoints, structure.Resolution, structure.Width, structure.UseDoubleCollider, meshMatt);
         }
 
         #endregion
@@ -87,11 +98,11 @@ namespace PSG
         {
             return new SplineCurveStructure
             {
-                useDoubleCollider = useDoubleCollider,
-                resolution = resolution,
-                width = width,
-                splinePoints = splinePoints,
-                vertices = Vertices
+                UseDoubleCollider = UseDoubleCollider,
+                Resolution = Resolution,
+                Width = Width,
+                SplinePoints = SplinePoints,
+                Vertices = Vertices
             };
         }
 
@@ -99,30 +110,30 @@ namespace PSG
         {
             return new RawSplineCurveStructure
             {
-                useDoubleCollider = useDoubleCollider,
-                resolution = resolution,
-                width = width,
-                splinePoints = splinePoints
+                UseDoubleCollider = UseDoubleCollider,
+                Resolution = Resolution,
+                Width = Width,
+                SplinePoints = SplinePoints
             };
         }
 
         protected override bool ValidateMesh()
         {
-            if (MeshHelper.HasDuplicates(splinePoints))
+            if (MeshHelper.HasDuplicates(SplinePoints))
             {
                 Debug.LogWarning("SplineCurveMesh::ValidateMesh: Duplicate points detected!");
                 return false;
             }
-            if (resolution < CatmullRomSpline.MIN_RESOLUTION)
+            if (Resolution < CatmullRomSpline.MIN_RESOLUTION)
             {
-                resolution = CatmullRomSpline.MIN_RESOLUTION;
+                Resolution = CatmullRomSpline.MIN_RESOLUTION;
             }
             return true;
         }
 
         protected override void BuildMeshComponents()
         {
-            List<Vector2> curvePoints = CatmullRomSpline.GetPoints(splinePoints, resolution, false);
+            List<Vector2> curvePoints = CatmullRomSpline.GetPoints(SplinePoints, Resolution, false);
             int len = curvePoints.Count;
             if (len <= 1) return;
 
@@ -131,7 +142,7 @@ namespace PSG
             // first vertex
             {
                 Vector2 dir = (curvePoints[1] - curvePoints[0]).normalized;
-                dir = new Vector2(-dir.y, dir.x) * width;
+                dir = new Vector2(-dir.y, dir.x) * Width;
                 leftCurvePoints.Add(curvePoints[0] - dir);
                 rightCurvePoints.Add(curvePoints[0] + dir);
             }
@@ -141,14 +152,14 @@ namespace PSG
                 float leftAngle = Mathf.Atan2(curvePoints[i].y - curvePoints[i - 1].y, curvePoints[i].x - curvePoints[i - 1].x) * Mathf.Rad2Deg + 90;
                 float rightAngle = Mathf.Atan2(curvePoints[i + 1].y - curvePoints[i].y, curvePoints[i + 1].x - curvePoints[i].x) * Mathf.Rad2Deg + 90;
                 float middleAngle = leftAngle + Mathf.DeltaAngle(leftAngle, rightAngle) * 0.5f;
-                Vector2 dir = new Vector2(Mathf.Cos(middleAngle * Mathf.Deg2Rad), Mathf.Sin(middleAngle * Mathf.Deg2Rad)) * width;
+                Vector2 dir = new Vector2(Mathf.Cos(middleAngle * Mathf.Deg2Rad), Mathf.Sin(middleAngle * Mathf.Deg2Rad)) * Width;
                 leftCurvePoints.Add(curvePoints[i] - dir);
                 rightCurvePoints.Add(curvePoints[i] + dir);
             }
             // last vertex
             {
                 Vector2 dir = (curvePoints[len - 2] - curvePoints[len - 1]).normalized;
-                dir = new Vector2(-dir.y, dir.x) * width;
+                dir = new Vector2(-dir.y, dir.x) * Width;
                 leftCurvePoints.Add(curvePoints[len - 1] + dir);
                 rightCurvePoints.Add(curvePoints[len - 1] - dir);
             }
@@ -177,19 +188,19 @@ namespace PSG
 
         public override void UpdateCollider()
         {
-            if (useDoubleCollider)
+            if (UseDoubleCollider)
             {
                 C_PC2D.points = MeshHelper.ConvertVec3ToVec2(Vertices);
             }
             else
             {
-                C_EC2D.points = CatmullRomSpline.GetPoints(splinePoints, resolution, false).ToArray();
+                C_EC2D.points = CatmullRomSpline.GetPoints(SplinePoints, Resolution, false).ToArray();
             }
         }
 
         public override void GetOrAddComponents()
         {
-            if (useDoubleCollider)
+            if (UseDoubleCollider)
             {
                 C_PC2D = gameObject.GetOrAddComponent<PolygonCollider2D>();
             }
@@ -206,19 +217,19 @@ namespace PSG
     [System.Serializable]
     public struct RawSplineCurveStructure
     {
-        public Vector2[] splinePoints;
-        public float resolution;
-        public float width;
-        public bool useDoubleCollider;
+        public Vector2[] SplinePoints;
+        public float Resolution;
+        public float Width;
+        public bool UseDoubleCollider;
     }
 
     [System.Serializable]
     public struct SplineCurveStructure
     {
-        public Vector2[] splinePoints;
-        public float resolution;
-        public float width;
-        public Vector3[] vertices;
-        public bool useDoubleCollider;
+        public Vector2[] SplinePoints;
+        public float Resolution;
+        public float Width;
+        public Vector3[] Vertices;
+        public bool UseDoubleCollider;
     }
 }

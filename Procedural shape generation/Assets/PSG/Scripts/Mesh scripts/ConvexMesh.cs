@@ -14,11 +14,11 @@ namespace PSG
     public class ConvexMesh : MeshBase
     {
         //mesh data
-        private Vector3[] baseVertices;
-        private Vector3[] vertices;
+        public Vector3[] BaseVertices { get; protected set; }
+        public Vector3[] ConvexVertices { get; protected set; }
 
         //collider
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Methods
 
@@ -48,7 +48,7 @@ namespace PSG
         public void Build(Vector3[] vertices, Material meshMatt = null)
         {
             name = "Convex Mesh";
-            this.vertices = vertices;
+            ConvexVertices = vertices;
 
             BuildMesh(ref meshMatt);
         }
@@ -56,14 +56,14 @@ namespace PSG
         //get points set in constructor
         public Vector3[] GetBasePoints()
         {
-            return baseVertices;
+            return BaseVertices;
         }
 
         #region Abstract Implementation
 
         protected override bool ValidateMesh()
         {
-            if (vertices.Length < 2)
+            if (ConvexVertices.Length < 2)
             {
                 Debug.LogWarning("ConvexMesh::ValidateMesh: verts count must be greater than 2!");
                 return false;
@@ -73,9 +73,9 @@ namespace PSG
 
         protected override void BuildMeshComponents()
         {
-            baseVertices = vertices;
+            BaseVertices = ConvexVertices;
 
-            Vertices = MeshHelper.ConvertVec2ToVec3(ConvexHull.QuickHull(MeshHelper.ConvertVec3ToVec2(vertices)).ToArray()); // oh no
+            Vertices = MeshHelper.ConvertVec2ToVec3(ConvexHull.QuickHull(MeshHelper.ConvertVec3ToVec2(ConvexVertices)).ToArray()); // oh no
 
             Triangles = new int[Vertices.Length * 3];
 

@@ -5,7 +5,7 @@ namespace PSG {
 
     public static class TriangulableMeshProxy
     {
-        private static System.Type triangulatedMeshType = typeof(TriangulatedMesh);
+        private static readonly System.Type triangulatedMeshType = typeof(TriangulatedMesh);
 
         public static TriangulatedMesh ConvertToTriangulatedMesh(TriangulableMesh sourceMeshScript)
         {

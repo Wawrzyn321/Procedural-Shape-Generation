@@ -14,11 +14,11 @@ namespace PSG
     {
 
         //mesh data
-        private Vector2[] points;
-        private List<Triangulation.IntTriple> connections;
+        public Vector2[] Points;
+        public List<Triangulation.IntTriple> Connections;
 
         //collider
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Building
 
@@ -49,7 +49,7 @@ namespace PSG
 
         public static TriangulatedMesh Add(Vector3 position, TriangulatedMeshStructure structure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return Add(position, structure.points, structure.connections, meshMatt, attachRigidbody);
+            return Add(position, structure.Points, structure.Connections, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -57,8 +57,8 @@ namespace PSG
         public void Build(Vector2[] points, List<Triangulation.IntTriple> connections, Material meshMatt)
         {
             name = "Triangulated mesh";
-            this.points = points;
-            this.connections = connections;
+            Points = points;
+            Connections = connections;
 
             BuildMesh(ref meshMatt);
         }
@@ -93,7 +93,7 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (MeshHelper.HasDuplicates(points))
+            if (MeshHelper.HasDuplicates(Points))
             {
                 Debug.LogWarning("TriangulatedMesh::ValidateMesh: Duplicate points detected!");
                 return false;
@@ -104,23 +104,23 @@ namespace PSG
         protected override void BuildMeshComponents()
         {
             Vector2 center = new Vector2();
-            for (int i = 0; i < points.Length; i++)
+            for (int i = 0; i < Points.Length; i++)
             {
-                center += points[i];
+                center += Points[i];
             }
-            center /= points.Length;
-            Vertices = new Vector3[points.Length];
+            center /= Points.Length;
+            Vertices = new Vector3[Points.Length];
             for (int i = 0; i < Vertices.Length; i++)
             {
-                Vertices[i] = points[i] - center;
+                Vertices[i] = Points[i] - center;
             }
 
-            Triangles = new int[connections.Count * 3];
-            for (int i = 0; i < connections.Count; i++)
+            Triangles = new int[Connections.Count * 3];
+            for (int i = 0; i < Connections.Count; i++)
             {
-                Triangles[i * 3 + 0] = connections[i].a;
-                Triangles[i * 3 + 1] = connections[i].b;
-                Triangles[i * 3 + 2] = connections[i].c;
+                Triangles[i * 3 + 0] = Connections[i].A;
+                Triangles[i * 3 + 1] = Connections[i].B;
+                Triangles[i * 3 + 2] = Connections[i].C;
             }
             UVs = MeshHelper.UVUnwrap(Vertices);
         }
@@ -142,8 +142,8 @@ namespace PSG
 
     public struct TriangulatedMeshStructure
     {
-        public Vector2[] points;
-        public List<Triangulation.IntTriple> connections;
+        public Vector2[] Points;
+        public List<Triangulation.IntTriple> Connections;
     }
 
 }

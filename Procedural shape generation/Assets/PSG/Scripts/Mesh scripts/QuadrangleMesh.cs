@@ -11,12 +11,11 @@ namespace PSG
     /// </summary>
     public class QuadrangleMesh : MeshBase
     {
-
         //mesh data
-        private Vector2[] verts;
+        public Vector2[] Verts { get; protected set; }
 
         //collider
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Build
 
@@ -39,7 +38,7 @@ namespace PSG
         public void Build(IList<Vector2> verts, Material meshMatt = null)
         {
             name = "Quadrangle";
-            this.verts = (Vector2[])verts;
+            Verts = (Vector2[])verts;
 
             BuildMesh(ref meshMatt);
         }
@@ -61,7 +60,7 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (MeshHelper.HasDuplicates(verts))
+            if (MeshHelper.HasDuplicates(Verts))
             {
                 Debug.LogWarning("QuadrangleMesh::ValidateMesh: Duplicate points detected!");
                 return false;
@@ -72,17 +71,17 @@ namespace PSG
         protected override void BuildMeshComponents()
         {
             Vertices = new Vector3[4];
-            Vector2 center = (verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f;
+            Vector2 center = (Verts[0] + Verts[1] + Verts[2] + Verts[3]) * 0.25f;
             for (int i = 0; i < 4; i++)
             {
-                Vertices[i] = verts[i] - center;
+                Vertices[i] = Verts[i] - center;
             }
 
             double[] angles = new double[4];
             double sum = 0;
             for (int i = 0; i < 4; i++)
             {
-                angles[i] = MeshHelper.AngleBetweenPoints(verts[i], verts[(i + 1) % 4], verts[(i + 2) % 4]);
+                angles[i] = MeshHelper.AngleBetweenPoints(Verts[i], Verts[(i + 1) % 4], Verts[(i + 2) % 4]);
                 sum += angles[i];
             }
             if (System.Math.Abs(360 - sum) < 1e-3) //check for clockwise order

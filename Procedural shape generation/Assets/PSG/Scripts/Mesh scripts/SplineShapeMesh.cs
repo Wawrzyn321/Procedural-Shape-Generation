@@ -13,11 +13,11 @@ namespace PSG
     {
 
         //collider
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         //spline data
-        private Vector2[] splinePoints;
-        private float resolution;
+        public Vector2[] SplinePoints { get; protected set; }
+        public float Resolution { get; protected set; }
 
         #region Static Building
 
@@ -54,8 +54,8 @@ namespace PSG
         public void Build(Vector2[] splinePoints, float resolution, Material meshMatt)
         {
             name = "Spline mesh";
-            this.splinePoints = splinePoints;
-            this.resolution = resolution;
+            SplinePoints = splinePoints;
+            Resolution = resolution;
 
             BuildMesh(ref meshMatt);
         }
@@ -64,9 +64,9 @@ namespace PSG
         {
             return new SplineShapeStructure
             {
-                splinePoints = splinePoints,
-                resolution = resolution,
-                vertices = Vertices
+                SplinePoints = SplinePoints,
+                Resolution = Resolution,
+                Vertices = Vertices
             };
         }
 
@@ -74,8 +74,8 @@ namespace PSG
         {
             return new RawSplineShapeStructure()
             {
-                splinePoints = splinePoints,
-                resolution = resolution
+                SplinePoints = SplinePoints,
+                Resolution = Resolution
             };
         }
 
@@ -84,26 +84,26 @@ namespace PSG
         protected override void BuildMeshComponents()
         {
             Vector2 center = new Vector2();
-            for (int i = 0; i < splinePoints.Length; i++)
+            for (int i = 0; i < SplinePoints.Length; i++)
             {
-                center += splinePoints[i];
+                center += SplinePoints[i];
             }
-            center /= splinePoints.Length;
-            for (int i = 0; i < splinePoints.Length; i++)
+            center /= SplinePoints.Length;
+            for (int i = 0; i < SplinePoints.Length; i++)
             {
-                splinePoints[i] -= center;
+                SplinePoints[i] -= center;
             }
 
-            Vertices = CatmullRomSpline.GetPoints(MeshHelper.ConvertVec2ToVec3(splinePoints), resolution).ToArray();
+            Vertices = CatmullRomSpline.GetPoints(MeshHelper.ConvertVec2ToVec3(SplinePoints), Resolution).ToArray();
 
             var connections = Triangulation.TriangulationToInt3(new List<Vector2>(MeshHelper.ConvertVec3ToVec2(Vertices)));
 
             Triangles = new int[connections.Count * 3];
             for (int i = 0; i < connections.Count; i++)
             {
-                Triangles[i * 3 + 0] = connections[i].a;
-                Triangles[i * 3 + 1] = connections[i].b;
-                Triangles[i * 3 + 2] = connections[i].c;
+                Triangles[i * 3 + 0] = connections[i].A;
+                Triangles[i * 3 + 1] = connections[i].B;
+                Triangles[i * 3 + 2] = connections[i].C;
             }
 
             UVs = MeshHelper.UVUnwrap(Vertices);
@@ -111,14 +111,14 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (MeshHelper.HasDuplicates(splinePoints))
+            if (MeshHelper.HasDuplicates(SplinePoints))
             {
                 Debug.LogWarning("SplineShapeMesh::ValidateMesh: Duplicate points detected!");
                 return false;
             }
-            if (resolution < CatmullRomSpline.MIN_RESOLUTION)
+            if (Resolution < CatmullRomSpline.MIN_RESOLUTION)
             {
-                resolution = CatmullRomSpline.MIN_RESOLUTION;
+                Resolution = CatmullRomSpline.MIN_RESOLUTION;
             }
             return true;
         }
@@ -141,15 +141,15 @@ namespace PSG
     [System.Serializable]
     public struct RawSplineShapeStructure
     {
-        public Vector2[] splinePoints;
-        public float resolution;
+        public Vector2[] SplinePoints;
+        public float Resolution;
     }
 
     [System.Serializable]
     public struct SplineShapeStructure
     {
-        public Vector2[] splinePoints;
-        public float resolution;
-        public Vector3[] vertices;
+        public Vector2[] SplinePoints;
+        public float Resolution;
+        public Vector3[] Vertices;
     }
 }

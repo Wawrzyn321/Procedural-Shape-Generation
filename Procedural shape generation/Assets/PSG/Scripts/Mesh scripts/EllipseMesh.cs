@@ -12,12 +12,12 @@ namespace PSG
     public class EllipseMesh : MeshBase
     {
         //ellipse data
-        private float radiusHorizontal;
-        private float radiusVertical;
-        private int sides;
+        public float RadiusHorizontal { get; protected set; }
+        public float RadiusVertical { get; protected set; }
+        public int Sides { get; protected set; }
 
         //collider
-        private PolygonCollider2D C_PC2D;
+        public PolygonCollider2D C_PC2D { get; protected set; }
 
         #region Static Methods - building from values and from structure
         
@@ -36,7 +36,7 @@ namespace PSG
 
         public static EllipseMesh AddEllipse(Vector3 position, EllipseStructure ellipseStructure, Material meshMatt = null, bool attachRigidbody = true)
         {
-            return AddEllipse(position, ellipseStructure.radiusHorizontal, ellipseStructure.radiusVertical, ellipseStructure.sides, meshMatt, attachRigidbody);
+            return AddEllipse(position, ellipseStructure.RadiusHorizontal, ellipseStructure.RadiusVertical, ellipseStructure.Sides, meshMatt, attachRigidbody);
         }
 
         #endregion
@@ -47,16 +47,16 @@ namespace PSG
         public void Build(float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null)
         {
             name = "Ellipse";
-            this.radiusHorizontal = radiusHorizontal;
-            this.radiusVertical = radiusVertical;
-            this.sides = sides;
+            RadiusHorizontal = radiusHorizontal;
+            RadiusVertical = radiusVertical;
+            Sides = sides;
 
             BuildMesh(ref meshMatt);
         }
 
         public void Build(EllipseStructure ellipseStructure, Material meshMatt = null)
         {
-            Build(ellipseStructure.radiusHorizontal, ellipseStructure.radiusVertical, ellipseStructure.sides, meshMatt);
+            Build(ellipseStructure.RadiusHorizontal, ellipseStructure.RadiusVertical, ellipseStructure.Sides, meshMatt);
         }
 
         #endregion
@@ -65,9 +65,9 @@ namespace PSG
         {
             return new EllipseStructure
             {
-                radiusHorizontal = radiusHorizontal,
-                radiusVertical = radiusVertical,
-                sides = sides
+                RadiusHorizontal = RadiusHorizontal,
+                RadiusVertical = RadiusVertical,
+                Sides = Sides
             };
         }
 
@@ -75,54 +75,54 @@ namespace PSG
 
         protected override bool ValidateMesh()
         {
-            if (sides < 2)
+            if (Sides < 2)
             {
                 Debug.LogWarning("EllipseMesh::ValidateMesh: sides count can't be less than two!");
                 return false;
             }
-            if (radiusHorizontal == 0 || radiusVertical == 0)
+            if (RadiusHorizontal == 0 || RadiusVertical == 0)
             {
                 Debug.LogWarning("EllipseMesh::ValidateMesh: radiuses can't be equal to zero!");
                 return false;
             }
-            if (radiusHorizontal < 0)
+            if (RadiusHorizontal < 0)
             {
-                radiusHorizontal = -radiusHorizontal;
+                RadiusHorizontal = -RadiusHorizontal;
             }
-            if (radiusVertical < 0)
+            if (RadiusVertical < 0)
             {
-                radiusVertical = -radiusVertical;
+                RadiusVertical = -RadiusVertical;
             }
             return true;
         }
 
         protected override void BuildMeshComponents()
         {
-            Vertices = new Vector3[sides + 1];
-            Triangles = new int[3 * sides];
-            UVs = new Vector2[sides + 1];
+            Vertices = new Vector3[Sides + 1];
+            Triangles = new int[3 * Sides];
+            UVs = new Vector2[Sides + 1];
 
             Vertices[0] = Vector3.zero;
             UVs[0] = Vector3.one * 0.5f;
-            float angleDelta = deg360 / sides;
-            for (int i = 1; i < sides + 1; i++)
+            float angleDelta = deg360 / Sides;
+            for (int i = 1; i < Sides + 1; i++)
             {
-                Vector3 vertPos = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusHorizontal, Mathf.Sin((i + 1) * angleDelta) * radiusVertical);
+                Vector3 vertPos = new Vector3(Mathf.Cos((i + 1) * angleDelta) * RadiusHorizontal, Mathf.Sin((i + 1) * angleDelta) * RadiusVertical);
                 Vertices[i] = vertPos;
-                UVs[i] = new Vector3(vertPos.x / 2 / radiusHorizontal, vertPos.y / 2 / radiusVertical) + new Vector3(0.5f, 0.5f, 0);
-                Triangles[(i - 1) * 3 + 0] = 1 + i % sides;
-                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % sides;
+                UVs[i] = new Vector3(vertPos.x / 2 / RadiusHorizontal, vertPos.y / 2 / RadiusVertical) + new Vector3(0.5f, 0.5f, 0);
+                Triangles[(i - 1) * 3 + 0] = 1 + i % Sides;
+                Triangles[(i - 1) * 3 + 1] = 1 + (i - 1) % Sides;
                 Triangles[(i - 1) * 3 + 2] = 0;
             }
         }
 
         public override void UpdateCollider()
         {
-            Vector2[] points = new Vector2[sides];
-            float angleDelta = deg360 / sides;
-            for (int i = 0; i < sides; i++)
+            Vector2[] points = new Vector2[Sides];
+            float angleDelta = deg360 / Sides;
+            for (int i = 0; i < Sides; i++)
             {
-                points[i] = new Vector3(Mathf.Cos((i + 1) * angleDelta) * radiusHorizontal, Mathf.Sin((i + 1) * angleDelta) * radiusVertical);
+                points[i] = new Vector3(Mathf.Cos((i + 1) * angleDelta) * RadiusHorizontal, Mathf.Sin((i + 1) * angleDelta) * RadiusVertical);
             }
             C_PC2D.points = points;
         }
@@ -139,8 +139,8 @@ namespace PSG
 
     public struct EllipseStructure
     {
-        public float radiusHorizontal;
-        public float radiusVertical;
-        public int sides;
+        public float RadiusHorizontal;
+        public float RadiusVertical;
+        public int Sides;
     }
 }
