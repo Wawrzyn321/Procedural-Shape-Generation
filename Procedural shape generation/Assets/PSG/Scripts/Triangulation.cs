@@ -5,7 +5,6 @@ namespace PSG
 {
     public static class Triangulation
     {
-
         public struct Vector2Triple
         {
             public Vector2 a, b, c;
@@ -16,16 +15,17 @@ namespace PSG
                 this.c = c;
             }
         }
-        public struct intTriple
+        public struct IntTriple
         {
             public int a, b, c;
-            public intTriple(int a, int b, int c)
+            public IntTriple(int a, int b, int c)
             {
                 this.a = a;
                 this.b = b;
                 this.c = c;
             }
         }
+        
         private struct VecIndexPair
         {
             public Vector2 v;
@@ -110,9 +110,9 @@ namespace PSG
             return triangles;
         }
 
-        public static List<intTriple> TriangulationToInt3(List<Vector2> sourcePoints)
+        public static List<IntTriple> TriangulationToInt3(List<Vector2> sourcePoints)
         {
-            List<intTriple> triangles = new List<intTriple>();
+            List<IntTriple> triangles = new List<IntTriple>();
             int MAX = sourcePoints.Count * sourcePoints.Count;
 
             //temporary List of points
@@ -135,7 +135,7 @@ namespace PSG
                     int end = (start + 2) % verts.Count;
 
                     //change the order to fit triangle mesh facing
-                    triangles.Add(new intTriple(verts[start].index, verts[end].index, verts[middle].index));
+                    triangles.Add(new IntTriple(verts[start].index, verts[end].index, verts[middle].index));
 
                     //is current point convex?
                     bool isConvex =

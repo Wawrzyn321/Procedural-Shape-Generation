@@ -96,8 +96,6 @@ namespace PSG
 
             Vertices = CatmullRomSpline.GetPoints(MeshHelper.ConvertVec2ToVec3(splinePoints), resolution).ToArray();
 
-            Vertices = CatmullRomSpline.DecimatePoints(Vertices);
-
             var connections = Triangulation.TriangulationToInt3(new List<Vector2>(MeshHelper.ConvertVec3ToVec2(Vertices)));
 
             Triangles = new int[connections.Count * 3];

@@ -18,7 +18,7 @@ namespace PSG {
             Object.DestroyImmediate(sourceMeshScript.GetComponent<Collider2D>());
             TriangulatedMesh triangulatedMesh = sourceMeshScript.gameObject.AddComponent<TriangulatedMesh>();
             Vector2[] points = MeshHelper.ConvertVec3ToVec2(sourceMeshScript.GetTriangulableVertices());
-            List<Triangulation.intTriple> connections = Triangulation.TriangulationToInt3(new List<Vector2>(points));
+            List<Triangulation.IntTriple> connections = Triangulation.TriangulationToInt3(new List<Vector2>(points));
             triangulatedMesh.Build(points, connections, sourceMeshScript.C_MR.sharedMaterial);
 
             //delete base component
@@ -50,7 +50,7 @@ namespace PSG {
                 subPoints.Add(mid1);
                 subPoints.Add(diff);
             }
-            List<Triangulation.intTriple> connections = Triangulation.TriangulationToInt3(new List<Vector2>(subPoints));
+            List<Triangulation.IntTriple> connections = Triangulation.TriangulationToInt3(new List<Vector2>(subPoints));
             TriangulatedMesh triangulatedMesh = sourceMeshScript.gameObject.AddComponent<TriangulatedMesh>();
             triangulatedMesh.Build(subPoints.ToArray(), connections, sourceMeshScript.C_MR.sharedMaterial);
             triangulatedMesh.smoothingValue = smoothness;

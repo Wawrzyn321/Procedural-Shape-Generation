@@ -15,14 +15,14 @@ namespace PSG
 
         //mesh data
         private Vector2[] points;
-        private List<Triangulation.intTriple> connections;
+        private List<Triangulation.IntTriple> connections;
 
         //collider
         private PolygonCollider2D C_PC2D;
 
         #region Static Building
 
-        public static TriangulatedMesh Add(Vector3 position, Vector2[] points, List<Triangulation.intTriple> connections, Material meshMatt = null, bool attachRigidbody = true)
+        public static TriangulatedMesh Add(Vector3 position, Vector2[] points, List<Triangulation.IntTriple> connections, Material meshMatt = null, bool attachRigidbody = true)
         {
             GameObject triangulatedMesh = new GameObject();
             Vector2 center = new Vector2();
@@ -43,7 +43,7 @@ namespace PSG
 
         public static TriangulatedMesh Add(Vector3 position, Vector2[] points, Material meshMatt = null, bool attachRigidbody = true)
         {
-            List<Triangulation.intTriple> connections = Triangulation.TriangulationToInt3(new List<Vector2>(points));
+            List<Triangulation.IntTriple> connections = Triangulation.TriangulationToInt3(new List<Vector2>(points));
             return Add(position, points, connections, meshMatt, attachRigidbody);
         }
 
@@ -54,7 +54,7 @@ namespace PSG
 
         #endregion
 
-        public void Build(Vector2[] points, List<Triangulation.intTriple> connections, Material meshMatt)
+        public void Build(Vector2[] points, List<Triangulation.IntTriple> connections, Material meshMatt)
         {
             name = "Triangulated mesh";
             this.points = points;
@@ -143,7 +143,7 @@ namespace PSG
     public struct TriangulatedMeshStructure
     {
         public Vector2[] points;
-        public List<Triangulation.intTriple> connections;
+        public List<Triangulation.IntTriple> connections;
     }
 
 }

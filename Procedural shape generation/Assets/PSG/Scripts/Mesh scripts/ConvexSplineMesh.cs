@@ -83,8 +83,6 @@ namespace PSG
         {
             Vertices = MeshHelper.ConvertVec2ToVec3(CatmullRomSpline.GetPoints(splinePoints, resolution).ToArray());
 
-            Vertices = CatmullRomSpline.DecimatePoints(Vertices);
-
             CenterShift = new Vector3();
             for (int i = 0; i < Vertices.Length; i++)
             {
