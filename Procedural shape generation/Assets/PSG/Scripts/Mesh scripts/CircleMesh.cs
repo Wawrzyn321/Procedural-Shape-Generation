@@ -35,12 +35,12 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static CircleMesh AddCircle(Vector3 position, float radius, int sides, bool useCircleCollider, Material meshMatt = null, bool attachRigidbody = true)
+        public static CircleMesh AddCircle(Vector3 position, float radius, int sides, bool useCircleCollider, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject circle = new GameObject();
             circle.transform.position = position;
             CircleMesh circleComponent = circle.AddComponent<CircleMesh>();
-            circleComponent.Build(radius, sides, useCircleCollider, meshMatt);
+            circleComponent.Build(radius, sides, useCircleCollider, meshMat);
             if (attachRigidbody)
             {
                 circle.AddComponent<Rigidbody2D>();
@@ -48,9 +48,9 @@ namespace PSG
             return circleComponent;
         }
 
-        public static CircleMesh AddCircle(Vector3 position, CircleStructure circleStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static CircleMesh AddCircle(Vector3 position, CircleStructure circleStructure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddCircle(position, circleStructure.Radius, circleStructure.Sides, circleStructure.UseCircleCollider, meshMatt, attachRigidbody);
+            return AddCircle(position, circleStructure.Radius, circleStructure.Sides, circleStructure.UseCircleCollider, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -58,19 +58,19 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(float radius, int sides, bool useCircleCollider, Material meshMatt = null)
+        public void Build(float radius, int sides, bool useCircleCollider, Material meshMat = null)
         {
             name = "Circle";
             Radius = radius;
             Sides = sides;
             UseCircleCollider = useCircleCollider;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
-        public void Build(CircleStructure circleStructure, Material meshMatt = null)
+        public void Build(CircleStructure circleStructure, Material meshMat = null)
         {
-            Build(circleStructure.Radius, circleStructure.Sides, circleStructure.UseCircleCollider, meshMatt);
+            Build(circleStructure.Radius, circleStructure.Sides, circleStructure.UseCircleCollider, meshMat);
         }
 
         #endregion

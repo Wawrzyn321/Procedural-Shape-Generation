@@ -21,12 +21,12 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
         
-        public static EllipseMesh AddEllipse(Vector3 position, float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static EllipseMesh AddEllipse(Vector3 position, float radiusHorizontal, float radiusVertical, int sides, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject ellipse = new GameObject();
             ellipse.transform.position = position;
             EllipseMesh ellipseComponent = ellipse.AddComponent<EllipseMesh>();
-            ellipseComponent.Build(radiusHorizontal, radiusVertical, sides, meshMatt);
+            ellipseComponent.Build(radiusHorizontal, radiusVertical, sides, meshMat);
             if (attachRigidbody)
             {
                 ellipse.AddComponent<Rigidbody2D>();
@@ -34,9 +34,9 @@ namespace PSG
             return ellipseComponent;
         }
 
-        public static EllipseMesh AddEllipse(Vector3 position, EllipseStructure ellipseStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static EllipseMesh AddEllipse(Vector3 position, EllipseStructure ellipseStructure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddEllipse(position, ellipseStructure.RadiusHorizontal, ellipseStructure.RadiusVertical, ellipseStructure.Sides, meshMatt, attachRigidbody);
+            return AddEllipse(position, ellipseStructure.RadiusHorizontal, ellipseStructure.RadiusVertical, ellipseStructure.Sides, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -44,19 +44,19 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(float radiusHorizontal, float radiusVertical, int sides, Material meshMatt = null)
+        public void Build(float radiusHorizontal, float radiusVertical, int sides, Material meshMat = null)
         {
             name = "Ellipse";
             RadiusHorizontal = radiusHorizontal;
             RadiusVertical = radiusVertical;
             Sides = sides;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
-        public void Build(EllipseStructure ellipseStructure, Material meshMatt = null)
+        public void Build(EllipseStructure ellipseStructure, Material meshMat = null)
         {
-            Build(ellipseStructure.RadiusHorizontal, ellipseStructure.RadiusVertical, ellipseStructure.Sides, meshMatt);
+            Build(ellipseStructure.RadiusHorizontal, ellipseStructure.RadiusVertical, ellipseStructure.Sides, meshMat);
         }
 
         #endregion

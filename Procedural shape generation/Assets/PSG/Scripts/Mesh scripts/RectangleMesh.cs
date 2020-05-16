@@ -18,13 +18,13 @@ namespace PSG
 
         #region Static Methods
         
-        public static RectangleMesh AddRectangle(Vector3 position, Vector2 size, Material meshMatt = null, bool attachRigidbody = true)
+        public static RectangleMesh AddRectangle(Vector3 position, Vector2 size, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject rectangleMesh = new GameObject();
 
             rectangleMesh.transform.position = position;
             RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
-            rectangleComponent.Build(size, meshMatt);
+            rectangleComponent.Build(size, meshMat);
             if (attachRigidbody)
             {
                 rectangleMesh.AddComponent<Rigidbody2D>();
@@ -33,12 +33,12 @@ namespace PSG
         }
 
         // fill area {from}, {to} by rectangle
-        public static RectangleMesh FillRectangle(Vector3 from, Vector3 to, Material meshMatt = null, bool attachRigidbody = true)
+        public static RectangleMesh FillRectangle(Vector3 from, Vector3 to, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject rectangleMesh = new GameObject();
             rectangleMesh.transform.position = (from + to) / 2;
             RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
-            rectangleComponent.Build(to - from, meshMatt);
+            rectangleComponent.Build(to - from, meshMat);
             if (attachRigidbody)
             {
                 rectangleMesh.AddComponent<Rigidbody2D>();
@@ -47,12 +47,12 @@ namespace PSG
         }
 
         // build rectangle from Rect
-        public static RectangleMesh FillRectangle(Rect rect, Material meshMatt = null, bool attachRigidbody = true)
+        public static RectangleMesh FillRectangle(Rect rect, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject rectangleMesh = new GameObject();
             rectangleMesh.transform.position = rect.center;
             RectangleMesh rectangleComponent = rectangleMesh.AddComponent<RectangleMesh>();
-            rectangleComponent.Build(rect.size, meshMatt);
+            rectangleComponent.Build(rect.size, meshMat);
             if (attachRigidbody)
             {
                 rectangleMesh.AddComponent<Rigidbody2D>();
@@ -63,12 +63,12 @@ namespace PSG
         #endregion
 
         //assign variables, get components and build mesh
-        public void Build(Vector2 size, Material meshMatt = null)
+        public void Build(Vector2 size, Material meshMat = null)
         {
             name = "Rectangle";
             Size = size;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
         //convert to quad

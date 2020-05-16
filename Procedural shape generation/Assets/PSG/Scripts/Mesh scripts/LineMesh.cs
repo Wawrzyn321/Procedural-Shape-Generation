@@ -43,7 +43,7 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static LineMesh AddLine(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Space space, Material meshMatt = null, bool attachRigidbody = true)
+        public static LineMesh AddLine(Vector3 position, Vector2[] lineVerts, float lineWidth, bool useDoubleCollider, Space space, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject line = new GameObject();
 
@@ -62,7 +62,7 @@ namespace PSG
             }
 
             LineMesh lineComponent = line.AddComponent<LineMesh>();
-            lineComponent.Build(lineVerts, lineWidth, useDoubleCollider, meshMatt);
+            lineComponent.Build(lineVerts, lineWidth, useDoubleCollider, meshMat);
             if (attachRigidbody)
             {
                 line.AddComponent<Rigidbody2D>();
@@ -70,9 +70,9 @@ namespace PSG
             return lineComponent;
         }
 
-        public static LineMesh AddLine(Vector3 position, LineStructure structure, Material meshMatt = null, bool attachRigidbody = true)
+        public static LineMesh AddLine(Vector3 position, LineStructure structure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddLine(position, structure.LineVerts, structure.LineWidth, structure.UseDoubleCollider, Space.Self, meshMatt, attachRigidbody);
+            return AddLine(position, structure.LineVerts, structure.LineWidth, structure.UseDoubleCollider, Space.Self, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -80,19 +80,19 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(IList<Vector2> lineVerts, float lineWidth, bool useDoubleCollider, Material meshMatt = null)
+        public void Build(IList<Vector2> lineVerts, float lineWidth, bool useDoubleCollider, Material meshMat = null)
         {
             name = "Line mesh";
             UseDoubleCollider = useDoubleCollider;
             LineVerts = (Vector2[])lineVerts;
             LineWidth = lineWidth;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
-        public void Build(LineStructure structure, Material meshMatt = null)
+        public void Build(LineStructure structure, Material meshMat = null)
         {
-            Build(structure.LineVerts, structure.LineWidth, structure.UseDoubleCollider, meshMatt);
+            Build(structure.LineVerts, structure.LineWidth, structure.UseDoubleCollider, meshMat);
         }
 
         #endregion

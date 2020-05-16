@@ -22,12 +22,12 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static CakeMesh AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMatt = null, bool attachRigidbody = true)
+        public static CakeMesh AddCakeMesh(Vector3 position, float radius, int sides, int sidesToFill, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject cake = new GameObject();
             cake.transform.position = position;
             CakeMesh cakeComponent = cake.AddComponent<CakeMesh>();
-            cakeComponent.Build(radius, sides, sidesToFill, meshMatt);
+            cakeComponent.Build(radius, sides, sidesToFill, meshMat);
             if (attachRigidbody)
             {
                 cake.AddComponent<Rigidbody2D>();
@@ -35,9 +35,9 @@ namespace PSG
             return cakeComponent;
         }
 
-        public static CakeMesh AddCakeMesh(Vector3 position, CakeStructure cakeStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static CakeMesh AddCakeMesh(Vector3 position, CakeStructure cakeStructure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddCakeMesh(position, cakeStructure.Radius, cakeStructure.Sides, cakeStructure.Sides, meshMatt, attachRigidbody);
+            return AddCakeMesh(position, cakeStructure.Radius, cakeStructure.Sides, cakeStructure.Sides, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -45,19 +45,19 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(float radius, int sides, int sidesToFill, Material meshMatt = null)
+        public void Build(float radius, int sides, int sidesToFill, Material meshMat = null)
         {
             name = "Cake";
             Radius = radius;
             Sides = sides;
             SidesToFill = sidesToFill;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
-        public void Build(CakeStructure cakeStructure, Material meshMatt = null)
+        public void Build(CakeStructure cakeStructure, Material meshMat = null)
         {
-            Build(cakeStructure.Radius, cakeStructure.Sides, cakeStructure.SidesToFill, meshMatt);
+            Build(cakeStructure.Radius, cakeStructure.Sides, cakeStructure.SidesToFill, meshMat);
         }
 
         #endregion

@@ -24,12 +24,12 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static PointedCircleMesh AddPointedCircle(Vector3 position, float radius, int sides, Vector2 shift, Material meshMatt = null, bool attachRigidbody = true)
+        public static PointedCircleMesh AddPointedCircle(Vector3 position, float radius, int sides, Vector2 shift, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject pointedCircle = new GameObject();
             pointedCircle.transform.position = position;
             PointedCircleMesh pointedCircleComponent = pointedCircle.AddComponent<PointedCircleMesh>();
-            pointedCircleComponent.Build(radius, sides, shift, meshMatt);
+            pointedCircleComponent.Build(radius, sides, shift, meshMat);
             if (attachRigidbody)
             {
                 pointedCircle.AddComponent<Rigidbody2D>();
@@ -37,9 +37,9 @@ namespace PSG
             return pointedCircleComponent;
         }
 
-        public static PointedCircleMesh AddPointedCircle(Vector3 position, PointedCircleStructure pointedCircleStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static PointedCircleMesh AddPointedCircle(Vector3 position, PointedCircleStructure pointedCircleStructure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddPointedCircle(position, pointedCircleStructure.Radius, pointedCircleStructure.Sides, pointedCircleStructure.Shift, meshMatt, attachRigidbody);
+            return AddPointedCircle(position, pointedCircleStructure.Radius, pointedCircleStructure.Sides, pointedCircleStructure.Shift, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -47,19 +47,19 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(float radius, int sides, Vector2 shift, Material meshMatt = null)
+        public void Build(float radius, int sides, Vector2 shift, Material meshMat = null)
         {
             name = "PointedCircle";
             Radius = radius;
             Sides = sides;
             Shift = shift;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
-        void Build(PointedCircleStructure pointedCircleStructure, Material meshMatt = null)
+        void Build(PointedCircleStructure pointedCircleStructure, Material meshMat = null)
         {
-            Build(pointedCircleStructure.Radius, pointedCircleStructure.Sides, pointedCircleStructure.Shift, meshMatt);
+            Build(pointedCircleStructure.Radius, pointedCircleStructure.Sides, pointedCircleStructure.Shift, meshMat);
         }
 
         #endregion

@@ -23,14 +23,14 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static GearMesh AddGear(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static GearMesh AddGear(Vector3 position, float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMat = null, bool attachRigidbody = true)
         {
-            MeshHelper.SetupMaterial(ref meshMatt);
+            MeshHelper.SetupMaterial(ref meshMat);
             GameObject gear = new GameObject();
             gear.transform.position = position;
 
             GearMesh gearComponent = gear.AddComponent<GearMesh>();
-            gearComponent.Build(innerRadius, rootRadius, outerRadius, sides, meshMatt);
+            gearComponent.Build(innerRadius, rootRadius, outerRadius, sides, meshMat);
             if (attachRigidbody)
             {
                 gear.AddComponent<Rigidbody2D>();
@@ -38,9 +38,9 @@ namespace PSG
             return gearComponent;
         }
 
-        public static GearMesh AddGear(Vector3 position, GearStructure gearStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static GearMesh AddGear(Vector3 position, GearStructure gearStructure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddGear(position, gearStructure.InnerRadius, gearStructure.RootRadius, gearStructure.OuterRadius, gearStructure.Sides, meshMatt, attachRigidbody);
+            return AddGear(position, gearStructure.InnerRadius, gearStructure.RootRadius, gearStructure.OuterRadius, gearStructure.Sides, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -48,9 +48,9 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMatt = null)
+        public void Build(float innerRadius, float rootRadius, float outerRadius, int sides, Material meshMat = null)
         {
-            MeshHelper.SetupMaterial(ref meshMatt);
+            MeshHelper.SetupMaterial(ref meshMat);
             name = "Gear";
             InnerRadius = innerRadius;
             RootRadius = rootRadius;
@@ -60,7 +60,7 @@ namespace PSG
             _Mesh = new Mesh();
             GetOrAddComponents();
 
-            C_MR.material = meshMatt;
+            C_MR.material = meshMat;
 
             if (!Validate || ValidateMesh())
             {
@@ -70,9 +70,9 @@ namespace PSG
             }
         }
 
-        public void Build(GearStructure gearStructure, Material meshMatt = null)
+        public void Build(GearStructure gearStructure, Material meshMat = null)
         {
-            Build(gearStructure.InnerRadius, gearStructure.RootRadius, gearStructure.OuterRadius, gearStructure.Sides, meshMatt);
+            Build(gearStructure.InnerRadius, gearStructure.RootRadius, gearStructure.OuterRadius, gearStructure.Sides, meshMat);
         }
 
         #endregion

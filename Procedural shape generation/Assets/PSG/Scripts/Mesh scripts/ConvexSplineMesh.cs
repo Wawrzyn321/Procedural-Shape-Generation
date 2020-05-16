@@ -23,12 +23,12 @@ namespace PSG
 
         #region Static Building
 
-        public static ConvexSplineMesh AddConvexSpline(Vector3 position, Vector2[] basePoints, float resolution = 0.2f, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
+        public static ConvexSplineMesh AddConvexSpline(Vector3 position, Vector2[] basePoints, float resolution = 0.2f, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject splineShapeMesh = new GameObject();
 
             ConvexSplineMesh convexSplineMeshComponent = splineShapeMesh.AddComponent<ConvexSplineMesh>();
-            convexSplineMeshComponent.Build(basePoints, resolution, meshMatt);
+            convexSplineMeshComponent.Build(basePoints, resolution, meshMat);
             if (attachRigidbody)
             {
                 splineShapeMesh.AddComponent<Rigidbody2D>();
@@ -48,14 +48,14 @@ namespace PSG
 
         #endregion
 
-        public void Build(Vector2[] basePoints, float resolution, Material meshMatt)
+        public void Build(Vector2[] basePoints, float resolution, Material meshMat)
         {
             name = "Convex spline mesh";
             BasePoints = basePoints;
             Resolution = resolution;
             SplinePoints = ConvexHull.QuickHull(basePoints).ToArray(); // oh no
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
         public ConvexSplineStructure GetStructure()

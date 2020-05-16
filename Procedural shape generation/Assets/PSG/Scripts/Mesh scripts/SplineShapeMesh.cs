@@ -21,7 +21,7 @@ namespace PSG
 
         #region Static Building
 
-        public static SplineShapeMesh AddSplineShape(Vector3 position, Vector2[] splinePoints, float resolution = 0.2f, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
+        public static SplineShapeMesh AddSplineShape(Vector3 position, Vector2[] splinePoints, float resolution = 0.2f, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject splineShapeMesh = new GameObject();
 
@@ -41,7 +41,7 @@ namespace PSG
 
 
             SplineShapeMesh splineMeshComponent = splineShapeMesh.AddComponent<SplineShapeMesh>();
-            splineMeshComponent.Build(splinePoints, resolution, meshMatt);
+            splineMeshComponent.Build(splinePoints, resolution, meshMat);
             if (attachRigidbody)
             {
                 splineShapeMesh.AddComponent<Rigidbody2D>();
@@ -51,13 +51,13 @@ namespace PSG
 
         #endregion
 
-        public void Build(Vector2[] splinePoints, float resolution, Material meshMatt)
+        public void Build(Vector2[] splinePoints, float resolution, Material meshMat)
         {
             name = "Spline mesh";
             SplinePoints = splinePoints;
             Resolution = resolution;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
         public SplineShapeStructure GetStructure()

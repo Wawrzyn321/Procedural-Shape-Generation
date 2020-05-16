@@ -22,14 +22,14 @@ namespace PSG
 
         #region Static Methods
 
-        public static ConvexMesh AddConvexMesh(Vector3 position, Vector3[] vertices, Material meshMatt = null, bool attachRigidbody = true)
+        public static ConvexMesh AddConvexMesh(Vector3 position, Vector3[] vertices, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject convex = new GameObject();
 
             convex.transform.position = position;
 
             ConvexMesh convexComponent = convex.AddComponent<ConvexMesh>();
-            convexComponent.Build(vertices, meshMatt);
+            convexComponent.Build(vertices, meshMat);
             if (attachRigidbody)
             {
                 convex.AddComponent<Rigidbody2D>();
@@ -37,20 +37,20 @@ namespace PSG
             return convexComponent;
         }
 
-        public static ConvexMesh AddConvexMesh(Vector3 position, List<Vector3> vertices, Material meshMatt = null, bool attachRigidbody = true)
+        public static ConvexMesh AddConvexMesh(Vector3 position, List<Vector3> vertices, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddConvexMesh(position, vertices.ToArray(), meshMatt, attachRigidbody);
+            return AddConvexMesh(position, vertices.ToArray(), meshMat, attachRigidbody);
         }
 
         #endregion
 
         //assign variables, get components and build mesh
-        public void Build(Vector3[] vertices, Material meshMatt = null)
+        public void Build(Vector3[] vertices, Material meshMat = null)
         {
             name = "Convex Mesh";
             ConvexVertices = vertices;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
         //get points set in constructor

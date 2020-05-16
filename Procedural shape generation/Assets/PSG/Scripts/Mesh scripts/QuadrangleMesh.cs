@@ -19,12 +19,12 @@ namespace PSG
 
         #region Static Build
 
-        public static QuadrangleMesh AddQuadrangle(Vector3 position, IList<Vector2> verts, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
+        public static QuadrangleMesh AddQuadrangle(Vector3 position, IList<Vector2> verts, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject quad = new GameObject();
             quad.transform.position = position + (space == Space.World ? (Vector3)(verts[0] + verts[1] + verts[2] + verts[3]) * 0.25f : Vector3.zero);
             QuadrangleMesh quadComponent = quad.AddComponent<QuadrangleMesh>();
-            quadComponent.Build(verts, meshMatt);
+            quadComponent.Build(verts, meshMat);
             if (attachRigidbody)
             {
                 quad.AddComponent<Rigidbody2D>();
@@ -35,12 +35,12 @@ namespace PSG
         #endregion
 
         //assign variables, get components and build mesh
-        public void Build(IList<Vector2> verts, Material meshMatt = null)
+        public void Build(IList<Vector2> verts, Material meshMat = null)
         {
             name = "Quadrangle";
             Verts = (Vector2[])verts;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
         private static int GetMaxIndex(IList<double> values)

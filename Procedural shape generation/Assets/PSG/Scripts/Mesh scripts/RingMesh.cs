@@ -21,12 +21,12 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static RingMesh AddRing(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static RingMesh AddRing(Vector3 position, float innerRadius, float outerRadius, int sides, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject ring = new GameObject();
             ring.transform.position = position;
             RingMesh ringComponent = ring.AddComponent<RingMesh>();
-            ringComponent.Build(innerRadius, outerRadius, sides, meshMatt);
+            ringComponent.Build(innerRadius, outerRadius, sides, meshMat);
             if (attachRigidbody)
             {
                 ring.AddComponent<Rigidbody2D>();
@@ -34,9 +34,9 @@ namespace PSG
             return ringComponent;
         }
 
-        public static RingMesh AddRing(Vector3 position, RingStructure ringStructure, Material meshMatt = null, bool attachRigidbody = false)
+        public static RingMesh AddRing(Vector3 position, RingStructure ringStructure, Material meshMat = null, bool attachRigidbody = false)
         {
-            return AddRing(position, ringStructure.InnerRadius, ringStructure.OuterRadius, ringStructure.Sides, meshMatt, attachRigidbody);
+            return AddRing(position, ringStructure.InnerRadius, ringStructure.OuterRadius, ringStructure.Sides, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -44,19 +44,19 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(float innerRadius, float outerRadius, int sides, Material meshMatt = null)
+        public void Build(float innerRadius, float outerRadius, int sides, Material meshMat = null)
         {
             name = "Ring";
             InnerRadius = innerRadius;
             OuterRadius = outerRadius;
             Sides = sides;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
-        public void Build(RingStructure ringStructure, Material meshMatt = null)
+        public void Build(RingStructure ringStructure, Material meshMat = null)
         {
-            Build(ringStructure.InnerRadius, ringStructure.OuterRadius, ringStructure.Sides, meshMatt);
+            Build(ringStructure.InnerRadius, ringStructure.OuterRadius, ringStructure.Sides, meshMat);
         }
 
         #endregion

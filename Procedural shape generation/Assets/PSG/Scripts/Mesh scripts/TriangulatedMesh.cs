@@ -22,7 +22,7 @@ namespace PSG
 
         #region Static Building
 
-        public static TriangulatedMesh Add(Vector3 position, Vector2[] points, List<Triangulation.IntTriple> connections, Material meshMatt = null, bool attachRigidbody = true)
+        public static TriangulatedMesh Add(Vector3 position, Vector2[] points, List<Triangulation.IntTriple> connections, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject triangulatedMesh = new GameObject();
             Vector2 center = new Vector2();
@@ -33,7 +33,7 @@ namespace PSG
             triangulatedMesh.transform.position = center / points.Length;
 
             TriangulatedMesh triComponent = triangulatedMesh.AddComponent<TriangulatedMesh>();
-            triComponent.Build(points, connections, meshMatt);
+            triComponent.Build(points, connections, meshMat);
             if (attachRigidbody)
             {
                 triangulatedMesh.AddComponent<Rigidbody2D>();
@@ -41,26 +41,26 @@ namespace PSG
             return triComponent;
         }
 
-        public static TriangulatedMesh Add(Vector3 position, Vector2[] points, Material meshMatt = null, bool attachRigidbody = true)
+        public static TriangulatedMesh Add(Vector3 position, Vector2[] points, Material meshMat = null, bool attachRigidbody = true)
         {
             List<Triangulation.IntTriple> connections = Triangulation.TriangulationToInt3(new List<Vector2>(points));
-            return Add(position, points, connections, meshMatt, attachRigidbody);
+            return Add(position, points, connections, meshMat, attachRigidbody);
         }
 
-        public static TriangulatedMesh Add(Vector3 position, TriangulatedMeshStructure structure, Material meshMatt = null, bool attachRigidbody = true)
+        public static TriangulatedMesh Add(Vector3 position, TriangulatedMeshStructure structure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return Add(position, structure.Points, structure.Connections, meshMatt, attachRigidbody);
+            return Add(position, structure.Points, structure.Connections, meshMat, attachRigidbody);
         }
 
         #endregion
 
-        public void Build(Vector2[] points, List<Triangulation.IntTriple> connections, Material meshMatt)
+        public void Build(Vector2[] points, List<Triangulation.IntTriple> connections, Material meshMat)
         {
             name = "Triangulated mesh";
             Points = points;
             Connections = connections;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
         public static List<Vector2> Smooth(List<Vector2> sourcePoints, float smoothness)

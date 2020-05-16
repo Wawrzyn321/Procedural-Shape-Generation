@@ -21,13 +21,13 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static StarMesh AddStar(Vector3 position, float radiusA, float radiusB, int sides, Material meshMatt = null, bool attachRigidbody = true)
+        public static StarMesh AddStar(Vector3 position, float radiusA, float radiusB, int sides, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject star = new GameObject();
             star.transform.position = position;
 
             StarMesh starComponent = star.AddComponent<StarMesh>();
-            starComponent.Build(radiusA, radiusB, sides, meshMatt);
+            starComponent.Build(radiusA, radiusB, sides, meshMat);
             if (attachRigidbody)
             {
                 star.AddComponent<Rigidbody2D>();
@@ -35,9 +35,9 @@ namespace PSG
             return starComponent;
         }
 
-        public static StarMesh AddStar(Vector3 position, StarStructure starStructure, Material meshMatt = null, bool attachRigidbody = true)
+        public static StarMesh AddStar(Vector3 position, StarStructure starStructure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddStar(position, starStructure.RadiusA, starStructure.RadiusB, starStructure.Sides, meshMatt, attachRigidbody);
+            return AddStar(position, starStructure.RadiusA, starStructure.RadiusB, starStructure.Sides, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -45,7 +45,7 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(float radiusA, float radiusB, int sides, Material meshMatt = null)
+        public void Build(float radiusA, float radiusB, int sides, Material meshMat = null)
         {
             name = "Star";
 
@@ -56,7 +56,7 @@ namespace PSG
             
             GetOrAddComponents();
 
-            C_MR.material = meshMatt;
+            C_MR.material = meshMat;
 
             if (!Validate || ValidateMesh())
             {
@@ -66,9 +66,9 @@ namespace PSG
             }
         }
 
-        public void Build(StarStructure starStructure, Material meshMatt = null)
+        public void Build(StarStructure starStructure, Material meshMat = null)
         {
-            Build(starStructure.RadiusA, starStructure.RadiusB, starStructure.Sides, meshMatt);
+            Build(starStructure.RadiusA, starStructure.RadiusB, starStructure.Sides, meshMat);
         }
 
         #endregion

@@ -60,15 +60,15 @@ namespace PSG
            BuildMesh(ref m);
         }
 
-        public void BuildMesh(ref Material meshMatt)
+        public void BuildMesh(ref Material meshMat)
         {
             if (!Validate || ValidateMesh())
             {
-                MeshHelper.SetupMaterial(ref meshMatt);
+                MeshHelper.SetupMaterial(ref meshMat);
 
                 _Mesh = new Mesh();
                 GetOrAddComponents();
-                C_MR.material = meshMatt;
+                C_MR.material = meshMat;
 
                 BuildMeshComponents();
                 UpdateMeshFilter();

@@ -25,18 +25,18 @@ namespace PSG
 
         #region Static Methods
 
-        public static TriangleMesh AddTriangle(Vector3 position, Vector2[] points, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
+        public static TriangleMesh AddTriangle(Vector3 position, Vector2[] points, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
         {
             Debug.Assert(points.Length == 3, "TriangleMesh::AddTriangle: supplied triangle array length must be equal to 3!");
-            return AddTriangle(position, points[0], points[1], points[2], space, meshMatt, attachRigidbody);
+            return AddTriangle(position, points[0], points[1], points[2], space, meshMat, attachRigidbody);
         }
 
-        public static TriangleMesh AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMatt = null, bool attachRigidbody = true)
+        public static TriangleMesh AddTriangle(Vector3 position, Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject triangle = new GameObject();
             triangle.transform.position = position + (space == Space.World ? (Vector3)(p1 + p2 + p3) / 3f : Vector3.zero);
             TriangleMesh triangleComponent = triangle.AddComponent<TriangleMesh>();
-            triangleComponent.Build(p1, p2, p3, space, meshMatt);
+            triangleComponent.Build(p1, p2, p3, space, meshMat);
             if (attachRigidbody)
             {
                 triangle.AddComponent<Rigidbody2D>();
@@ -47,7 +47,7 @@ namespace PSG
         #endregion
 
         //assign variables, get components and build mesh
-        public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMatt = null)
+        public void Build(Vector2 p1, Vector2 p2, Vector2 p3, Space space = Space.World, Material meshMat = null)
         {
             name = "Triangle";
             Vector2 center = (p1 + p2 + p3) / 3f;
@@ -55,11 +55,11 @@ namespace PSG
             P2 = p2 - center;
             P3 = p3 - center;
 
-            BuildMesh(ref meshMatt);
+            BuildMesh(ref meshMat);
         }
 
         //assign variables, get components and build mesh
-        public void Build(IList<Vector2> vertices, Material meshMatt = null)
+        public void Build(IList<Vector2> vertices, Material meshMat = null)
         {
             Vector2 center = (vertices[0] + vertices[1] + vertices[2]) / 3f;
             P1 = vertices[0] - center;
