@@ -348,10 +348,10 @@ MonoBehaviour:
   circleControlPoint: {x: 0.72, y: 0.72}
   circleSides: 24
   circleUseCircleCollider: 0
-  quadrangleVertex1: {x: -2, y: 2, z: 0}
-  quadrangleVertex2: {x: 3, y: 1, z: 0}
-  quadrangleVertex3: {x: 4, y: 0, z: 0}
-  quadrangleVertex4: {x: -1, y: -2, z: 0}
+  quadrangleVertex1: {x: -2, y: 2}
+  quadrangleVertex2: {x: 3, y: 1}
+  quadrangleVertex3: {x: 4, y: 0}
+  quadrangleVertex4: {x: -1, y: -2}
   ellipseHorizontalRadius: 1.2
   ellipseVerticalRadius: 1
   ellipseControlPoint: {x: 1.2, y: 1}
@@ -391,7 +391,6 @@ MonoBehaviour:
   - {x: 2, y: -1}
   - {x: 3, y: 1}
   - {x: 2, y: 2}
-  splineResolution: 0.2
   splinePoints:
   - {x: -3, y: -3}
   - {x: 1, y: -3}
@@ -403,7 +402,6 @@ MonoBehaviour:
   - {x: 1, y: -1}
   - {x: 3, y: 1}
   - {x: 2, y: 2}
-  splineCurveResolution: 0.2
   splineCurveWidth: 0.2
   splineCurveUseDoubleCollider: 1
   convexSplinePoints:
@@ -412,7 +410,10 @@ MonoBehaviour:
   - {x: 1, y: -1}
   - {x: 3, y: 1}
   - {x: 2, y: 2}
-  convexSplineResolution: 0.2
+  splineResolution: 0.2
+  splineSimplification: 0
+  minRelativeSplineArea: 0
+  minAbsoluteSplineArea: 0
   material: {fileID: 0}
   attachRigidbody: 0
   setRandomColor: 0

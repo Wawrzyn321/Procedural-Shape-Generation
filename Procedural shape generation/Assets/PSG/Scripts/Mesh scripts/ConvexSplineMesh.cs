@@ -15,6 +15,8 @@ namespace PSG
         public Vector2[] BasePoints { get; protected set; }
         public Vector2[] SplinePoints { get; protected set; }
         public float Resolution { get; protected set; }
+        // used for simplification
+        public float? MinArea { get; protected set; }
 
         //collider
         public PolygonCollider2D C_PC2D { get; protected set; }
@@ -23,12 +25,12 @@ namespace PSG
 
         #region Static Building
 
-        public static ConvexSplineMesh AddConvexSpline(Vector3 position, Vector2[] basePoints, float resolution = 0.2f, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
+        public static ConvexSplineMesh AddConvexSpline(Vector3 position, Vector2[] basePoints, float resolution = 0.2f, float? minArea = null, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject splineShapeMesh = new GameObject();
 
             ConvexSplineMesh convexSplineMeshComponent = splineShapeMesh.AddComponent<ConvexSplineMesh>();
-            convexSplineMeshComponent.Build(basePoints, resolution, meshMat);
+            convexSplineMeshComponent.Build(basePoints, resolution, minArea, meshMat);
             if (attachRigidbody)
             {
                 splineShapeMesh.AddComponent<Rigidbody2D>();
@@ -46,16 +48,27 @@ namespace PSG
             return convexSplineMeshComponent;
         }
 
+        public static ConvexSplineMesh AddConvexSpline(Vector3 position, Vector2[] basePoints, float resolution = 0.2f, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
+        {
+            return AddConvexSpline(position, basePoints, resolution, null, space, meshMat, attachRigidbody);
+        }
+
         #endregion
 
-        public void Build(Vector2[] basePoints, float resolution, Material meshMat)
+        public void Build(Vector2[] basePoints, float resolution, float? minArea, Material meshMat)
         {
             name = "Convex spline mesh";
             BasePoints = basePoints;
             Resolution = resolution;
-            SplinePoints = ConvexHull.QuickHull(basePoints).ToArray(); // oh no
+            MinArea = minArea;
+            SplinePoints = ConvexHull.QuickHull(basePoints).ToArray();
 
             BuildMesh(ref meshMat);
+        }
+
+        public void Build(Vector2[] basePoints, float resolution, Material meshMat)
+        {
+            Build(basePoints, resolution, null, meshMat);
         }
 
         public ConvexSplineStructure GetStructure()
@@ -81,14 +94,14 @@ namespace PSG
 
         protected override void BuildMeshComponents()
         {
-            Vertices = MeshHelper.ConvertVec2ToVec3(CatmullRomSpline.GetPoints(SplinePoints, Resolution).ToArray());
-
-            CenterShift = new Vector3();
-            for (int i = 0; i < Vertices.Length; i++)
+            var points = CatmullRomSpline.GetPoints(MeshHelper.ConvertVec2ToVec3(SplinePoints), Resolution);
+            if (MinArea.HasValue)
             {
-                CenterShift += Vertices[i];
+                points = SplineSimplification.Simplify(points, MinArea.Value, true, false);
             }
-            CenterShift /= Vertices.Length;
+            Vertices = points.ToArray();
+
+            CenterShift = MeshHelper.GetCenter(Vertices);
             for (int i = 0; i < Vertices.Length; i++)
             {
                 Vertices[i] -= CenterShift;
@@ -139,6 +152,7 @@ namespace PSG
     {
         public Vector2[] SplinePoints;
         public float Resolution;
+        public float? MinArea;
     }
 
     [System.Serializable]
@@ -146,6 +160,7 @@ namespace PSG
     {
         public Vector2[] SplinePoints;
         public float Resolution;
+        public float? MinArea;
         public Vector3[] Vertices;
     }
 }

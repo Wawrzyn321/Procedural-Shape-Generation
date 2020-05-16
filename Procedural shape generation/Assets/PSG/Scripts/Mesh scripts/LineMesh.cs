@@ -53,12 +53,7 @@ namespace PSG
             }
             else
             {
-                Vector2 center = new Vector2();
-                for (int i = 0; i < lineVerts.Length; i++)
-                {
-                    center += lineVerts[i];
-                }
-                line.transform.position = position + (Vector3)center / lineVerts.Length;
+                line.transform.position = position + (Vector3)MeshHelper.GetCenter(lineVerts);
             }
 
             LineMesh lineComponent = line.AddComponent<LineMesh>();
@@ -150,12 +145,7 @@ namespace PSG
             List<Vector3> verticesList = new List<Vector3>();
             List<int> trianglesList = new List<int>();
 
-            Vector2 center = new Vector2();
-            for (int i = 0; i < LineVerts.Length; i++)
-            {
-                center += LineVerts[i];
-            }
-            center /= LineVerts.Length;
+            Vector2 center = MeshHelper.GetCenter(LineVerts);
             for (int i = 0; i < LineVerts.Length; i++)
             {
                 LineVerts[i] -= center;

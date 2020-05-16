@@ -20,6 +20,8 @@ namespace PSG
         public float Resolution { get; protected set; }
         public float Width { get; protected set; }
         public bool UseDoubleCollider { get; protected set; }
+        // used for simplification
+        public float? MinArea { get; protected set; }
 
         //colliders
         public PolygonCollider2D C_PC2D { get; protected set; }
@@ -38,7 +40,7 @@ namespace PSG
 
         #region Static Methods - building from values and from structure
 
-        public static SplineCurveMesh AddSplineCurve(Vector3 position, Vector2[] splinePoints, float resolution, float width, bool useDoubleCollider, Space space, Material meshMat = null, bool attachRigidbody = true)
+        public static SplineCurveMesh AddSplineCurve(Vector3 position, Vector2[] splinePoints, float resolution, float width, bool useDoubleCollider, float? minArea, Space space, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject curve = new GameObject();
 
@@ -48,17 +50,12 @@ namespace PSG
             }
             else
             {
-                Vector2 center = new Vector2();
-                for (int i = 0; i < splinePoints.Length; i++)
-                {
-                    center += splinePoints[i];
-                }
-                curve.transform.position = position + (Vector3)center / splinePoints.Length;
+                curve.transform.position = position + (Vector3)MeshHelper.GetCenter(splinePoints);
             }
 
             curve.transform.position = position;
             SplineCurveMesh curveComponent = curve.AddComponent<SplineCurveMesh>();
-            curveComponent.Build(splinePoints, resolution, width, useDoubleCollider, meshMat);
+            curveComponent.Build(splinePoints, resolution, width, useDoubleCollider, minArea, meshMat);
             if (attachRigidbody)
             {
                 curve.AddComponent<Rigidbody2D>();
@@ -66,9 +63,14 @@ namespace PSG
             return curveComponent;
         }
 
+        public static SplineCurveMesh AddSplineCurve(Vector3 position, Vector2[] splinePoints, float resolution, float width, bool useDoubleCollider, Space space, Material meshMat = null, bool attachRigidbody = true)
+        {
+            return AddSplineCurve(position, splinePoints, resolution, width, useDoubleCollider, null, space, meshMat, attachRigidbody);
+        }
+
         public static SplineCurveMesh AddSplineCurve(Vector3 position, RawSplineCurveStructure structure, Material meshMat = null, bool attachRigidbody = true)
         {
-            return AddSplineCurve(position, structure.SplinePoints, structure.Resolution, structure.Width, structure.UseDoubleCollider, Space.Self, meshMat, attachRigidbody);
+            return AddSplineCurve(position, structure.SplinePoints, structure.Resolution, structure.Width, structure.UseDoubleCollider, structure.MinArea, Space.Self, meshMat, attachRigidbody);
         }
 
         #endregion
@@ -76,20 +78,26 @@ namespace PSG
         #region Public Build
 
         //assign variables, get components and build mesh
-        public void Build(Vector2[] splinePoints, float resolution, float width, bool useDoubleCollider, Material meshMat = null)
+        public void Build(Vector2[] splinePoints, float resolution, float width, bool useDoubleCollider, float? minArea, Material meshMat = null)
         {
             name = "Spline curve mesh";
             SplinePoints = splinePoints;
             Resolution = resolution;
             Width = width;
             UseDoubleCollider = useDoubleCollider;
+            MinArea = minArea;
 
             BuildMesh(ref meshMat);
         }
 
+        public void Build(Vector2[] splinePoints, float resolution, float width, bool useDoubleCollider, Material meshMat = null)
+        {
+            Build(splinePoints, resolution, width, useDoubleCollider, null, meshMat);
+        }
+
         public void Build(RawSplineCurveStructure structure, Material meshMat = null)
         {
-            Build(structure.SplinePoints, structure.Resolution, structure.Width, structure.UseDoubleCollider, meshMat);
+            Build(structure.SplinePoints, structure.Resolution, structure.Width, structure.UseDoubleCollider, null, meshMat);
         }
 
         #endregion
@@ -134,6 +142,11 @@ namespace PSG
         protected override void BuildMeshComponents()
         {
             List<Vector2> curvePoints = CatmullRomSpline.GetPoints(SplinePoints, Resolution, false);
+            if (MinArea.HasValue)
+            {
+                curvePoints = SplineSimplification.Simplify(curvePoints, MinArea.Value, true, false);
+            }
+
             int len = curvePoints.Count;
             if (len <= 1) return;
 
@@ -220,6 +233,7 @@ namespace PSG
         public Vector2[] SplinePoints;
         public float Resolution;
         public float Width;
+        public float? MinArea;
         public bool UseDoubleCollider;
     }
 
@@ -229,6 +243,7 @@ namespace PSG
         public Vector2[] SplinePoints;
         public float Resolution;
         public float Width;
+        public float? MinArea;
         public Vector3[] Vertices;
         public bool UseDoubleCollider;
     }

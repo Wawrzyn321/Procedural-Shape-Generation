@@ -191,7 +191,7 @@ public class DemoScene : MonoBehaviour
             new Vector2(8.4f,-1.5f),
         };
 
-        SplineShapeMesh splineShape = SplineShapeMesh.AddSplineShape(Vector3.zero, points);
+        SplineShapeMesh splineShape = SplineShapeMesh.AddSplineShape(Vector3.zero, points, 0.2f, null);
 
         splineShape.GetComponent<MeshRenderer>().material.color = Color.red;
     }
@@ -222,7 +222,7 @@ public class DemoScene : MonoBehaviour
             new Vector2(6.4f,-1.5f),
         };
 
-        ConvexSplineMesh convexSpline = ConvexSplineMesh.AddConvexSpline(Vector3.zero, points);
+        ConvexSplineMesh convexSpline = ConvexSplineMesh.AddConvexSpline(Vector3.zero, points, 0.2f, null);
 
         convexSpline.GetComponent<MeshRenderer>().material.color = Color.red;
     }

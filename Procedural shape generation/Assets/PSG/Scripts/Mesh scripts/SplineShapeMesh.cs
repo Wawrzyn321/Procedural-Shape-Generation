@@ -18,10 +18,12 @@ namespace PSG
         //spline data
         public Vector2[] SplinePoints { get; protected set; }
         public float Resolution { get; protected set; }
+        // used for simplification
+        public float? MinArea { get; protected set; }
 
         #region Static Building
 
-        public static SplineShapeMesh AddSplineShape(Vector3 position, Vector2[] splinePoints, float resolution = 0.2f, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
+        public static SplineShapeMesh AddSplineShape(Vector3 position, Vector2[] splinePoints, float resolution = 0.2f, float? minArea = null, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject splineShapeMesh = new GameObject();
 
@@ -31,17 +33,12 @@ namespace PSG
             }
             else
             {
-                Vector2 center = new Vector2();
-                for (int i = 0; i < splinePoints.Length; i++)
-                {
-                    center += splinePoints[i];
-                }
-                splineShapeMesh.transform.position = position + (Vector3)center / splinePoints.Length;
+                splineShapeMesh.transform.position = position + (Vector3)MeshHelper.GetCenter(splinePoints);
             }
 
 
             SplineShapeMesh splineMeshComponent = splineShapeMesh.AddComponent<SplineShapeMesh>();
-            splineMeshComponent.Build(splinePoints, resolution, meshMat);
+            splineMeshComponent.Build(splinePoints, resolution, minArea, meshMat);
             if (attachRigidbody)
             {
                 splineShapeMesh.AddComponent<Rigidbody2D>();
@@ -49,15 +46,26 @@ namespace PSG
             return splineMeshComponent;
         }
 
+        public static SplineShapeMesh AddSplineShape(Vector3 position, Vector2[] splinePoints, float resolution = 0.2f, Space space = Space.World, Material meshMat = null, bool attachRigidbody = true)
+        {
+            return AddSplineShape(position, splinePoints, resolution, null, space, meshMat, attachRigidbody);
+        }
+
         #endregion
 
-        public void Build(Vector2[] splinePoints, float resolution, Material meshMat)
+        public void Build(Vector2[] splinePoints, float resolution, float? minArea, Material meshMat)
         {
             name = "Spline mesh";
             SplinePoints = splinePoints;
             Resolution = resolution;
+            MinArea = minArea;
 
             BuildMesh(ref meshMat);
+        }
+
+        public void Build(Vector2[] splinePoints, float resolution, Material meshMat)
+        {
+            Build(splinePoints, resolution, null, meshMat);
         }
 
         public SplineShapeStructure GetStructure()
@@ -66,6 +74,7 @@ namespace PSG
             {
                 SplinePoints = SplinePoints,
                 Resolution = Resolution,
+                MinArea = MinArea,
                 Vertices = Vertices
             };
         }
@@ -75,7 +84,8 @@ namespace PSG
             return new RawSplineShapeStructure()
             {
                 SplinePoints = SplinePoints,
-                Resolution = Resolution
+                Resolution = Resolution,
+                MinArea = MinArea,
             };
         }
 
@@ -83,18 +93,18 @@ namespace PSG
 
         protected override void BuildMeshComponents()
         {
-            Vector2 center = new Vector2();
-            for (int i = 0; i < SplinePoints.Length; i++)
-            {
-                center += SplinePoints[i];
-            }
-            center /= SplinePoints.Length;
+            Vector2 center = MeshHelper.GetCenter(SplinePoints);
             for (int i = 0; i < SplinePoints.Length; i++)
             {
                 SplinePoints[i] -= center;
             }
 
-            Vertices = CatmullRomSpline.GetPoints(MeshHelper.ConvertVec2ToVec3(SplinePoints), Resolution).ToArray();
+            var points = CatmullRomSpline.GetPoints(MeshHelper.ConvertVec2ToVec3(SplinePoints), Resolution);
+            if (MinArea.HasValue)
+            {
+                points = SplineSimplification.Simplify(points, MinArea.Value, true, false);
+            }
+            Vertices = points.ToArray();
 
             var connections = Triangulation.TriangulationToInt3(new List<Vector2>(MeshHelper.ConvertVec3ToVec2(Vertices)));
 
@@ -143,6 +153,7 @@ namespace PSG
     {
         public Vector2[] SplinePoints;
         public float Resolution;
+        public float? MinArea;
     }
 
     [System.Serializable]
@@ -150,6 +161,7 @@ namespace PSG
     {
         public Vector2[] SplinePoints;
         public float Resolution;
+        public float? MinArea;
         public Vector3[] Vertices;
     }
 }

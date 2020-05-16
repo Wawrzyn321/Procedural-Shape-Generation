@@ -11,7 +11,7 @@ namespace PSG
     /// </summary>
     public class QuadrangleMesh : MeshBase
     {
-        //mesh data
+        //mesh data - keep untransformed vertices
         public Vector2[] Verts { get; protected set; }
 
         //collider
@@ -71,7 +71,7 @@ namespace PSG
         protected override void BuildMeshComponents()
         {
             Vertices = new Vector3[4];
-            Vector2 center = (Verts[0] + Verts[1] + Verts[2] + Verts[3]) * 0.25f;
+            Vector2 center = MeshHelper.GetCenter(Verts);
             for (int i = 0; i < 4; i++)
             {
                 Vertices[i] = Verts[i] - center;

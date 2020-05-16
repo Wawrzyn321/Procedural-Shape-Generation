@@ -89,7 +89,7 @@ namespace PSG
 
                     for (int i = 0; i < verts.Count; i++)
                         if (i != start && i != middle && i != end)
-                            if (IsPointInTriangle(verts[i], verts[start], verts[middle], verts[end]) && noPointsIn)
+                            if (MeshHelper.IsPointInTriangle(verts[i], verts[start], verts[middle], verts[end]) && noPointsIn)
                             {
                                 //there's a point in triangle
                                 noPointsIn = false;
@@ -156,7 +156,7 @@ namespace PSG
                     for (int i = 0; i < verts.Count; i++)
                     {
                         if (i != start && i != middle && i != end)
-                            if (IsPointInTriangle(verts[i].v, verts[start].v, verts[middle].v, verts[end].v) && noPointsIn)
+                            if (MeshHelper.IsPointInTriangle(verts[i].v, verts[start].v, verts[middle].v, verts[end].v) && noPointsIn)
                             {
                                 //there's a point in triangle
                                 noPointsIn = false;
@@ -217,21 +217,14 @@ namespace PSG
             return true;
         }
 
-
-        public static double GetTriangleArea(Vector2 v1, Vector2 v2, Vector2 v3)
-        {
-            double det = v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y);
-            return System.Math.Abs(det) / 2.0;
-        }
-
-        public static bool IsPointInTriangle(Vector2 v, Vector2 v1, Vector2 v2, Vector2 v3)
-        {
-            double totalArea = GetTriangleArea(v1, v2, v3);
-            double AArea = GetTriangleArea(v1, v, v3);
-            double BArea = GetTriangleArea(v, v2, v3);
-            double CArea = GetTriangleArea(v1, v2, v);
-            return totalArea == AArea + BArea + CArea;
-        }
+        //public static bool IsPointInTriangle(Vector2 v, Vector2 v1, Vector2 v2, Vector2 v3)
+        //{
+        //    double totalArea = GetTriangleArea(v1, v2, v3);
+        //    double AArea = GetTriangleArea(v1, v, v3);
+        //    double BArea = GetTriangleArea(v, v2, v3);
+        //    double CArea = GetTriangleArea(v1, v2, v);
+        //    return totalArea == AArea + BArea + CArea;
+        //}
 
         public static bool IsPointConvex(Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4, bool isCW)
         {

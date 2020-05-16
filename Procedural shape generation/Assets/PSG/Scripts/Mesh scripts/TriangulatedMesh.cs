@@ -25,12 +25,7 @@ namespace PSG
         public static TriangulatedMesh Add(Vector3 position, Vector2[] points, List<Triangulation.IntTriple> connections, Material meshMat = null, bool attachRigidbody = true)
         {
             GameObject triangulatedMesh = new GameObject();
-            Vector2 center = new Vector2();
-            for (int i = 0; i < points.Length; i++)
-            {
-                center += points[i];
-            }
-            triangulatedMesh.transform.position = center / points.Length;
+            triangulatedMesh.transform.position = MeshHelper.GetCenter(points);
 
             TriangulatedMesh triComponent = triangulatedMesh.AddComponent<TriangulatedMesh>();
             triComponent.Build(points, connections, meshMat);
@@ -103,12 +98,7 @@ namespace PSG
 
         protected override void BuildMeshComponents()
         {
-            Vector2 center = new Vector2();
-            for (int i = 0; i < Points.Length; i++)
-            {
-                center += Points[i];
-            }
-            center /= Points.Length;
+            Vector2 center = MeshHelper.GetCenter(Vertices);
             Vertices = new Vector3[Points.Length];
             for (int i = 0; i < Vertices.Length; i++)
             {

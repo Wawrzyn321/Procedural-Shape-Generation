@@ -38,6 +38,43 @@ namespace PSG
 
         #region Math
 
+        public static Vector2 GetCenter(this Vector2[] vec)
+        {
+            if (vec == null)
+            {
+                throw new System.ArgumentException("Vector2::GetCenter: vec cannot be null.");
+            }
+
+            var center = Vector2.zero;
+            for (int i = 0; i < vec.Length; i++)
+            {
+                center += vec[i];
+            }
+            return center / vec.Length;
+        }
+
+        public static Vector3 GetCenter(this Vector3[] vec)
+        {
+            if (vec == null)
+            {
+                throw new System.ArgumentException("Vector3::GetCenter: vec cannot be null.");
+            }
+
+            var center = Vector3.zero;
+            for (int i = 0; i < vec.Length; i++)
+            {
+                center += vec[i];
+            }
+            return center / vec.Length;
+        }
+
+
+        public static double GetTriangleArea(Vector2 v1, Vector2 v2, Vector2 v3)
+        {
+            double det = v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y);
+            return System.Math.Abs(det) / 2.0;
+        }
+
         public static double AngleBetweenPoints(Vector2 first, Vector2 center, Vector2 last)
         {
             double centerFirstDistance = Vector2.Distance(center, first);
@@ -139,8 +176,13 @@ namespace PSG
 
         #region UV Unwrapping
 
+        public static Vector4 GetBounds(IList<Vector2> vec)
+        {
+            return GetBounds(ConvertVec2ToVec3(vec));
+        }
+
         //get bounding box of supplied points
-        private static Vector4 GetBounds(IList<Vector3> vec)
+        public static Vector4 GetBounds(IList<Vector3> vec)
         {
             /* x - minX
              * y - minY

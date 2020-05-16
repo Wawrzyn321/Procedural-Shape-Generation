@@ -1,26 +1,26 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using PSG;
-using UnityEditorInternal;
+using System.Collections.Generic;
 
 [CustomEditor(typeof(MeshCreator), true)]
 public class MeshCreatorEditor : Editor
 {
-    private ReorderableList lineReorderableList;
-    private ReorderableList convexReorderableList;
-    private ReorderableList triangulatedReorderableList;
-    private ReorderableList splineShapeReorderableList;
-    private ReorderableList splineCurveReorderableList;
-    private ReorderableList convexSplineReorderableList;
+    private Vector2ListWrapper linePointsList;
+    private Vector2ListWrapper convexPointList;
+    private Vector2ListWrapper triangulatedPointList;
+    private Vector2ListWrapper splineShapePointList;
+    private Vector2ListWrapper splineCurvePointList;
+    private Vector2ListWrapper convexSplinePointList;
 
     private void OnEnable()
     {
-        lineReorderableList = CreateVector2List("linePoints", "Line Points");
-        convexReorderableList = CreateVector2List("convexPoints", "Convex Shape Points");
-        triangulatedReorderableList = CreateVector2List("triangulatedPoints", "Triangulated Mesh Points");
-        splineShapeReorderableList = CreateVector2List("splinePoints", "Spline Shape Points");
-        splineCurveReorderableList = CreateVector2List("splineCurvePoints", "Spline Curve Points");
-        convexSplineReorderableList = CreateVector2List("convexSplinePoints", "Convex Spline Points");
+        linePointsList = new Vector2ListWrapper(serializedObject, "linePoints", "Line Points");
+        convexPointList = new Vector2ListWrapper(serializedObject, "convexPoints", "Convex Shape Points");
+        triangulatedPointList = new Vector2ListWrapper(serializedObject, "triangulatedPoints", "Triangulated Mesh Points");
+        splineShapePointList = new Vector2ListWrapper(serializedObject, "splinePoints", "Spline Shape Points");
+        splineCurvePointList = new Vector2ListWrapper(serializedObject, "splineCurvePoints", "Spline Curve Points");
+        convexSplinePointList = new Vector2ListWrapper(serializedObject, "convexSplinePoints", "Convex Spline Points");
     }
 
     //standard override
@@ -157,6 +157,47 @@ public class MeshCreatorEditor : Editor
         return vector.normalized * length;
     }
 
+    private void DrawSplineInspector(MeshCreator meshCreator, List<Vector2> points, bool isClosed)
+    {
+        meshCreator.splineResolution = EditorGUILayout.Slider("Resolution", meshCreator.splineResolution, CatmullRomSpline.MIN_RESOLUTION, 0.25f);
+        meshCreator.splineSimplification = (SplineSimplification.Type)EditorGUILayout.EnumPopup("Simplify spline", meshCreator.splineSimplification);
+        if (meshCreator.splineSimplification == SplineSimplification.Type.None) return;
+
+        float area = CatmullRomSpline.BoundingBoxArea(points);
+        if (meshCreator.splineSimplification == SplineSimplification.Type.ByRelativeBoundingBoxArea)
+        {
+            meshCreator.minRelativeSplineArea = EditorGUILayout.Slider("Minimal shape area percentage", meshCreator.minRelativeSplineArea, 0, 1, null);
+            meshCreator.minAbsoluteSplineArea = meshCreator.minRelativeSplineArea * area;
+            EditorGUI.BeginDisabledGroup(true);
+            meshCreator.minAbsoluteSplineArea = EditorGUILayout.Slider("Minimal absolute area", meshCreator.minAbsoluteSplineArea, 0, area, null);
+            EditorGUI.EndDisabledGroup();
+        }
+        else
+        {
+            meshCreator.minAbsoluteSplineArea = EditorGUILayout.Slider("Minimal absolute area", meshCreator.minAbsoluteSplineArea, 0, area, null);
+            meshCreator.minRelativeSplineArea = Mathf.Clamp01(meshCreator.minAbsoluteSplineArea / area);
+            EditorGUI.BeginDisabledGroup(true);
+            meshCreator.minRelativeSplineArea = EditorGUILayout.Slider("Minimal shape area percentage", meshCreator.minRelativeSplineArea, 0, 1, null);
+            EditorGUI.EndDisabledGroup();
+        }
+        var simplifiedPoints = GetSimplifiedSplinePoints(meshCreator, points, isClosed);
+        if (points.Count != simplifiedPoints.Count)
+        {
+            EditorGUILayout.HelpBox("Point count: " + simplifiedPoints.Count + "/" + points.Count, MessageType.Info);
+        }
+    }
+
+    private List<Vector2> GetSimplifiedSplinePoints(MeshCreator meshCreator, List<Vector2> points, bool isClosed)
+    {
+        if (meshCreator.splineSimplification == SplineSimplification.Type.None)
+        {
+            return points;
+        }
+        else
+        {
+            return SplineSimplification.Simplify(points, meshCreator.minAbsoluteSplineArea, isClosed);
+        }
+    }
     private void DrawMeshTypeInspector(MeshCreator meshCreator)
     {
         meshCreator.meshType = (MeshCreator.MeshType)EditorGUILayout.EnumPopup("Type", meshCreator.meshType);
@@ -199,7 +240,7 @@ public class MeshCreatorEditor : Editor
                 meshCreator.cakeSidesToFill = EditorGUILayout.IntSlider("Sides to fill", meshCreator.cakeSidesToFill, 1, meshCreator.cakeSides);
                 break;
             case MeshCreator.MeshType.Convex:
-                DrawReorderableList(convexReorderableList);
+                convexPointList.Draw();
                 break;
             case MeshCreator.MeshType.Star:
                 meshCreator.starRadiusA = EditorGUILayout.Slider("Radius A", meshCreator.starRadiusA, 0.0001f, 16, null);
@@ -215,26 +256,28 @@ public class MeshCreatorEditor : Editor
             case MeshCreator.MeshType.Line:
                 meshCreator.lineWidth = EditorGUILayout.Slider("Line width", meshCreator.lineWidth, 0.0001f, 1f, null);
                 meshCreator.lineUseDoubleCollider = EditorGUILayout.Toggle("Use double collider", meshCreator.lineUseDoubleCollider, emptyLayout);
-                DrawReorderableList(lineReorderableList);
+                linePointsList.Draw();
                 break;
             case MeshCreator.MeshType.TriangulatedMesh:
-                DrawReorderableList(triangulatedReorderableList);
+                triangulatedPointList.Draw();
                 break;
             case MeshCreator.MeshType.SplineShape:
-                meshCreator.splineResolution = EditorGUILayout.Slider("Spline resolution", meshCreator.splineResolution,
-                    0.05f, 0.5f);
-                DrawReorderableList(splineShapeReorderableList);
+                splineShapePointList.Draw();
+                var points = CatmullRomSpline.GetPoints(meshCreator.splinePoints.ToArray(), meshCreator.splineResolution);
+                DrawSplineInspector(meshCreator, points, true);
                 break;
             case MeshCreator.MeshType.SplineCurve:
-                DrawReorderableList(splineCurveReorderableList);
-                meshCreator.splineCurveResolution = EditorGUILayout.Slider("Resolution", meshCreator.splineCurveResolution, 0.01f, 0.25f);
+                splineCurvePointList.Draw();
                 meshCreator.splineCurveWidth = EditorGUILayout.Slider("Width", meshCreator.splineCurveWidth, 0.0001f, 5f);
                 meshCreator.splineCurveUseDoubleCollider = EditorGUILayout.Toggle("Use double collider",
                     meshCreator.splineCurveUseDoubleCollider);
+                DrawSplineInspector(meshCreator, CatmullRomSpline.GetPoints(meshCreator.splineCurvePoints, meshCreator.splineResolution, false), false);
                 break;
             case MeshCreator.MeshType.SplineConvexShape:
-                DrawReorderableList(convexSplineReorderableList);
-                meshCreator.convexSplineResolution = EditorGUILayout.Slider("Resolution", meshCreator.convexSplineResolution, 0.01f, 0.25f);
+                convexSplinePointList.Draw();
+                List<Vector2> splineConvexPoints = ConvexHull.QuickHull(meshCreator.convexSplinePoints);
+                splineConvexPoints = CatmullRomSpline.GetPoints(splineConvexPoints, meshCreator.splineResolution, true);
+                DrawSplineInspector(meshCreator, splineConvexPoints, true);
                 break;
             default:
                 throw new System.ArgumentOutOfRangeException();
@@ -268,6 +311,10 @@ public class MeshCreatorEditor : Editor
 
     private MeshBase GetChoosenMesh(MeshCreator meshCreator)
     {
+        float? minArea = meshCreator.splineSimplification != SplineSimplification.Type.None
+            ? meshCreator.minAbsoluteSplineArea
+            : (float?)null;
+
         switch (meshCreator.meshType)
         {
             case MeshCreator.MeshType.Triangle:
@@ -315,51 +362,17 @@ public class MeshCreatorEditor : Editor
                     meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.SplineShape:
                 return SplineShapeMesh.AddSplineShape(meshCreator.transform.position, meshCreator.splinePoints.ToArray(), meshCreator.splineResolution,
-                   Space.World, meshCreator.material, meshCreator.attachRigidbody);
+                   minArea, Space.World, meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.SplineCurve:
                 return SplineCurveMesh.AddSplineCurve(meshCreator.transform.position, meshCreator.splineCurvePoints.ToArray(),
-                    meshCreator.splineCurveResolution, meshCreator.splineCurveWidth, meshCreator.splineCurveUseDoubleCollider, Space.World,
-                    meshCreator.material, meshCreator.attachRigidbody);
+                    meshCreator.splineResolution, meshCreator.splineCurveWidth, meshCreator.splineCurveUseDoubleCollider, minArea,
+                    Space.World, meshCreator.material, meshCreator.attachRigidbody);
             case MeshCreator.MeshType.SplineConvexShape:
                 return ConvexSplineMesh.AddConvexSpline(meshCreator.transform.position, meshCreator.convexSplinePoints.ToArray(),
-                    meshCreator.convexSplineResolution, Space.World, meshCreator.material, meshCreator.attachRigidbody);
+                    meshCreator.splineResolution, minArea, Space.World, meshCreator.material, meshCreator.attachRigidbody);
             default:
                 throw new System.ArgumentOutOfRangeException();
         }
-    }
-
-    #endregion
-
-    #region Reorderable List Methods
-
-    private void DrawReorderableList(ReorderableList reorderableList)
-    {
-        serializedObject.Update();
-        reorderableList.DoLayoutList();
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    private ReorderableList CreateVector2List(string propertyName, string title)
-    {
-        ReorderableList reorderableList = new ReorderableList(serializedObject,
-            serializedObject.FindProperty(propertyName), true, true, true, true);
-
-        reorderableList.drawElementCallback = (rect, index, isActive, isFocused) =>
-        {
-            var element = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
-            rect.y += 2;
-            EditorGUI.PropertyField(
-                new Rect(rect.x, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight),
-                element.FindPropertyRelative("x"), GUIContent.none);
-            EditorGUI.PropertyField(
-                new Rect(rect.x + rect.width / 2, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight),
-                element.FindPropertyRelative("y"), GUIContent.none);
-        };
-        reorderableList.drawHeaderCallback = (Rect rect) =>
-        {
-            EditorGUI.LabelField(new Rect(rect.width / 2 - 15, rect.y, rect.width, rect.height), title);
-        };
-        return reorderableList;
     }
 
     #endregion

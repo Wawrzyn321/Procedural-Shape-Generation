@@ -1,12 +1,14 @@
 ﻿using PSG;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// In-editor helper for visual creation of meshes.
 /// 
-/// Most of fields here are public-but-hidden to easily
-/// expose them both to Inspector and MeshCreatorInspector
+/// Most of fields here are public-but-hidden to expose
+/// them to MeshCreatorInspector
+/// todo use properties with C# 6 initial values?
 /// script.
 /// </summary>
 public class MeshCreator : MonoBehaviour
@@ -139,8 +141,6 @@ public class MeshCreator : MonoBehaviour
 
     #region Spline Shape
     [HideInInspector]
-    public float splineResolution = 0.2f;
-    [HideInInspector]
     public List<Vector2> splinePoints = new List<Vector2> {
         new Vector2(-3,-3), new Vector2(1,-3),
         new Vector2(0,0), new Vector2(-2,2)
@@ -155,8 +155,6 @@ public class MeshCreator : MonoBehaviour
         new Vector2(2, 2)
     };
     [HideInInspector]
-    public float splineCurveResolution = 0.2f;
-    [HideInInspector]
     public float splineCurveWidth = 0.2f;
     [HideInInspector]
     public bool splineCurveUseDoubleCollider = true;
@@ -169,8 +167,17 @@ public class MeshCreator : MonoBehaviour
         new Vector2(1, -1), new Vector2(3, 1),
         new Vector2(2, 2)
     };
+    #endregion
+
+    #region Spline Common
     [HideInInspector]
-    public float convexSplineResolution = 0.2f;
+    public float splineResolution = 0.2f;
+    [HideInInspector]
+    public SplineSimplification.Type splineSimplification = SplineSimplification.Type.None;
+    [HideInInspector]
+    public float minRelativeSplineArea = 0;
+    [HideInInspector]
+    public float minAbsoluteSplineArea = 0;
     #endregion
 
     //common properties
@@ -269,7 +276,7 @@ public class MeshCreator : MonoBehaviour
                 break;
             case MeshType.Convex:
                 if (convexPoints != null && convexPoints.Count < 2) return;
-                var convexOutline = GetConvexPoints();
+                var convexOutline = ConvexHull.QuickHull(convexPoints);
                 for (int i = 0; i < convexOutline.Count; i++)
                 {
                     Gizmos.DrawLine(p2 + convexOutline[i], p2 + convexOutline[(i + 1) % convexOutline.Count]);
@@ -337,15 +344,16 @@ public class MeshCreator : MonoBehaviour
                 }
                 break;
             case MeshType.SplineShape:
-                points = CatmullRomSpline.GetPoints(splinePoints.ToArray(), splineResolution).ToArray();
-                for (int i = 0; i < points.Length; i++)
+                List<Vector2> shapePoints = CatmullRomSpline.GetPoints(splinePoints.ToArray(), splineResolution);
+                shapePoints = SimplifySplinePoints(shapePoints, true);
+                for (int i = 0; i < shapePoints.Count; i++)
                 {
-                    Gizmos.DrawLine(p2 + points[i], p2 + points[(i + 1) % points.Length]);
+                    Gizmos.DrawLine(p2 + shapePoints[i], p2 + shapePoints[(i + 1) % shapePoints.Count]);
                 }
                 break;
-
             case MeshType.SplineCurve:
-                List<Vector2> curvePoints = CatmullRomSpline.GetPoints(splineCurvePoints, splineCurveResolution, false);
+                List<Vector2> curvePoints = CatmullRomSpline.GetPoints(splineCurvePoints, splineResolution, false);
+                curvePoints = SimplifySplinePoints(curvePoints, false);
                 int len = curvePoints.Count;
                 if (len <= 1) return;
 
@@ -394,11 +402,12 @@ public class MeshCreator : MonoBehaviour
                 }
                 break;
             case MeshType.SplineConvexShape:
-                List<Vector2> splineConvexP = ConvexHull.QuickHull(convexSplinePoints);
-                splineConvexP = CatmullRomSpline.GetPoints(splineConvexP, convexSplineResolution);
-                for (int i = 0; i < splineConvexP.Count; i++)
+                List<Vector2> splineConvexPoints = ConvexHull.QuickHull(convexSplinePoints);
+                splineConvexPoints = CatmullRomSpline.GetPoints(splineConvexPoints, splineResolution);
+                splineConvexPoints = SimplifySplinePoints(splineConvexPoints, true);
+                for (int i = 0; i < splineConvexPoints.Count; i++)
                 {
-                    Gizmos.DrawLine(p2 + splineConvexP[i], p2 + splineConvexP[(i + 1) % splineConvexP.Count]);
+                    Gizmos.DrawLine(p2 + splineConvexPoints[i], p2 + splineConvexPoints[(i + 1) % splineConvexPoints.Count]);
                 }
                 break;
             default:
@@ -406,9 +415,16 @@ public class MeshCreator : MonoBehaviour
         }
     }
 
-    private List<Vector2> GetConvexPoints()
+    private List<Vector2> SimplifySplinePoints(List<Vector2> points, bool isClosed)
     {
-        return ConvexHull.QuickHull(convexPoints);
+        if (splineSimplification == SplineSimplification.Type.None)
+        {
+            return points;
+        }
+        else
+        {
+            return SplineSimplification.Simplify(points, minAbsoluteSplineArea, isClosed);
+        }
     }
 
     private Vector2[] GetLinePoints()
