@@ -14,11 +14,8 @@ namespace PSG
 
         public static List<Vector2> Simplify(List<Vector2> points, float minArea, bool isClosed, bool useCopy = true)
         {
-            return new List<Vector2>(MeshHelper.ConvertVec3ToVec2(Simplify(new List<Vector3>(MeshHelper.ConvertVec2ToVec3(points)), minArea, true, true)));
-
             const int minPointsCount = 10;
             var pts = useCopy ? new List<Vector2>(points) : points;
-            Debug.Log("2 " + pts.Count + " "+ minArea);
             var bp = false;
 
             if (isClosed)
@@ -81,7 +78,6 @@ namespace PSG
 
                 } while (prevPointCount != pts.Count);
             }
-            Debug.Log("2 " + pts.Count);
             return pts;
         }
 
@@ -90,8 +86,6 @@ namespace PSG
             const int minPointsCount = 10;
 
             var pts = useCopy ? new List<Vector3>(points) : points;
-            //Debug.Log("3 " + pts.Count + " " + minArea);
-            var bp = false;
             if (isClosed)
             {
                 int prevPointCount;
@@ -108,11 +102,6 @@ namespace PSG
                         var area = MeshHelper.GetTriangleArea(p1, p2, p3);
                         if (area < minArea)
                         {
-                            if (!bp)
-                            {
-                                //Debug.Log((index + 1) % pts.Count + " " + pts[(index + 1) % pts.Count]);
-                                bp = true;
-                            }
                             pts.RemoveAt((index + 1) % pts.Count);
                             index += 2;
                         }
@@ -152,7 +141,6 @@ namespace PSG
 
                 } while (prevPointCount != pts.Count);
             }
-            //Debug.Log("3 " + pts.Count);
             return pts;
         }
     }
