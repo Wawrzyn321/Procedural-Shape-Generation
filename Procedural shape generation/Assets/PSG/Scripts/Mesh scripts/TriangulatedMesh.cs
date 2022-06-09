@@ -98,7 +98,7 @@ namespace PSG
 
         protected override void BuildMeshComponents()
         {
-            Vector2 center = MeshHelper.GetCenter(Vertices);
+            Vector2 center = MeshHelper.GetCenter(Points);
             Vertices = new Vector3[Points.Length];
             for (int i = 0; i < Vertices.Length; i++)
             {
